@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ICEBERG COIN</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+    <style>
+        /* CSS Variables for Theming */
+        :root {
+            --font-family: 'Inter', sans-serif;
+            --primary-gradient: linear-gradient(135deg, #1e88e5, #0d47a1);
+            --secondary-gradient: linear-gradient(135deg, #4fc3f7, #0288d1);
+            --success-gradient: linear-gradient(135deg, #4caf50, #2e7d32);
+            --warning-gradient: linear-gradient(135deg, #ffb74d, #f57c00);
+            --bg-color-light: #e3f2fd;
+            --card-bg-light: #ffffff;
+            --text-color-light: #1565c0;
+            --subtle-text-light: #546e7a;
+            --border-color-light: #bbdefb;
+            --bg-color-dark: #0d47a1;
+            --card-bg-dark: #1e3a8a;
+            --text-color-dark: #e3f2fd;
+            --subtle-text-dark: #90caf9;
+            --border-color-dark: #1e3a8a;
+            --shadow-light: 0 4px 12px rgba(30, 136, 229, 0.2);
+            --shadow-dark: 0 4px 12px rgba(13, 71, 161, 0.4);
+        }
+
+        /* Base Styles */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body {
+            font-family: var(--font-family);
+            transition: background-color 0.3s, color 0.3s;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        /* Theme Styles */
+        body.light-theme { 
+            background-color: var(--bg-color-light); 
+            color: var(--text-color-light); 
+        }
+        
+        body.dark-theme { 
+            background-color: var(--bg-color-dark); 
+            color: var(--text-color-dark); 
+        }
+        
+        #app { 
+            max-width: 500px; 
+            margin: 0 auto; 
+            padding: 0 15px;
+        }
+
+        /* Header Styles */
+        .app-header {
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.4rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .theme-toggle {
+            width: 48px;
+            height: 28px;
+            border-radius: 28px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .light-theme .theme-toggle {
+            background-color: #bbdefb;
+        }
+        
+        .dark-theme .theme-toggle {
+            background-color: #1e3a8a;
+        }
+        
+        .toggle-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            transition: left 0.3s, background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        .light-theme .toggle-thumb {
+            left: 2px;
+            background-color: #ffffff;
+            color: #ffb74d;
+        }
+        
+        .dark-theme .toggle-thumb {
+            left: 22px;
+            background-color: #0d47a1;
+            color: #ffb74d;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 2px solid transparent;
+            background: 
+                linear-gradient(var(--card-bg-light), var(--card-bg-light)) padding-box,
+                var(--primary-gradient) border-box;
+        }
+        
+        .dark-theme .profile-card {
+            background: 
+                linear-gradient(var(--card-bg-dark), var(--card-bg-dark)) padding-box,
+                var(--primary-gradient) border-box;
+        }
+        
+        #user-photo {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid transparent;
+            background: var(--primary-gradient) border-box;
+            -webkit-mask: 
+                linear-gradient(#fff 0 0) padding-box, 
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+        
+        .user-info {
+            flex: 1;
+        }
+        
+        .user-info h1 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .verified-icon {
+            color: #4fc3f7;
+            font-size: 16px;
+        }
+        
+        .balance-display {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 500;
+        }
+        
+        .light-theme .balance-display {
+            color: var(--subtle-text-light);
+        }
+        
+        .dark-theme .balance-display {
+            color: var(--subtle-text-dark);
+        }
+        
+        .balance-amount {
+            font-weight: 700;
+            font-size: 1.1rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            border-radius: 16px;
+            padding: 20px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            text-align: center;
+            border: 2px solid transparent;
+            background: 
+                linear-gradient(var(--card-bg-light), var(--card-bg-light)) padding-box,
+                var(--secondary-gradient) border-box;
+        }
+        
+        .dark-theme .stat-card {
+            background: 
+                linear-gradient(var(--card-bg-dark), var(--card-bg-dark)) padding-box,
+                var(--secondary-gradient) border-box;
+        }
+        
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 18px;
+        }
+        
+        .stat-icon.ads {
+            background: var(--secondary-gradient);
+            color: white;
+        }
+        
+        .stat-icon.referrals {
+            background: var(--success-gradient);
+            color: white;
+        }
+        
+        .stat-card h3 {
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .light-theme .stat-card h3 {
+            color: var(--subtle-text-light);
+        }
+        
+        .dark-theme .stat-card h3 {
+            color: var(--subtle-text-dark);
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .light-theme .stat-value {
+            color: var(--text-color-light);
+        }
+        
+        .dark-theme .stat-value {
+            color: var(--text-color-dark);
+        }
+
+        /* Task Cards */
+        .task-card {
+            border-radius: 16px;
+            padding: 20px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 2px solid transparent;
+            background: 
+                linear-gradient(var(--card-bg-light), var(--card-bg-light)) padding-box,
+                var(--secondary-gradient) border-box;
+        }
+        
+        .dark-theme .task-card {
+            background: 
+                linear-gradient(var(--card-bg-dark), var(--card-bg-dark)) padding-box,
+                var(--secondary-gradient) border-box;
+        }
+        
+        .task-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .task-icon.ad {
+            background: var(--secondary-gradient);
+            color: white;
+        }
+        
+        .task-icon.channel {
+            background: var(--warning-gradient);
+            color: white;
+        }
+        
+        .task-icon.group {
+            background: var(--success-gradient);
+            color: white;
+        }
+        
+        .task-content {
+            flex: 1;
+        }
+        
+        .task-content h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .task-content p {
+            font-size: 0.85rem;
+            font-weight: 400;
+        }
+        
+        .light-theme .task-content p {
+            color: var(--subtle-text-light);
+        }
+        
+        .dark-theme .task-content p {
+            color: var(--subtle-text-dark);
+        }
+        
+        .task-reward {
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .task-action {
+            flex-shrink: 0;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: none;
+            font-family: var(--font-family);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-light);
+        }
+        
+        .dark-theme .btn-primary:hover {
+            box-shadow: var(--shadow-dark);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+        }
+        
+        .light-theme .btn-secondary {
+            color: var(--text-color-light);
+        }
+        
+        .dark-theme .btn-secondary {
+            color: var(--text-color-dark);
+        }
+        
+        .btn-secondary::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 12px;
+            padding: 2px;
+            background: var(--primary-gradient);
+            -webkit-mask: 
+                linear-gradient(#fff 0 0) content-box, 
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 0.8rem;
+        }
+        
+        .btn-loading .btn-text {
+            visibility: hidden;
+        }
+        
+        .btn-loading::after {
+            content: "";
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border: 2px solid transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Referral Section */
+        .referral-section {
+            border-radius: 16px;
+            padding: 20px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 2px solid transparent;
+            background: 
+                linear-gradient(var(--card-bg-light), var(--card-bg-light)) padding-box,
+                var(--primary-gradient) border-box;
+        }
+        
+        .dark-theme .referral-section {
+            background: 
+                linear-gradient(var(--card-bg-dark), var(--card-bg-dark)) padding-box,
+                var(--primary-gradient) border-box;
+        }
+        
+        .referral-section h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .referral-section p {
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .light-theme .referral-section p {
+            color: var(--subtle-text-light);
+        }
+        
+        .dark-theme .referral-section p {
+            color: var(--subtle-text-dark);
+        }
+        
+        .referral-input {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        
+        #referral-link {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            border-radius: 12px;
+            border: 1px dashed;
+            font-family: var(--font-family);
+            font-size: 0.85rem;
+            background-color: transparent;
+        }
+        
+        .light-theme #referral-link {
+            border-color: #bbdefb;
+            color: var(--text-color-light);
+        }
+        
+        .dark-theme #referral-link {
+            border-color: #1e3a8a;
+            color: var(--text-color-dark);
+        }
+        
+        .copy-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 35px;
+            height: 35px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Withdraw Form */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 12px;
+            border: 1px solid;
+            font-family: var(--font-family);
+            font-size: 0.9rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background-color: transparent;
+        }
+        
+        .light-theme .form-control {
+            border-color: var(--border-color-light);
+            color: var(--text-color-light);
+        }
+        
+        .dark-theme .form-control {
+            border-color: var(--border-color-dark);
+            color: var(--text-color-dark);
+        }
+        
+        .light-theme .form-control:focus {
+            outline: none;
+            border-color: #1e88e5;
+            box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.15);
+        }
+        
+        .dark-theme .form-control:focus {
+            outline: none;
+            border-color: #0d47a1;
+            box-shadow: 0 0 0 3px rgba(13, 71, 161, 0.2);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 500px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: 1px solid;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .light-theme .bottom-nav {
+            background-color: rgba(227, 242, 253, 0.8);
+            border-top-color: var(--border-color-light);
+        }
+        
+        .dark-theme .bottom-nav {
+            background-color: rgba(13, 71, 161, 0.8);
+            border-top-color: var(--border-color-dark);
+        }
+        
+        .nav-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px 10px;
+            font-family: var(--font-family);
+            font-size: 0.7rem;
+            transition: color 0.2s;
+            flex-grow: 1;
+            border-radius: 10px;
+        }
+        
+        .light-theme .nav-btn {
+            color: var(--subtle-text-light);
+        }
+        
+        .dark-theme .nav-btn {
+            color: var(--subtle-text-dark);
+        }
+        
+        .nav-btn i {
+            font-size: 1.4rem;
+            margin-bottom: 3px;
+            transition: transform 0.2s;
+        }
+        
+        .nav-btn.active {
+            font-weight: 600;
+        }
+        
+        .light-theme .nav-btn.active {
+            color: #1e88e5;
+        }
+        
+        .dark-theme .nav-btn.active {
+            color: #4fc3f7;
+        }
+        
+        .nav-btn.active i {
+            transform: translateY(-2px);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            width: 80%;
+            max-width: 300px;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+        }
+        
+        .light-theme .modal-content {
+            background-color: var(--card-bg-light);
+        }
+        
+        .dark-theme .modal-content {
+            background-color: var(--card-bg-dark);
+        }
+        
+        .loader {
+            border: 3px solid transparent;
+            border-radius: 50%;
+            border-top: 3px solid;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        .light-theme .loader {
+            border-top-color: #1e88e5;
+        }
+        
+        .dark-theme .loader {
+            border-top-color: #0d47a1;
+        }
+        
+        .modal p {
+            font-weight: 500;
+        }
+
+        /* Page Transitions */
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Section Headers */
+        .section-header {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 20px 0 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-header i {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        /* Animation for coins */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .balance-amount {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="light-theme">
+
+    <div id="app">
+        <header class="app-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-mountain"></i>
+                </div>
+                <div class="logo-text">ICEBERG COIN</div>
+            </div>
+            <div class="theme-toggle" id="theme-toggle">
+                <div class="toggle-thumb">
+                    <i class="fas" id="theme-icon"></i>
+                </div>
+            </div>
+        </header>
+
+        <div class="profile-card">
+            <img id="user-photo" src="" alt="User Photo">
+            <div class="user-info">
+                <h1 id="user-name">Loading... <i class="fas fa-check-circle verified-icon"></i></h1>
+                <div class="balance-display">
+                    <span>Balance:</span>
+                    <span class="balance-amount" id="user-points">0</span>
+                    <span>ICEBERG</span>
+                </div>
+            </div>
+        </div>
+
+        <main id="main-content">
+            <!-- Home Page -->
+            <div id="home-page" class="page active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon ads">
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                        <h3>Daily Ads Watched</h3>
+                        <p class="stat-value"><span id="daily-ads-watched">0</span>/50</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon referrals">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Total Referrals</h3>
+                        <p class="stat-value" id="referral-count">0</p>
+                    </div>
+                </div>
+
+                <div class="referral-section">
+                    <h3>Refer & Earn More!</h3>
+                    <p>Share your link to get bonus points</p>
+                    <div class="referral-input">
+                        <input type="text" id="referral-link" readonly>
+                        <button class="copy-btn" id="copy-ref-link-btn">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-share-alt"></i>
+                        <span>Share Referral Link</span>
+                    </button>
+                </div>
+
+                <h2 class="section-header"><i class="fas fa-tasks"></i> Quick Tasks</h2>
+                
+                <div class="task-card">
+                    <div class="task-icon ad">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="task-content">
+                        <h3>Watch Rewarded Ad</h3>
+                        <p>Earn 0.25 ICEBERG for every ad</p>
+                        <div class="task-reward">+0.25 ICEBERG</div>
+                    </div>
+                    <div class="task-action">
+                        <button id="watch-ad-btn" class="btn btn-primary btn-sm">
+                            <span class="btn-text">Watch</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="task-card">
+                    <div class="task-icon channel">
+                        <i class="fab fa-telegram"></i>
+                    </div>
+                    <div class="task-content">
+                        <h3>Join Our Channel</h3>
+                        <p>Get 3 ICEBERG bonus</p>
+                        <div class="task-reward">+3 ICEBERG</div>
+                    </div>
+                    <div class="task-action">
+                        <button id="join-channel-btn" class="btn btn-primary btn-sm">
+                            <span class="btn-text">Join</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="task-card">
+                    <div class="task-icon group">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="task-content">
+                        <h3>Join Our Group</h3>
+                        <p>Get 2 ICEBERG bonus</p>
+                        <div class="task-reward">+2 ICEBERG</div>
+                    </div>
+                    <div class="task-action">
+                        <button id="join-group-btn" class="btn btn-primary btn-sm">
+                            <span class="btn-text">Join</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tasks Page -->
+            <div id="tasks-page" class="page">
+                <h2 class="section-header"><i class="fas fa-tasks"></i> Complete Tasks</h2>
+                
+                <div class="task-card">
+                    <div class="task-icon ad">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="task-content">
+                        <h3>Watch Rewarded Ad</h3>
+                        <p>Earn 0.25 ICEBERG for every ad</p>
+                        <div class="task-reward">+0.25 ICEBERG</div>
+                    </div>
+                    <div class="task-action">
+                        <button id="watch-ad-btn-2" class="btn btn-primary btn-sm">
+                            <span class="btn-text">Watch</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="task-card">
+                    <div class="task-icon channel">
+                        <i class="fab fa-telegram"></i>
+                    </div>
+                    <div class="task-content">
+                        <h3>Join Our Channel</h3>
+                        <p>Get 3 ICEBERG bonus</p>
+                        <div class="task-reward">+3 ICEBERG</div>
+                    </div>
+                    <div class="task-action">
+                        <button id="join-channel-btn-2" class="btn btn-primary btn-sm">
+                            <span class="btn-text">Join</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="task-card">
+                    <div class="task-icon group">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="task-content">
+                        <h3>Join Our Group</h3>
+                        <p>Get 2 ICEBERG bonus</p>
+                        <div class="task-reward">+2 ICEBERG</div>
+                    </div>
+                    <div class="task-action">
+                        <button id="join-group-btn-2" class="btn btn-primary btn-sm">
+                            <span class="btn-text">Join</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Withdraw Page -->
+            <div id="withdraw-page" class="page">
+                <h2 class="section-header"><i class="fas fa-wallet"></i> Withdraw</h2>
+                
+                <div class="referral-section">
+                    <h3>Withdraw Your Earnings</h3>
+                    <p>Minimum 30 ICEBERG required to withdraw</p>
+                </div>
+
+                <form id="withdraw-form">
+                    <div class="form-group">
+                        <label for="withdraw-method">Withdrawal Method:</label>
+                        <select id="withdraw-method" class="form-control" required>
+                            <option value="Binance">Binance</option>
+                            <option value="JazzCash">JazzCash</option>
+                            <option value="EasyPaisa">EasyPaisa</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="account-number">Account Number:</label>
+                        <input type="text" id="account-number" class="form-control" placeholder="Enter your account number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">Amount to Withdraw (ICEBERG):</label>
+                        <input type="number" id="amount" class="form-control" placeholder="e.g., 30" min="30" required>
+                    </div>
+                    <button type="submit" id="withdraw-submit-btn" class="btn btn-primary" style="width: 100%;">
+                        <span class="btn-text">Submit Request</span>
+                    </button>
+                </form>
+            </div>
+        </main>
+
+        <nav class="bottom-nav">
+            <button class="nav-btn active" data-page="home-page">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </button>
+            <button class="nav-btn" data-page="tasks-page">
+                <i class="fas fa-tasks"></i>
+                <span>Tasks</span>
+            </button>
+            <button class="nav-btn" data-page="withdraw-page">
+                <i class="fas fa-wallet"></i>
+                <span>Withdraw</span>
+            </button>
+        </nav>
+    </div>
+
+    <div id="loading-modal" class="modal">
+        <div class="modal-content">
+            <div class="loader"></div>
+            <p>Loading Ad...</p>
+        </div>
+    </div>
+    
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- GigaPub Ad Script -->
+    <script src="https://ad.gigapub.tech/script?id=3055"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tg = window.Telegram.WebApp;
+
+            // --- Configuration ---
+            const BOT_TOKEN = "8420674857:AAGHTbMwyY5EyVmrq-m1quLi6WrgrpfML0Y";
+            const BOT_USERNAME = "PenguEarn_Bot"; // Your bot's username
+            const ADMIN_CHAT_ID = "6385223654";
+            const CHANNEL_LINK = "https://t.me/PenguEarnCommunity";
+            const GROUP_LINK = "https://t.me/PenguEarnCommunity";
+            const DAILY_AD_LIMIT = 50;
+            const POINTS_PER_AD = 0.25;
+            const CHANNEL_JOIN_BONUS = 3;
+            const GROUP_JOIN_BONUS = 2;
+            const MIN_WITHDRAW_POINTS = 30;
+
+            // --- DOM Elements ---
+            const userPhotoElem = document.getElementById('user-photo');
+            const userNameElem = document.getElementById('user-name');
+            const userPointsElem = document.getElementById('user-points');
+            const dailyAdsWatchedElem = document.getElementById('daily-ads-watched');
+            const referralCountElem = document.getElementById('referral-count');
+            const watchAdBtn = document.getElementById('watch-ad-btn');
+            const watchAdBtn2 = document.getElementById('watch-ad-btn-2');
+            const joinChannelBtn = document.getElementById('join-channel-btn');
+            const joinChannelBtn2 = document.getElementById('join-channel-btn-2');
+            const joinGroupBtn = document.getElementById('join-group-btn');
+            const joinGroupBtn2 = document.getElementById('join-group-btn-2');
+            const withdrawForm = document.getElementById('withdraw-form');
+            const withdrawSubmitBtn = document.getElementById('withdraw-submit-btn');
+            const referralLinkElem = document.getElementById('referral-link');
+            const copyRefLinkBtn = document.getElementById('copy-ref-link-btn');
+            const loadingModal = document.getElementById('loading-modal');
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeIcon = document.getElementById('theme-icon');
+
+            // --- State Management ---
+            let userState = {
+                points: 0,
+                dailyAdWatchCount: 0,
+                lastAdWatchDate: null,
+                referrals: [],
+                hasJoinedChannel: false,
+                hasJoinedGroup: false,
+                userId: null
+            };
+
+            const saveState = () => {
+                if(userState.userId) {
+                    localStorage.setItem(`userState_${userState.userId}`, JSON.stringify(userState));
+                }
+            };
+
+            const loadState = (userId) => {
+                const savedState = localStorage.getItem(`userState_${userId}`);
+                if (savedState) {
+                    userState = JSON.parse(savedState);
+                    if (userState.hasJoinedGroup === undefined) userState.hasJoinedGroup = false;
+                }
+            };
+            
+            // --- Core Functions ---
+            const initApp = () => {
+                tg.ready();
+                tg.expand();
+                
+                // Set initial theme based on Telegram theme
+                setTheme(tg.colorScheme);
+                
+                const user = tg.initDataUnsafe.user;
+                if (!user || !user.id) {
+                    tg.showAlert("Could not verify user. Please open this app through Telegram.", () => tg.close());
+                    return;
+                }
+                
+                userState.userId = user.id;
+                loadState(user.id);
+                
+                const today = new Date().toISOString().slice(0, 10);
+                if (userState.lastAdWatchDate !== today) {
+                    userState.dailyAdWatchCount = 0;
+                    userState.lastAdWatchDate = today;
+                }
+                
+                updateUI();
+                setupNavigation();
+                setupEventListeners();
+                saveState();
+            };
+            
+            const setTheme = (theme) => {
+                if (theme === 'dark') {
+                    document.body.className = 'dark-theme';
+                    themeIcon.className = 'fas fa-sun';
+                } else {
+                    document.body.className = 'light-theme';
+                    themeIcon.className = 'fas fa-moon';
+                }
+            };
+            
+            const updateUI = () => {
+                const user = tg.initDataUnsafe.user;
+                if (user) {
+                    userPhotoElem.src = user.photo_url || 'https://i.imgur.com/placeholder.png';
+                    userNameElem.innerHTML = `${user.first_name || ''} ${user.last_name || ''} <i class="fas fa-check-circle verified-icon"></i>`;
+                }
+                
+                userPointsElem.textContent = userState.points.toFixed(2);
+                dailyAdsWatchedElem.textContent = userState.dailyAdWatchCount;
+                referralCountElem.textContent = userState.referrals.length;
+
+                referralLinkElem.value = `https://t.me/${BOT_USERNAME}?startapp=${userState.userId}`;
+
+                // Update task button states
+                if (userState.hasJoinedChannel) {
+                    joinChannelBtn.innerHTML = '<span class="btn-text">Claimed</span>';
+                    joinChannelBtn.disabled = true;
+                    joinChannelBtn2.innerHTML = '<span class="btn-text">Claimed</span>';
+                    joinChannelBtn2.disabled = true;
+                }
+                if (userState.hasJoinedGroup) {
+                    joinGroupBtn.innerHTML = '<span class="btn-text">Claimed</span>';
+                    joinGroupBtn.disabled = true;
+                    joinGroupBtn2.innerHTML = '<span class="btn-text">Claimed</span>';
+                    joinGroupBtn2.disabled = true;
+                }
+                
+                // Update ad watch button if limit reached
+                if (userState.dailyAdWatchCount >= DAILY_AD_LIMIT) {
+                    watchAdBtn.innerHTML = '<span class="btn-text">Limit Reached</span>';
+                    watchAdBtn.disabled = true;
+                    watchAdBtn2.innerHTML = '<span class="btn-text">Limit Reached</span>';
+                    watchAdBtn2.disabled = true;
+                }
+            };
+            
+            const setupEventListeners = () => {
+                watchAdBtn.addEventListener('click', handleWatchAd);
+                watchAdBtn2.addEventListener('click', handleWatchAd);
+                joinChannelBtn.addEventListener('click', handleJoinChannel);
+                joinChannelBtn2.addEventListener('click', handleJoinChannel);
+                joinGroupBtn.addEventListener('click', handleJoinGroup);
+                joinGroupBtn2.addEventListener('click', handleJoinGroup);
+                withdrawForm.addEventListener('submit', handleWithdraw);
+                copyRefLinkBtn.addEventListener('click', copyReferralLink);
+                
+                // Theme toggle
+                themeToggle.addEventListener('click', toggleTheme);
+            };
+            
+            const toggleTheme = () => {
+                if (document.body.classList.contains('light-theme')) {
+                    setTheme('dark');
+                } else {
+                    setTheme('light');
+                }
+            };
+
+            const handleWatchAd = () => {
+                if (userState.dailyAdWatchCount >= DAILY_AD_LIMIT) {
+                    tg.showAlert("You have reached your daily ad watch limit."); return;
+                }
+                loadingModal.style.display = 'flex';
+                
+                // Use GigaPub's show_3055 function instead of show_144
+                if (typeof show_3055 === 'function') {
+                    show_3055().then(() => {
+                        userState.points += POINTS_PER_AD;
+                        userState.dailyAdWatchCount++;
+                        saveState();
+                        updateUI();
+                        tg.HapticFeedback.notificationOccurred('success');
+                        tg.showAlert(`Congratulations! You've earned ${POINTS_PER_AD} ICEBERG.`);
+                    }).catch(() => {
+                        tg.showAlert("Ad could not be loaded. Please try again later.");
+                    }).finally(() => {
+                        loadingModal.style.display = 'none';
+                    });
+                } else {
+                    tg.showAlert("Ad system is not available. Please try again later.");
+                    loadingModal.style.display = 'none';
+                }
+            };
+            
+            const handleJoinChannel = () => {
+                if(userState.hasJoinedChannel) {
+                    tg.showAlert('You have already claimed this bonus.'); return;
+                }
+                tg.openTelegramLink(CHANNEL_LINK);
+                setTimeout(() => {
+                    userState.points += CHANNEL_JOIN_BONUS;
+                    userState.hasJoinedChannel = true;
+                    tg.showAlert(`Thank you! You received ${CHANNEL_JOIN_BONUS} bonus ICEBERG.`);
+                    saveState();
+                    updateUI();
+                }, 3000);
+            };
+
+            const handleJoinGroup = () => {
+                if(userState.hasJoinedGroup) {
+                    tg.showAlert('You have already claimed this bonus.'); return;
+                }
+                tg.openTelegramLink(GROUP_LINK);
+                setTimeout(() => {
+                    userState.points += GROUP_JOIN_BONUS;
+                    userState.hasJoinedGroup = true;
+                    tg.showAlert(`Thank you! You received ${GROUP_JOIN_BONUS} bonus ICEBERG.`);
+                    saveState();
+                    updateUI();
+                }, 3000);
+            };
+
+            const handleWithdraw = async (e) => {
+                e.preventDefault();
+                const method = document.getElementById('withdraw-method').value;
+                const accountNumber = document.getElementById('account-number').value;
+                const amount = parseInt(document.getElementById('amount').value, 10);
+
+                if (isNaN(amount) || amount <= 0) { tg.showAlert("Please enter a valid amount."); return; }
+                if (amount < MIN_WITHDRAW_POINTS) { tg.showAlert(`Minimum withdrawal is ${MIN_WITHDRAW_POINTS} ICEBERG.`); return; }
+                if (amount > userState.points) { tg.showAlert("You don't have enough balance."); return; }
+
+                withdrawSubmitBtn.classList.add('btn-loading');
+                withdrawSubmitBtn.disabled = true;
+
+                userState.points -= amount;
+                saveState();
+                updateUI();
+                
+                const user = tg.initDataUnsafe.user;
+                const message = `<b>New Withdraw Request!</b>\n-----------------------------------\n<b>User:</b> ${user.first_name || ''} ${user.last_name || ''} (@${user.username || 'N/A'})\n<b>User ID:</b> <code>${user.id}</code>\n-----------------------------------\n<b>Method:</b> ${method}\n<b>Account:</b> <code>${accountNumber}</code>\n<b>Amount:</b> ${amount} ICEBERG\n-----------------------------------\n<b>Date:</b> ${new Date().toLocaleString('en-US', { timeZone: 'Asia/Dhaka' })}`;
+                
+                const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ chat_id: ADMIN_CHAT_ID, text: message, parse_mode: 'HTML'})
+                    });
+                    const result = await response.json();
+                    if (result.ok) {
+                        tg.HapticFeedback.notificationOccurred('success');
+                        tg.showAlert("Withdrawal request submitted successfully!");
+                        withdrawForm.reset();
+                    } else { throw new Error(result.description); }
+                } catch (error) {
+                    tg.HapticFeedback.notificationOccurred('error');
+                    tg.showAlert("Failed to submit request. Your ICEBERG have been returned.");
+                    userState.points += amount;
+                    saveState();
+                    updateUI();
+                } finally {
+                    withdrawSubmitBtn.classList.remove('btn-loading');
+                    withdrawSubmitBtn.disabled = false;
+                }
+            };
+            
+            const copyReferralLink = () => {
+                navigator.clipboard.writeText(referralLinkElem.value).then(() => {
+                    tg.HapticFeedback.notificationOccurred('success');
+                    tg.showAlert("Referral link copied!");
+                });
+            };
+
+            const setupNavigation = () => {
+                const navButtons = document.querySelectorAll('.nav-btn');
+                const pages = document.querySelectorAll('.page');
+                navButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const pageId = button.dataset.page;
+                        pages.forEach(page => page.classList.remove('active'));
+                        document.getElementById(pageId).classList.add('active');
+                        navButtons.forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
+                    });
+                });
+            };
+
+            initApp();
+        });
+    </script>
+</body>
+</html> 
