@@ -718,7 +718,7 @@
             // Update referral stats
             document.getElementById('referral-count').textContent = userData.referralCount;
             document.getElementById('referral-earnings').textContent = userData.referralEarnings;
-            document.getElementById('referral-link').textContent = `https://t.me/DrToken_RoBot?startapp=ref${userData.id}`;
+            document.getElementById('referral-link').textContent = `https://t.me/DrToken_RoBot?startapp=${userData.id}`;
             
             // Update progress bars
             document.getElementById('max-ton').textContent = userData.tonBalance.toFixed(4) + ' TON';
