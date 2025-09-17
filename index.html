@@ -3,9 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ICEBERG COIN</title>
+    <title>DR Token Airdrop</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --accent: #00c6ff;
+            --dark: #1a202c;
+            --light: #f8f9fa;
+            --success: #0f9d58;
+            --warning: #f4b400;
+            --danger: #db4437;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --card-border: rgba(255, 255, 255, 0.2);
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -14,10 +28,10 @@
         }
         
         body {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-            color: #fff;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--light);
             min-height: 100vh;
-            padding-bottom: 60px;
+            padding-bottom: 80px;
         }
         
         .container {
@@ -30,17 +44,19 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: rgba(0, 0, 0, 0.4);
+            background: var(--card-bg);
             padding: 15px;
-            border-radius: 15px;
+            border-radius: 20px;
             margin-bottom: 20px;
             backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
         
         .user-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
         
         .user-pic {
@@ -48,151 +64,244 @@
             height: 50px;
             border-radius: 50%;
             border: 2px solid #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .balance-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
         }
         
         .balance-card {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 15px;
-            border-radius: 15px;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 20px;
             text-align: center;
-            margin-bottom: 20px;
             backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .balance-label {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
         }
         
         .balance-amount {
-            font-size: 32px;
+            font-size: 24px;
             font-weight: bold;
-            margin: 10px 0;
-            color: #4fd1c5;
+            margin: 5px 0;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .balance-subtext {
+            font-size: 12px;
+            opacity: 0.7;
         }
         
         .nav {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 10px;
             margin-bottom: 20px;
         }
         
         .nav-btn {
-            background: rgba(0, 0, 0, 0.4);
-            border: none;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
             color: white;
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 16px;
+            padding: 12px 5px;
+            border-radius: 15px;
+            font-size: 14px;
             cursor: pointer;
             transition: all 0.3s;
             backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .nav-btn i {
+            font-size: 18px;
         }
         
         .nav-btn:hover {
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(255, 255, 255, 0.15);
             transform: translateY(-2px);
         }
         
+        .nav-btn.active {
+            background: var(--accent);
+            color: var(--dark);
+            font-weight: bold;
+        }
+        
         .section {
-            background: rgba(0, 0, 0, 0.4);
+            background: var(--card-bg);
             padding: 20px;
-            border-radius: 15px;
+            border-radius: 20px;
             margin-bottom: 20px;
             backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
         
         .section-title {
             font-size: 20px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            color: var(--accent);
         }
         
         .task-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 0;
+            padding: 15px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .task-item:last-child {
+            border-bottom: none;
         }
         
         .task-info {
             flex: 1;
         }
         
+        .task-name {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .task-desc {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
         .task-reward {
-            color: #4fd1c5;
+            color: var(--accent);
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
         
         .task-btn {
-            background: #4fd1c5;
+            background: var(--accent);
             border: none;
-            color: #000;
+            color: var(--dark);
             padding: 8px 15px;
-            border-radius: 8px;
+            border-radius: 10px;
             font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .task-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
         }
         
         .task-btn.completed {
-            background: #2d3748;
-            color: #a0aec0;
+            background: var(--success);
+            color: white;
+        }
+        
+        .task-btn.pending {
+            background: var(--warning);
+            color: var(--dark);
         }
         
         .referral-box {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.2);
             padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
         }
         
         .referral-stats {
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
             margin-top: 15px;
         }
         
         .stat-item {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 15px;
             text-align: center;
         }
         
         .stat-value {
             font-size: 24px;
             font-weight: bold;
-            color: #4fd1c5;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.8;
         }
         
         .input-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         
         .input-label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            margin-bottom: 8px;
+            font-weight: 500;
         }
         
         .input-field {
             width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: none;
-            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            background: rgba(0, 0, 0, 0.1);
             color: white;
+            font-size: 16px;
         }
         
-        .withdraw-btn {
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .action-btn {
             width: 100%;
-            padding: 12px;
-            background: #4fd1c5;
-            color: #000;
+            padding: 15px;
+            background: var(--accent);
+            color: var(--dark);
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
+            font-size: 16px;
         }
         
-        .withdraw-btn:hover {
-            background: #38b2ac;
+        .action-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
         }
         
         .hidden {
@@ -208,12 +317,122 @@
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
+            background: var(--dark);
             color: white;
-            padding: 15px 20px;
+            padding: 15px 25px;
             border-radius: 10px;
             z-index: 1000;
             display: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+        
+        .withdrawal-history {
+            margin-top: 20px;
+        }
+        
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        
+        .swap-rate {
+            text-align: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            font-size: 14px;
+        }
+        
+        .token-icon {
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0 5px;
+            background: var(--accent);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-weight: bold;
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .check-in-calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-top: 15px;
+        }
+        
+        .calendar-day {
+            padding: 8px;
+            text-align: center;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .calendar-day.checked {
+            background: var(--success);
+            color: white;
+        }
+        
+        .calendar-day.today {
+            border: 2px solid var(--accent);
+        }
+        
+        .token-info {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+        
+        .token-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -224,109 +443,193 @@
                 <img id="user-pic" class="user-pic" src="" alt="Profile Picture">
                 <div>
                     <div id="user-name">User Name</div>
-                    <div>Level: Member</div>
+                    <div>ID: <span id="user-id">12345</span></div>
                 </div>
             </div>
-            <div id="user-balance">0 tokens</div>
+            <div>
+                <div style="text-align: right;">Level: Member</div>
+                <div style="text-align: right;">DR Tokens: <span id="header-balance">0</span></div>
+            </div>
         </div>
         
-        <div class="balance-card">
-            <div>Your Balance</div>
-            <div class="balance-amount" id="balance-amount">0 tokens</div>
-            <div>≈ $0.00</div>
+        <div class="balance-section">
+            <div class="balance-card">
+                <div class="balance-label"><i class="fas fa-coins"></i> DR Tokens</div>
+                <div class="balance-amount" id="dr-balance">0</div>
+                <div class="balance-subtext">≈ $0.00</div>
+            </div>
+            <div class="balance-card">
+                <div class="balance-label"><i class="fab fa-bitcoin"></i> TON Balance</div>
+                <div class="balance-amount" id="ton-balance">0.00</div>
+                <div class="balance-subtext">≈ $0.00</div>
+            </div>
         </div>
         
         <div class="nav">
-            <button class="nav-btn" onclick="showTab('tasks')">Tasks</button>
-            <button class="nav-btn" onclick="showTab('referrals')">Referrals</button>
-            <button class="nav-btn" onclick="showTab('withdraw')">Withdraw</button>
-            <button class="nav-btn" onclick="showTab('faq')">FAQ</button>
+            <button class="nav-btn active" onclick="showTab('tasks')">
+                <i class="fas fa-tasks"></i>
+                <span>Tasks</span>
+            </button>
+            <button class="nav-btn" onclick="showTab('referrals')">
+                <i class="fas fa-users"></i>
+                <span>Referrals</span>
+            </button>
+            <button class="nav-btn" onclick="showTab('withdraw')">
+                <i class="fas fa-wallet"></i>
+                <span>Withdraw</span>
+            </button>
+            <button class="nav-btn" onclick="showTab('swap')">
+                <i class="fas fa-exchange-alt"></i>
+                <span>Swap</span>
+            </button>
         </div>
         
         <div id="tasks-tab" class="tab-content">
             <div class="section">
-                <h2 class="section-title">Earn Tokens</h2>
+                <h2 class="section-title"><i class="fas fa-tasks"></i> Channel Tasks</h2>
                 <div class="task-item">
                     <div class="task-info">
-                        <div>Join Telegram Channel 1</div>
-                        <div class="task-reward">Reward: 2 tokens</div>
+                        <div class="task-name">Join Crypto News Channel</div>
+                        <div class="task-desc">Stay updated with latest crypto news</div>
                     </div>
-                    <button class="task-btn" onclick="completeTask(0)">Complete</button>
+                    <div class="task-reward">+2 <span class="token-icon">DR</span></div>
+                    <button class="task-btn" onclick="joinChannel(0)">Join</button>
                 </div>
                 <div class="task-item">
                     <div class="task-info">
-                        <div>Join Telegram Channel 2</div>
-                        <div class="task-reward">Reward: 2 tokens</div>
+                        <div class="task-name">Join DR Token Channel</div>
+                        <div class="task-desc">Get updates about DR Token</div>
                     </div>
-                    <button class="task-btn" onclick="completeTask(1)">Complete</button>
+                    <div class="task-reward">+2 <span class="token-icon">DR</span></div>
+                    <button class="task-btn" onclick="joinChannel(1)">Join</button>
                 </div>
                 <div class="task-item">
                     <div class="task-info">
-                        <div>Join Telegram Channel 3</div>
-                        <div class="task-reward">Reward: 2 tokens</div>
+                        <div class="task-name">Join Airdrop Channel</div>
+                        <div class="task-desc">Find more airdrop opportunities</div>
                     </div>
-                    <button class="task-btn" onclick="completeTask(2)">Complete</button>
+                    <div class="task-reward">+2 <span class="token-icon">DR</span></div>
+                    <button class="task-btn" onclick="joinChannel(2)">Join</button>
                 </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title"><i class="fas fa-calendar-check"></i> Daily Check-in</h2>
+                <div class="task-item">
+                    <div class="task-info">
+                        <div class="task-name">Daily Reward</div>
+                        <div class="task-desc">Check in daily to earn DR Tokens</div>
+                    </div>
+                    <div class="task-reward">+2 <span class="token-icon">DR</span></div>
+                    <button class="task-btn" id="checkin-btn" onclick="dailyCheckIn()">Check In</button>
+                </div>
+                <div class="check-in-calendar" id="checkin-calendar">
+                    <!-- Calendar will be generated by JS -->
+                </div>
+            </div>
+            
+            <div class="token-info">
+                <div class="token-logo">DR</div>
+                <h3>DR Token</h3>
+                <p>Utility token for the DR ecosystem</p>
+                <p>Total Supply: 10,000,000 DR</p>
             </div>
         </div>
         
         <div id="referrals-tab" class="tab-content hidden">
             <div class="section">
-                <h2 class="section-title">Referral Program</h2>
+                <h2 class="section-title"><i class="fas fa-users"></i> Referral Program</h2>
                 <div class="referral-box">
                     <div class="input-label">Your Referral Link:</div>
-                    <div class="input-field" id="referral-link">https://t.me/ICEBERG_COIN_Bot?startapp=ref12345</div>
-                    <button class="nav-btn" style="margin-top: 10px;" onclick="copyReferralLink()">Copy Link</button>
+                    <div class="input-field" id="referral-link">https://t.me/DrToken_RoBot?startapp=ref12345</div>
+                    <button class="action-btn" style="margin-top: 10px;" onclick="copyReferralLink()">
+                        <i class="fas fa-copy"></i> Copy Link
+                    </button>
                 </div>
                 <div class="referral-stats">
                     <div class="stat-item">
                         <div class="stat-value" id="referral-count">0</div>
-                        <div>Referrals</div>
+                        <div class="stat-label">Referrals</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-value" id="referral-earnings">0</div>
-                        <div>Earnings</div>
+                        <div class="stat-label">Earnings</div>
                     </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title"><i class="fas fa-gift"></i> Airdrop Bonus</h2>
+                <div class="task-item">
+                    <div class="task-info">
+                        <div class="task-name">Join Airdrop</div>
+                        <div class="task-desc">You've received a bonus for joining</div>
+                    </div>
+                    <div class="task-reward">+10 <span class="token-icon">DR</span></div>
+                    <button class="task-btn completed" id="airdrop-btn">Received</button>
                 </div>
             </div>
         </div>
         
         <div id="withdraw-tab" class="tab-content hidden">
             <div class="section">
-                <h2 class="section-title">Withdraw Tokens</h2>
+                <h2 class="section-title"><i class="fas fa-wallet"></i> Withdraw TON</h2>
                 <div class="input-group">
-                    <label class="input-label">Binance ID</label>
-                    <input type="text" class="input-field" id="binance-id" placeholder="Enter your Binance ID">
+                    <label class="input-label">TON Wallet Address or Binance ID</label>
+                    <input type="text" class="input-field" id="withdraw-address" placeholder="Enter your address">
                 </div>
                 <div class="input-group">
-                    <label class="input-label">Amount to withdraw (min 10 tokens)</label>
+                    <label class="input-label">Amount to withdraw (min 0.1 TON)</label>
                     <input type="number" class="input-field" id="withdraw-amount" placeholder="Enter amount">
+                    <div class="progress-bar">
+                        <div class="progress" id="withdraw-progress"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 12px;">
+                        <span>0 TON</span>
+                        <span id="max-ton">0 TON</span>
+                    </div>
                 </div>
-                <button class="withdraw-btn" onclick="withdrawTokens()">Withdraw</button>
+                <button class="action-btn" onclick="withdrawTon()">
+                    <i class="fas fa-paper-plane"></i> Withdraw TON
+                </button>
+                
+                <div class="withdrawal-history">
+                    <h3 style="margin: 20px 0 10px;">Withdrawal History</h3>
+                    <div id="withdrawal-history-list">
+                        <!-- Withdrawal history will be populated by JS -->
+                    </div>
+                </div>
             </div>
         </div>
         
-        <div id="faq-tab" class="tab-content hidden">
+        <div id="swap-tab" class="tab-content hidden">
             <div class="section">
-                <h2 class="section-title">Frequently Asked Questions</h2>
-                <div class="task-item">
-                    <div><strong>How do I earn more tokens?</strong></div>
+                <h2 class="section-title"><i class="fas fa-exchange-alt"></i> Swap DR to TON</h2>
+                
+                <div class="swap-rate">
+                    <i class="fas fa-exchange-alt"></i> 1 DR Token = 0.001 TON
                 </div>
-                <div class="task-item">
-                    <div>Complete tasks and refer friends to earn more tokens.</div>
+                
+                <div class="input-group">
+                    <label class="input-label">DR Tokens to swap (min 10 DR)</label>
+                    <input type="number" class="input-field" id="swap-amount" placeholder="Enter amount" oninput="updateSwapResult()">
+                    <div class="progress-bar">
+                        <div class="progress" id="swap-progress"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 12px;">
+                        <span>0 DR</span>
+                        <span id="max-dr">0 DR</span>
+                    </div>
                 </div>
-                <div class="task-item">
-                    <div><strong>When will I receive my withdrawal?</strong></div>
+                
+                <div class="input-group">
+                    <label class="input-label">You will receive</label>
+                    <input type="text" class="input-field" id="swap-result" placeholder="0 TON" readonly>
                 </div>
-                <div class="task-item">
-                    <div>Withdrawals are processed within 24 hours.</div>
-                </div>
-                <div class="task-item">
-                    <div><strong>What is the minimum withdrawal?</strong></div>
-                </div>
-                <div class="task-item">
-                    <div>The minimum withdrawal amount is 10 tokens.</div>
-                </div>
+                
+                <button class="action-btn" onclick="swapTokens()">
+                    <i class="fas fa-sync-alt"></i> Swap Now
+                </button>
             </div>
         </div>
     </div>
@@ -344,11 +647,15 @@
             id: 0,
             username: "User",
             photoUrl: "",
-            balance: 50,
+            drBalance: 10, // Starting airdrop bonus
+            tonBalance: 0,
             completedTasks: [false, false, false],
             referralCount: 0,
             referralEarnings: 0,
-            binanceId: ""
+            lastCheckIn: 0,
+            checkInStreak: 0,
+            withdrawalHistory: [],
+            airdropClaimed: true
         };
         
         // Initialize app
@@ -361,6 +668,7 @@
                 userData.photoUrl = tgUser.photo_url || "";
                 
                 document.getElementById('user-name').textContent = userData.username;
+                document.getElementById('user-id').textContent = userData.id;
                 document.getElementById('user-pic').src = userData.photoUrl || "https://via.placeholder.com/50";
             }
             
@@ -372,29 +680,36 @@
             }
             
             // Load user data from storage
-            const savedData = localStorage.getItem('iceberg_user_data');
+            const savedData = localStorage.getItem('dr_token_user_data');
             if (savedData) {
                 const parsedData = JSON.parse(savedData);
-                userData.balance = parsedData.balance;
+                userData.drBalance = parsedData.drBalance;
+                userData.tonBalance = parsedData.tonBalance;
                 userData.completedTasks = parsedData.completedTasks;
                 userData.referralCount = parsedData.referralCount;
                 userData.referralEarnings = parsedData.referralEarnings;
-                userData.binanceId = parsedData.binanceId || "";
+                userData.lastCheckIn = parsedData.lastCheckIn;
+                userData.checkInStreak = parsedData.checkInStreak;
+                userData.withdrawalHistory = parsedData.withdrawalHistory || [];
+                userData.airdropClaimed = parsedData.airdropClaimed;
             }
             
             updateUI();
+            generateCheckInCalendar();
+            updateWithdrawalHistory();
         }
         
         // Update UI with current data
         function updateUI() {
-            document.getElementById('user-balance').textContent = `${userData.balance} tokens`;
-            document.getElementById('balance-amount').textContent = `${userData.balance} tokens`;
+            document.getElementById('header-balance').textContent = userData.drBalance;
+            document.getElementById('dr-balance').textContent = userData.drBalance;
+            document.getElementById('ton-balance').textContent = userData.tonBalance.toFixed(4);
             
             // Update task buttons
             const taskButtons = document.querySelectorAll('.task-btn');
             userData.completedTasks.forEach((completed, index) => {
                 if (completed) {
-                    taskButtons[index].textContent = "Completed";
+                    taskButtons[index].textContent = "Joined";
                     taskButtons[index].classList.add('completed');
                     taskButtons[index].disabled = true;
                 }
@@ -402,12 +717,64 @@
             
             // Update referral stats
             document.getElementById('referral-count').textContent = userData.referralCount;
-            document.getElementById('referral-earnings').textContent = `${userData.referralEarnings} tokens`;
-            document.getElementById('referral-link').textContent = `https://t.me/ICEBERG_COIN_Bot?startapp=ref${userData.id}`;
+            document.getElementById('referral-earnings').textContent = userData.referralEarnings;
+            document.getElementById('referral-link').textContent = `https://t.me/DrToken_RoBot?startapp=ref${userData.id}`;
             
-            // Set binance ID if available
-            if (userData.binanceId) {
-                document.getElementById('binance-id').value = userData.binanceId;
+            // Update progress bars
+            document.getElementById('max-ton').textContent = userData.tonBalance.toFixed(4) + ' TON';
+            document.getElementById('max-dr').textContent = userData.drBalance + ' DR';
+            
+            const withdrawProgress = Math.min((userData.tonBalance / 10) * 100, 100);
+            document.getElementById('withdraw-progress').style.width = withdrawProgress + '%';
+            
+            const swapProgress = Math.min((userData.drBalance / 1000) * 100, 100);
+            document.getElementById('swap-progress').style.width = swapProgress + '%';
+            
+            // Update check-in button
+            const now = Date.now();
+            const lastCheckIn = userData.lastCheckIn;
+            const twentyFourHours = 24 * 60 * 60 * 1000;
+            
+            if (lastCheckIn && (now - lastCheckIn) < twentyFourHours) {
+                document.getElementById('checkin-btn').textContent = "Come Back Later";
+                document.getElementById('checkin-btn').classList.add('pending');
+                document.getElementById('checkin-btn').disabled = true;
+            } else {
+                document.getElementById('checkin-btn').textContent = "Check In";
+                document.getElementById('checkin-btn').classList.remove('pending');
+                document.getElementById('checkin-btn').disabled = false;
+            }
+            
+            // Update airdrop button
+            if (userData.airdropClaimed) {
+                document.getElementById('airdrop-btn').textContent = "Received";
+                document.getElementById('airdrop-btn').classList.add('completed');
+                document.getElementById('airdrop-btn').disabled = true;
+            }
+        }
+        
+        // Generate check-in calendar
+        function generateCheckInCalendar() {
+            const calendar = document.getElementById('checkin-calendar');
+            calendar.innerHTML = '';
+            
+            const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+            const today = new Date().getDate();
+            
+            for (let i = 0; i < 7; i++) {
+                const dayElem = document.createElement('div');
+                dayElem.className = 'calendar-day';
+                dayElem.textContent = days[i];
+                
+                if (i === new Date().getDay()) {
+                    dayElem.classList.add('today');
+                }
+                
+                if (i < userData.checkInStreak) {
+                    dayElem.classList.add('checked');
+                }
+                
+                calendar.appendChild(dayElem);
             }
         }
         
@@ -417,28 +784,81 @@
                 tab.classList.add('hidden');
             });
             document.getElementById(`${tabName}-tab`).classList.remove('hidden');
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            event.currentTarget.classList.add('active');
         }
         
-        // Complete a task
-        function completeTask(taskIndex) {
+        // Join channel task
+        function joinChannel(taskIndex) {
             if (userData.completedTasks[taskIndex]) return;
             
-            userData.completedTasks[taskIndex] = true;
-            userData.balance += 2;
+            // In a real app, this would open the channel and verify subscription
+            // For demo, we'll simulate with a progress bar
+            const btn = event.target;
+            btn.textContent = "Joining...";
+            btn.disabled = true;
+            
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 20;
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    
+                    userData.completedTasks[taskIndex] = true;
+                    userData.drBalance += 2;
+                    
+                    saveUserData();
+                    updateUI();
+                    
+                    btn.textContent = "Joined";
+                    btn.classList.add('completed');
+                    
+                    showNotification('Channel joined! 2 DR Tokens added to your balance.');
+                }
+            }, 1000);
+        }
+        
+        // Daily check-in
+        function dailyCheckIn() {
+            const now = Date.now();
+            const lastCheckIn = userData.lastCheckIn;
+            const twentyFourHours = 24 * 60 * 60 * 1000;
+            
+            if (lastCheckIn && (now - lastCheckIn) < twentyFourHours) {
+                showNotification('You can check in again in ' + formatTimeRemaining(twentyFourHours - (now - lastCheckIn)));
+                return;
+            }
+            
+            userData.lastCheckIn = now;
+            userData.checkInStreak = (userData.checkInStreak + 1) % 7;
+            userData.drBalance += 2;
             
             saveUserData();
             updateUI();
+            generateCheckInCalendar();
             
-            showNotification('Task completed! 2 tokens added to your balance.');
+            showNotification('Daily check-in complete! 2 DR Tokens added to your balance.');
+        }
+        
+        // Format time remaining
+        function formatTimeRemaining(ms) {
+            const hours = Math.floor(ms / (1000 * 60 * 60));
+            const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+            
+            return `${hours}h ${minutes}m`;
         }
         
         // Handle referral
         function handleReferral(referrerId) {
             // Check if this is a new user
-            const isNewUser = !localStorage.getItem('iceberg_user_data');
+            const isNewUser = !localStorage.getItem('dr_token_user_data');
             if (isNewUser && referrerId != userData.id) {
                 // In a real app, we would send this to the backend to reward the referrer
-                showNotification('Referral accepted! Welcome to ICEBERG COIN.');
+                showNotification('Referral accepted! Welcome to DR Token Airdrop.');
                 
                 // Here we would typically make an API call to reward the referrer
                 // For demo purposes, we'll just show a notification
@@ -447,57 +867,134 @@
         
         // Copy referral link
         function copyReferralLink() {
-            const referralLink = `https://t.me/ICEBERG_COIN_Bot?startapp=ref${userData.id}`;
+            const referralLink = `https://t.me/DrToken_RoBot?startapp=ref${userData.id}`;
             navigator.clipboard.writeText(referralLink).then(() => {
                 showNotification('Referral link copied to clipboard!');
             });
         }
         
-        // Withdraw tokens
-        function withdrawTokens() {
-            const binanceId = document.getElementById('binance-id').value;
-            const amount = parseInt(document.getElementById('withdraw-amount').value);
+        // Withdraw TON
+        function withdrawTon() {
+            const address = document.getElementById('withdraw-address').value;
+            const amount = parseFloat(document.getElementById('withdraw-amount').value);
             
-            if (!binanceId) {
-                showNotification('Please enter your Binance ID');
+            if (!address) {
+                showNotification('Please enter your TON wallet address or Binance ID');
                 return;
             }
             
-            if (isNaN(amount) || amount < 10) {
-                showNotification('Minimum withdrawal amount is 10 tokens');
+            if (isNaN(amount) || amount < 0.1) {
+                showNotification('Minimum withdrawal amount is 0.1 TON');
                 return;
             }
             
-            if (amount > userData.balance) {
-                showNotification('Insufficient balance');
+            if (amount > userData.tonBalance) {
+                showNotification('Insufficient TON balance');
                 return;
             }
-            
-            // Save binance ID
-            userData.binanceId = binanceId;
             
             // Deduct from balance
-            userData.balance -= amount;
+            userData.tonBalance -= amount;
+            
+            // Add to withdrawal history
+            const now = new Date();
+            userData.withdrawalHistory.push({
+                amount: amount,
+                address: address,
+                date: now.toLocaleDateString(),
+                time: now.toLocaleTimeString(),
+                status: 'Pending'
+            });
+            
+            // Save updated data
+            saveUserData();
+            updateUI();
+            updateWithdrawalHistory();
+            
+            // In a real app, we would send this to the backend
+            simulateWithdrawalRequest(address, amount);
+            
+            showNotification(`Withdrawal request of ${amount} TON sent!`);
+        }
+        
+        // Update withdrawal history
+        function updateWithdrawalHistory() {
+            const historyList = document.getElementById('withdrawal-history-list');
+            historyList.innerHTML = '';
+            
+            if (userData.withdrawalHistory.length === 0) {
+                historyList.innerHTML = '<div style="text-align: center; padding: 20px; opacity: 0.7;">No withdrawal history yet</div>';
+                return;
+            }
+            
+            userData.withdrawalHistory.forEach((withdrawal, index) => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                
+                historyItem.innerHTML = `
+                    <div>
+                        <div>${withdrawal.amount} TON</div>
+                        <div style="font-size: 12px; opacity: 0.7;">${withdrawal.date}</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div>${withdrawal.status}</div>
+                        <div style="font-size: 12px; opacity: 0.7;">${withdrawal.time}</div>
+                    </div>
+                `;
+                
+                historyList.appendChild(historyItem);
+            });
+        }
+        
+        // Swap DR to TON
+        function swapTokens() {
+            const amount = parseInt(document.getElementById('swap-amount').value);
+            
+            if (isNaN(amount) || amount < 10) {
+                showNotification('Minimum swap amount is 10 DR Tokens');
+                return;
+            }
+            
+            if (amount > userData.drBalance) {
+                showNotification('Insufficient DR Token balance');
+                return;
+            }
+            
+            // Calculate TON amount (1 DR = 0.001 TON)
+            const tonAmount = amount * 0.001;
+            
+            // Update balances
+            userData.drBalance -= amount;
+            userData.tonBalance += tonAmount;
             
             // Save updated data
             saveUserData();
             updateUI();
             
-            // In a real app, we would send this to the backend
-            // For demo purposes, we'll simulate sending a message to admin
-            simulateWithdrawalRequest(binanceId, amount);
+            showNotification(`Swapped ${amount} DR Tokens for ${tonAmount.toFixed(4)} TON!`);
+        }
+        
+        // Update swap result
+        function updateSwapResult() {
+            const amount = parseInt(document.getElementById('swap-amount').value);
             
-            showNotification(`Withdrawal request of ${amount} tokens sent!`);
+            if (isNaN(amount) || amount < 0) {
+                document.getElementById('swap-result').value = '0 TON';
+                return;
+            }
+            
+            const tonAmount = amount * 0.001;
+            document.getElementById('swap-result').value = `${tonAmount.toFixed(4)} TON`;
         }
         
         // Simulate sending withdrawal request to admin
-        function simulateWithdrawalRequest(binanceId, amount) {
+        function simulateWithdrawalRequest(address, amount) {
             const now = new Date();
             const requestData = {
                 user: userData.username,
                 userId: userData.id,
-                method: "Binance ID",
-                binanceId: binanceId,
+                method: "TON",
+                address: address,
                 amount: amount,
                 date: now.toLocaleDateString(),
                 time: now.toLocaleTimeString()
@@ -510,12 +1007,16 @@
         
         // Save user data to localStorage
         function saveUserData() {
-            localStorage.setItem('iceberg_user_data', JSON.stringify({
-                balance: userData.balance,
+            localStorage.setItem('dr_token_user_data', JSON.stringify({
+                drBalance: userData.drBalance,
+                tonBalance: userData.tonBalance,
                 completedTasks: userData.completedTasks,
                 referralCount: userData.referralCount,
                 referralEarnings: userData.referralEarnings,
-                binanceId: userData.binanceId
+                lastCheckIn: userData.lastCheckIn,
+                checkInStreak: userData.checkInStreak,
+                withdrawalHistory: userData.withdrawalHistory,
+                airdropClaimed: userData.airdropClaimed
             }));
         }
         
