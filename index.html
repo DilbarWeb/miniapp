@@ -2,1281 +2,648 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>ICEBERG COIN</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Earning App</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
     <style>
-        /* CSS Variables for Theming */
         :root {
-            --font-family: 'Inter', sans-serif;
-            --primary-gradient: linear-gradient(135deg, #1e88e5, #0d47a1);
-            --secondary-gradient: linear-gradient(135deg, #4fc3f7, #0288d1);
-            --success-gradient: linear-gradient(135deg, #4caf50, #2e7d32);
-            --warning-gradient: linear-gradient(135deg, #ffb74d, #f57c00);
-            --bg-color-light: #e3f2fd;
-            --card-bg-light: #ffffff;
-            --text-color-light: #1565c0;
-            --subtle-text-light: #546e7a;
-            --border-color-light: #bbdefb;
-            --bg-color-dark: #0d47a1;
-            --card-bg-dark: #1e3a8a;
-            --text-color-dark: #e3f2fd;
-            --subtle-text-dark: #90caf9;
-            --border-color-dark: #1e3a8a;
-            --shadow-light: 0 4px 12px rgba(30, 136, 229, 0.2);
-            --shadow-dark: 0 4px 12px rgba(13, 71, 161, 0.4);
+            --primary-color: #007bff;
+            --secondary-color: #28a745;
+            --background-color: #f0f2f5;
+            --card-background: #ffffff;
+            --text-color: #333333;
+            --light-text-color: #888888;
+            --border-color: #e0e0e0;
         }
 
-        /* Base Styles */
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-        }
-        
         body {
-            font-family: var(--font-family);
-            transition: background-color 0.3s, color 0.3s;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            margin: 0;
+            padding-bottom: 60px;
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 450px;
+            margin: 0 auto;
+            background-color: var(--card-background);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             min-height: 100vh;
-            padding-bottom: 80px;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Theme Styles */
-        body.light-theme { 
-            background-color: var(--bg-color-light); 
-            color: var(--text-color-light); 
-        }
-        
-        body.dark-theme { 
-            background-color: var(--bg-color-dark); 
-            color: var(--text-color-dark); 
-        }
-        
-        #app { 
-            max-width: 500px; 
-            margin: 0 auto; 
-            padding: 0 15px;
-        }
-
-        /* Header Styles */
-        .app-header {
-            padding: 20px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
+        .header {
             display: flex;
             align-items: center;
-            gap: 10px;
+            padding: 10px 15px;
+            background-color: var(--card-background);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         
-        .logo-icon {
+        .header-profile-pic {
             width: 40px;
             height: 40px;
-            background: var(--primary-gradient);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 20px;
-        }
-        
-        .logo-text {
-            font-weight: 700;
-            font-size: 1.4rem;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .theme-toggle {
-            width: 48px;
-            height: 28px;
-            border-radius: 28px;
-            position: relative;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        
-        .light-theme .theme-toggle {
-            background-color: #bbdefb;
-        }
-        
-        .dark-theme .theme-toggle {
-            background-color: #1e3a8a;
-        }
-        
-        .toggle-thumb {
-            width: 24px;
-            height: 24px;
             border-radius: 50%;
-            position: absolute;
-            top: 2px;
-            transition: left 0.3s, background-color 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-        }
-        
-        .light-theme .toggle-thumb {
-            left: 2px;
-            background-color: #ffffff;
-            color: #ffb74d;
-        }
-        
-        .dark-theme .toggle-thumb {
-            left: 22px;
-            background-color: #0d47a1;
-            color: #ffb74d;
+            margin-right: 12px;
+            border: 2px solid var(--primary-color);
+            background-color: #eee;
+            object-fit: cover;
         }
 
-        /* Profile Card */
-        .profile-card {
-            border-radius: 20px;
+        .header-user-info h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .header-user-info p {
+            margin: 0;
+            font-size: 12px;
+            color: var(--light-text-color);
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .card {
+            background-color: var(--background-color);
+            border-radius: 12px;
             padding: 20px;
             margin-bottom: 20px;
-            transition: background-color 0.3s, box-shadow 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            border: 2px solid transparent;
-            background: 
-                linear-gradient(var(--card-bg-light), var(--card-bg-light)) padding-box,
-                var(--primary-gradient) border-box;
-        }
-        
-        .dark-theme .profile-card {
-            background: 
-                linear-gradient(var(--card-bg-dark), var(--card-bg-dark)) padding-box,
-                var(--primary-gradient) border-box;
-        }
-        
-        #user-photo {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid transparent;
-            background: var(--primary-gradient) border-box;
-            -webkit-mask: 
-                linear-gradient(#fff 0 0) padding-box, 
-                linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-        }
-        
-        .user-info {
-            flex: 1;
-        }
-        
-        .user-info h1 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .verified-icon {
-            color: #4fc3f7;
-            font-size: 16px;
-        }
-        
-        .balance-display {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-weight: 500;
-        }
-        
-        .light-theme .balance-display {
-            color: var(--subtle-text-light);
-        }
-        
-        .dark-theme .balance-display {
-            color: var(--subtle-text-dark);
-        }
-        
-        .balance-amount {
-            font-weight: 700;
-            font-size: 1.1rem;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            border: 1px solid var(--border-color);
         }
 
-        /* Stats Cards */
-        .stats-grid {
+        .card-header {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .card-header .material-icons, .card-header .fa-solid {
+            margin-right: 8px;
+            color: var(--primary-color);
+        }
+
+        .balance-card .balance {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin: 10px 0;
+        }
+
+        .card-label {
+            font-size: 14px;
+            color: var(--light-text-color);
+        }
+
+        .dashboard-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
-            margin-bottom: 20px;
+            margin-top: 20px;
         }
-        
-        .stat-card {
-            border-radius: 16px;
+
+        .dashboard-item {
+            background-color: var(--card-background);
+            border-radius: 12px;
             padding: 20px;
-            transition: background-color 0.3s, box-shadow 0.3s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             text-align: center;
-            border: 2px solid transparent;
-            background: 
-                linear-gradient(var(--card-bg-light), var(--card-bg-light)) padding-box,
-                var(--secondary-gradient) border-box;
-        }
-        
-        .dark-theme .stat-card {
-            background: 
-                linear-gradient(var(--card-bg-dark), var(--card-bg-dark)) padding-box,
-                var(--secondary-gradient) border-box;
-        }
-        
-        .stat-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 10px;
-            font-size: 18px;
-        }
-        
-        .stat-icon.ads {
-            background: var(--secondary-gradient);
-            color: white;
-        }
-        
-        .stat-icon.referrals {
-            background: var(--success-gradient);
-            color: white;
-        }
-        
-        .stat-card h3 {
-            font-size: 0.85rem;
-            font-weight: 500;
-            margin-bottom: 8px;
-        }
-        
-        .light-theme .stat-card h3 {
-            color: var(--subtle-text-light);
-        }
-        
-        .dark-theme .stat-card h3 {
-            color: var(--subtle-text-dark);
-        }
-        
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-        
-        .light-theme .stat-value {
-            color: var(--text-color-light);
-        }
-        
-        .dark-theme .stat-value {
-            color: var(--text-color-dark);
         }
 
-        /* Task Cards */
-        .task-card {
-            border-radius: 16px;
-            padding: 20px;
-            transition: background-color 0.3s, box-shadow 0.3s;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            border: 2px solid transparent;
-            background: 
-                linear-gradient(var(--card-bg-light), var(--card-bg-light)) padding-box,
-                var(--secondary-gradient) border-box;
-        }
-        
-        .dark-theme .task-card {
-            background: 
-                linear-gradient(var(--card-bg-dark), var(--card-bg-dark)) padding-box,
-                var(--secondary-gradient) border-box;
-        }
-        
-        .task-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            flex-shrink: 0;
-        }
-        
-        .task-icon.ad {
-            background: var(--secondary-gradient);
-            color: white;
-        }
-        
-        .task-icon.channel {
-            background: var(--warning-gradient);
-            color: white;
-        }
-        
-        .task-icon.group {
-            background: var(--success-gradient);
-            color: white;
-        }
-        
-        .task-content {
-            flex: 1;
-        }
-        
-        .task-content h3 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        
-        .task-content p {
-            font-size: 0.85rem;
-            font-weight: 400;
-        }
-        
-        .light-theme .task-content p {
-            color: var(--subtle-text-light);
-        }
-        
-        .dark-theme .task-content p {
-            color: var(--subtle-text-dark);
-        }
-        
-        .task-reward {
-            font-weight: 700;
-            font-size: 0.9rem;
-            margin-top: 5px;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .task-action {
-            flex-shrink: 0;
+        .dashboard-item .material-icons {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: var(--primary-color);
         }
 
-        /* Buttons */
-        .btn {
-            padding: 12px 20px;
-            border-radius: 12px;
+        .dashboard-item-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .dashboard-item-label {
+            font-size: 12px;
+            color: var(--light-text-color);
+        }
+
+        .primary-btn, .secondary-btn {
             border: none;
-            font-family: var(--font-family);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
             font-weight: 600;
-            font-size: 0.9rem;
             cursor: pointer;
-            transition: all 0.2s;
+            width: 100%;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-top: 20px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
         }
         
-        .btn-primary {
-            background: var(--primary-gradient);
-            color: white;
+        .primary-btn .material-icons, .secondary-btn .material-icons {
+            font-size: 20px;
         }
-        
-        .btn-primary:hover {
-            opacity: 0.9;
+
+        .primary-btn {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+
+        .primary-btn:hover {
+            background-color: #0056b3;
             transform: translateY(-2px);
-            box-shadow: var(--shadow-light);
         }
         
-        .dark-theme .btn-primary:hover {
-            box-shadow: var(--shadow-dark);
-        }
-        
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-        
-        .btn-secondary {
-            background: transparent;
-            border: 2px solid transparent;
-            background-clip: padding-box;
-            position: relative;
-        }
-        
-        .light-theme .btn-secondary {
-            color: var(--text-color-light);
-        }
-        
-        .dark-theme .btn-secondary {
-            color: var(--text-color-dark);
-        }
-        
-        .btn-secondary::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 12px;
-            padding: 2px;
-            background: var(--primary-gradient);
-            -webkit-mask: 
-                linear-gradient(#fff 0 0) content-box, 
-                linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-        }
-        
-        .btn:disabled {
-            opacity: 0.6;
+        .primary-btn:disabled {
+            background-color: #ccc;
             cursor: not-allowed;
-            transform: none !important;
-        }
-        
-        .btn-sm {
-            padding: 8px 16px;
-            font-size: 0.8rem;
-        }
-        
-        .btn-loading .btn-text {
-            visibility: hidden;
-        }
-        
-        .btn-loading::after {
-            content: "";
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            border: 2px solid transparent;
-            border-top-color: currentColor;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            transform: none;
         }
 
-        /* Referral Section */
-        .referral-section {
-            border-radius: 16px;
-            padding: 20px;
-            transition: background-color 0.3s, box-shadow 0.3s;
-            margin-bottom: 20px;
-            text-align: center;
-            border: 2px solid transparent;
-            background: 
-                linear-gradient(var(--card-bg-light), var(--card-bg-light)) padding-box,
-                var(--primary-gradient) border-box;
-        }
-        
-        .dark-theme .referral-section {
-            background: 
-                linear-gradient(var(--card-bg-dark), var(--card-bg-dark)) padding-box,
-                var(--primary-gradient) border-box;
-        }
-        
-        .referral-section h3 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        
-        .referral-section p {
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-        }
-        
-        .light-theme .referral-section p {
-            color: var(--subtle-text-light);
-        }
-        
-        .dark-theme .referral-section p {
-            color: var(--subtle-text-dark);
-        }
-        
-        .referral-input {
-            position: relative;
-            margin-bottom: 15px;
-        }
-        
-        #referral-link {
-            width: 100%;
-            padding: 12px 45px 12px 15px;
-            border-radius: 12px;
-            border: 1px dashed;
-            font-family: var(--font-family);
-            font-size: 0.85rem;
-            background-color: transparent;
-        }
-        
-        .light-theme #referral-link {
-            border-color: #bbdefb;
-            color: var(--text-color-light);
-        }
-        
-        .dark-theme #referral-link {
-            border-color: #1e3a8a;
-            color: var(--text-color-dark);
-        }
-        
-        .copy-btn {
-            position: absolute;
-            right: 5px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 35px;
-            height: 35px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--primary-gradient);
-            color: white;
-            border: none;
-            cursor: pointer;
+        .secondary-btn {
+            background-color: #f0f0f0;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
         }
 
-        /* Withdraw Form */
-        .form-group {
-            margin-bottom: 20px;
+        .secondary-btn:hover {
+            background-color: #e0e0e0;
+            transform: translateY(-2px);
         }
         
-        .form-group label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border-radius: 12px;
-            border: 1px solid;
-            font-family: var(--font-family);
-            font-size: 0.9rem;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            background-color: transparent;
-        }
-        
-        .light-theme .form-control {
-            border-color: var(--border-color-light);
-            color: var(--text-color-light);
-        }
-        
-        .dark-theme .form-control {
-            border-color: var(--border-color-dark);
-            color: var(--text-color-dark);
-        }
-        
-        .light-theme .form-control:focus {
-            outline: none;
-            border-color: #1e88e5;
-            box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.15);
-        }
-        
-        .dark-theme .form-control:focus {
-            outline: none;
-            border-color: #0d47a1;
-            box-shadow: 0 0 0 3px rgba(13, 71, 161, 0.2);
+        .progress-bar-container {
+            height: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 10px;
         }
 
-        /* Bottom Navigation */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            max-width: 500px;
-            margin: 0 auto;
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0;
+            transition: width 0.5s ease-in-out;
+        }
+
+        .footer-nav {
             display: flex;
             justify-content: space-around;
-            padding: 12px 0;
-            border-top: 1px solid;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            align-items: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 450px;
+            background-color: var(--card-background);
+            border-top: 1px solid var(--border-color);
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
         }
-        
-        .light-theme .bottom-nav {
-            background-color: rgba(227, 242, 253, 0.8);
-            border-top-color: var(--border-color-light);
-        }
-        
-        .dark-theme .bottom-nav {
-            background-color: rgba(13, 71, 161, 0.8);
-            border-top-color: var(--border-color-dark);
-        }
-        
-        .nav-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
+
+        .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 5px 10px;
-            font-family: var(--font-family);
-            font-size: 0.7rem;
-            transition: color 0.2s;
-            flex-grow: 1;
-            border-radius: 10px;
-        }
-        
-        .light-theme .nav-btn {
-            color: var(--subtle-text-light);
-        }
-        
-        .dark-theme .nav-btn {
-            color: var(--subtle-text-dark);
-        }
-        
-        .nav-btn i {
-            font-size: 1.4rem;
-            margin-bottom: 3px;
-            transition: transform 0.2s;
-        }
-        
-        .nav-btn.active {
-            font-weight: 600;
-        }
-        
-        .light-theme .nav-btn.active {
-            color: #1e88e5;
-        }
-        
-        .dark-theme .nav-btn.active {
-            color: #4fc3f7;
-        }
-        
-        .nav-btn.active i {
-            transform: translateY(-2px);
+            padding: 10px;
+            cursor: pointer;
+            color: var(--light-text-color);
+            transition: color 0.3s;
+            flex: 1;
         }
 
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            justify-content: center;
-            align-items: center;
+        .nav-item .material-icons, .nav-item .fa-solid {
+            font-size: 24px;
+            margin-bottom: 5px;
         }
-        
-        .modal-content {
-            width: 80%;
-            max-width: 300px;
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-        }
-        
-        .light-theme .modal-content {
-            background-color: var(--card-bg-light);
-        }
-        
-        .dark-theme .modal-content {
-            background-color: var(--card-bg-dark);
-        }
-        
-        .loader {
-            border: 3px solid transparent;
-            border-radius: 50%;
-            border-top: 3px solid;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
-        }
-        
-        .light-theme .loader {
-            border-top-color: #1e88e5;
-        }
-        
-        .dark-theme .loader {
-            border-top-color: #0d47a1;
-        }
-        
-        .modal p {
+
+        .nav-item-label {
+            font-size: 12px;
             font-weight: 500;
         }
 
-        /* Page Transitions */
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+
         .page {
             display: none;
-            animation: fadeIn 0.3s ease-in-out;
+            animation: fadeIn 0.5s;
         }
-        
+
         .page.active {
             display: block;
         }
         
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
-
-        /* Section Headers */
-        .section-header {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin: 20px 0 15px;
+        
+        /* Profile & Withdraw Page Styles */
+        .profile-info, .withdraw-form-container {
+            background-color: var(--card-background);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .profile-pic-container {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #eee;
+            margin: 0 auto 15px;
+            overflow: hidden;
+            border: 3px solid var(--primary-color);
+        }
+        .profile-pic {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-info-row {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 10px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
         }
-        
-        .section-header i {
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+        .profile-info-row:last-child {
+            border-bottom: none;
         }
-        
-        /* Animation for coins */
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
-            100% { transform: translateY(0px); }
+        .profile-label { font-size: 16px; color: var(--text-color); }
+        .profile-value { font-size: 16px; font-weight: 600; color: var(--primary-color); }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
         }
-        
-        .balance-amount {
-            animation: float 3s ease-in-out infinite;
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            box-sizing: border-box;
+            font-size: 16px;
         }
     </style>
 </head>
-<body class="light-theme">
-
-    <div id="app">
-        <header class="app-header">
-            <div class="logo">
-                <div class="logo-icon">
-                    <i class="fas fa-mountain"></i>
-                </div>
-                <div class="logo-text">ICEBERG COIN</div>
-            </div>
-            <div class="theme-toggle" id="theme-toggle">
-                <div class="toggle-thumb">
-                    <i class="fas" id="theme-icon"></i>
-                </div>
+<body>
+    <div class="container">
+        <header class="header">
+            <img id="header-profile-pic" src="https://via.placeholder.com/40" alt="Profile" class="header-profile-pic" onerror="this.src='https://via.placeholder.com/40';">
+            <div class="header-user-info">
+                <h3 id="header-user-name">User</h3>
+                <p>Welcome to the Earning App!</p>
             </div>
         </header>
 
-        <div class="profile-card">
-            <img id="user-photo" src="" alt="User Photo">
-            <div class="user-info">
-                <h1 id="user-name">Loading... <i class="fas fa-check-circle verified-icon"></i></h1>
-                <div class="balance-display">
-                    <span>Balance:</span>
-                    <span class="balance-amount" id="user-points">0</span>
-                    <span>ICEBERG</span>
-                </div>
-            </div>
-        </div>
-
-        <main id="main-content">
-            <!-- Home Page -->
-            <div id="home-page" class="page active">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon ads">
-                            <i class="fas fa-play-circle"></i>
-                        </div>
-                        <h3>Daily Ads Watched</h3>
-                        <p class="stat-value"><span id="daily-ads-watched">0</span>/50</p>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon referrals">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <h3>Total Referrals</h3>
-                        <p class="stat-value" id="referral-count">0</p>
-                    </div>
-                </div>
-
-                <div class="referral-section">
-                    <h3>Refer & Earn More!</h3>
-                    <p>Share your link to get bonus points</p>
-                    <div class="referral-input">
-                        <input type="text" id="referral-link" readonly>
-                        <button class="copy-btn" id="copy-ref-link-btn">
-                            <i class="fas fa-copy"></i>
-                        </button>
-                    </div>
-                    <button class="btn btn-secondary">
-                        <i class="fas fa-share-alt"></i>
-                        <span>Share Referral Link</span>
+        <main class="content">
+            <section id="home-page" class="page active">
+                <div class="card balance-card">
+                    <h2 class="card-header">
+                        <span class="material-icons">account_balance_wallet</span>
+                        My Balance
+                    </h2>
+                    <div class="balance" id="current-balance">BDT 0.00</div>
+                    <button class="primary-btn" id="start-earning-btn">
+                        Start Earning Now <span class="material-icons">arrow_forward</span>
+                    </button>
+                    <button class="secondary-btn" id="withdraw-btn">
+                        Withdraw <span class="material-icons">currency_exchange</span>
                     </button>
                 </div>
-
-                <h2 class="section-header"><i class="fas fa-tasks"></i> Quick Tasks</h2>
-                
-                <div class="task-card">
-                    <div class="task-icon ad">
-                        <i class="fas fa-video"></i>
+                <div class="dashboard-grid">
+                    <div class="dashboard-item">
+                        <span class="material-icons" style="color: var(--secondary-color);">attach_money</span>
+                        <div class="dashboard-item-value" id="total-earnings">BDT 0.00</div>
+                        <div class="dashboard-item-label">Total Earnings</div>
                     </div>
-                    <div class="task-content">
-                        <h3>Watch Rewarded Ad</h3>
-                        <p>Earn 0.25 ICEBERG for every ad</p>
-                        <div class="task-reward">+0.25 ICEBERG</div>
-                    </div>
-                    <div class="task-action">
-                        <button id="watch-ad-btn" class="btn btn-primary btn-sm">
-                            <span class="btn-text">Watch</span>
-                        </button>
+                    <div class="dashboard-item">
+                        <span class="material-icons" style="color: #ffc107;">visibility</span>
+                        <div class="dashboard-item-value" id="ads-watched">0</div>
+                        <div class="dashboard-item-label">Ads Watched</div>
                     </div>
                 </div>
-
-                <div class="task-card">
-                    <div class="task-icon channel">
-                        <i class="fab fa-telegram"></i>
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-header">
+                        <span class="material-icons">group</span>
+                        Total Referrals
                     </div>
-                    <div class="task-content">
-                        <h3>Join Our Channel</h3>
-                        <p>Get 3 ICEBERG bonus</p>
-                        <div class="task-reward">+3 ICEBERG</div>
-                    </div>
-                    <div class="task-action">
-                        <button id="join-channel-btn" class="btn btn-primary btn-sm">
-                            <span class="btn-text">Join</span>
-                        </button>
-                    </div>
+                    <div class="dashboard-item-value" id="total-referrals">0</div>
                 </div>
+            </section>
 
-                <div class="task-card">
-                    <div class="task-icon group">
-                        <i class="fas fa-users"></i>
+            <section id="earn-page" class="page">
+                <div class="card">
+                    <h2 class="card-header">
+                        <span class="material-icons">monetization_on</span>
+                        Earn Rewards
+                    </h2>
+                    <div style="text-align: left; margin-bottom: 10px;">
+                        <div style="font-size: 14px; font-weight: 600;">Today's Progress:</div>
+                        <div style="font-size: 12px; color: var(--light-text-color);" id="ad-progress-text">Completed: 0 / 50</div>
                     </div>
-                    <div class="task-content">
-                        <h3>Join Our Group</h3>
-                        <p>Get 2 ICEBERG bonus</p>
-                        <div class="task-reward">+2 ICEBERG</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="ad-progress-bar"></div>
                     </div>
-                    <div class="task-action">
-                        <button id="join-group-btn" class="btn btn-primary btn-sm">
-                            <span class="btn-text">Join</span>
-                        </button>
-                    </div>
+                    <button class="primary-btn" id="watch-ad-btn">
+                        বিজ্ঞাপন দেখুন ও আয় করুন
+                        <span class="material-icons">play_circle_filled</span>
+                    </button>
                 </div>
-            </div>
-
-            <!-- Tasks Page -->
-            <div id="tasks-page" class="page">
-                <h2 class="section-header"><i class="fas fa-tasks"></i> Complete Tasks</h2>
-                
-                <div class="task-card">
-                    <div class="task-icon ad">
-                        <i class="fas fa-video"></i>
-                    </div>
-                    <div class="task-content">
-                        <h3>Watch Rewarded Ad</h3>
-                        <p>Earn 0.25 ICEBERG for every ad</p>
-                        <div class="task-reward">+0.25 ICEBERG</div>
-                    </div>
-                    <div class="task-action">
-                        <button id="watch-ad-btn-2" class="btn btn-primary btn-sm">
-                            <span class="btn-text">Watch</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="task-card">
-                    <div class="task-icon channel">
-                        <i class="fab fa-telegram"></i>
-                    </div>
-                    <div class="task-content">
-                        <h3>Join Our Channel</h3>
-                        <p>Get 3 ICEBERG bonus</p>
-                        <div class="task-reward">+3 ICEBERG</div>
-                    </div>
-                    <div class="task-action">
-                        <button id="join-channel-btn-2" class="btn btn-primary btn-sm">
-                            <span class="btn-text">Join</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="task-card">
-                    <div class="task-icon group">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="task-content">
-                        <h3>Join Our Group</h3>
-                        <p>Get 2 ICEBERG bonus</p>
-                        <div class="task-reward">+2 ICEBERG</div>
-                    </div>
-                    <div class="task-action">
-                        <button id="join-group-btn-2" class="btn btn-primary btn-sm">
-                            <span class="btn-text">Join</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
+            </section>
             
-            <!-- Withdraw Page -->
-            <div id="withdraw-page" class="page">
-                <h2 class="section-header"><i class="fas fa-wallet"></i> Withdraw</h2>
-                
-                <div class="referral-section">
-                    <h3>Withdraw Your Earnings</h3>
-                    <p>Minimum 30 ICEBERG required to withdraw</p>
+            <section id="withdraw-page" class="page">
+                <div class="card">
+                    <h2 class="card-header">
+                        <span class="material-icons">currency_exchange</span>
+                        Withdraw Your Earnings
+                    </h2>
+                    <div class="balance" id="withdraw-balance-display">BDT 0.00</div>
+                    <div class="card-label">Current Balance</div>
+                    <div style="margin-top: 20px; font-size: 14px; color: var(--light-text-color);">
+                        Minimum withdraw amount is BDT 100.00
+                    </div>
                 </div>
+                
+                <div class="withdraw-form-container">
+                    <h4 style="margin-top: 0; text-align: left;">Withdraw Details</h4>
+                    <form id="withdraw-form">
+                        <div class="form-group">
+                            <label for="withdraw-method">Withdraw Method</label>
+                            <select id="withdraw-method" required>
+                                <option value="" disabled selected>Select a method</option>
+                                <option value="bkash">bKash</option>
+                                <option value="binance">Binance</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="account-number">Account Number</label>
+                            <input type="text" id="account-number" placeholder="Enter bKash/Binance account number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="withdraw-amount">Amount (BDT)</label>
+                            <input type="number" id="withdraw-amount" placeholder="Enter amount to withdraw" required min="100">
+                        </div>
+                        <button type="submit" class="primary-btn" id="submit-withdraw-btn">
+                            Submit Withdraw Request
+                        </button>
+                    </form>
+                </div>
+            </section>
 
-                <form id="withdraw-form">
-                    <div class="form-group">
-                        <label for="withdraw-method">Withdrawal Method:</label>
-                        <select id="withdraw-method" class="form-control" required>
-                            <option value="Binance">Binance</option>
-                            <option value="JazzCash">JazzCash</option>
-                            <option value="EasyPaisa">EasyPaisa</option>
-                        </select>
+            <section id="profile-page" class="page">
+                <div class="card" style="padding: 30px;">
+                    <div class="profile-pic-container">
+                        <img id="profile-page-pic" src="https://via.placeholder.com/80" alt="Profile Picture" class="profile-pic" onerror="this.src='https://via.placeholder.com/80';">
                     </div>
-                    <div class="form-group">
-                        <label for="account-number">Account Number:</label>
-                        <input type="text" id="account-number" class="form-control" placeholder="Enter your account number" required>
+                    <h3 id="profile-user-name" style="margin: 0; font-weight: 600;">User</h3>
+                    <p id="profile-user-username" style="margin: 5px 0 0; color: var(--light-text-color); font-size: 14px;">@telegram</p>
+                </div>
+                <div class="profile-info">
+                    <h4 style="margin-top: 0; text-align:left;">My Profile</h4>
+                    <div class="profile-info-row">
+                        <span class="profile-label">Current Balance</span>
+                        <span class="profile-value" id="profile-balance">BDT 0.00</span>
                     </div>
-                    <div class="form-group">
-                        <label for="amount">Amount to Withdraw (ICEBERG):</label>
-                        <input type="number" id="amount" class="form-control" placeholder="e.g., 30" min="30" required>
+                    <div class="profile-info-row">
+                        <span class="profile-label">Total Earnings</span>
+                        <span class="profile-value" id="profile-earnings">BDT 0.00</span>
                     </div>
-                    <button type="submit" id="withdraw-submit-btn" class="btn btn-primary" style="width: 100%;">
-                        <span class="btn-text">Submit Request</span>
-                    </button>
-                </form>
-            </div>
+                    <div class="profile-info-row">
+                        <span class="profile-label">Total Ads Watched</span>
+                        <span class="profile-value" id="profile-ads-watched">0</span>
+                    </div>
+                    <div class="profile-info-row">
+                        <span class="profile-label">Total Referrals</span>
+                        <span class="profile-value" id="profile-referrals">0</span>
+                    </div>
+                </div>
+            </section>
         </main>
 
-        <nav class="bottom-nav">
-            <button class="nav-btn active" data-page="home-page">
-                <i class="fas fa-home"></i>
-                <span>Home</span>
-            </button>
-            <button class="nav-btn" data-page="tasks-page">
-                <i class="fas fa-tasks"></i>
-                <span>Tasks</span>
-            </button>
-            <button class="nav-btn" data-page="withdraw-page">
-                <i class="fas fa-wallet"></i>
-                <span>Withdraw</span>
-            </button>
+        <nav class="footer-nav">
+            <div class="nav-item active" data-page="home-page">
+                <span class="material-icons">home</span>
+                <span class="nav-item-label">Home</span>
+            </div>
+            <div class="nav-item" data-page="earn-page">
+                <span class="material-icons">play_circle</span>
+                <span class="nav-item-label">Earn</span>
+            </div>
+            <div class="nav-item" data-page="withdraw-page">
+                <span class="fa-solid fa-credit-card"></span>
+                <span class="nav-item-label">Withdraw</span>
+            </div>
+            <div class="nav-item" data-page="profile-page">
+                <span class="material-icons">person</span>
+                <span class="nav-item-label">Profile</span>
+            </div>
         </nav>
     </div>
 
-    <div id="loading-modal" class="modal">
-        <div class="modal-content">
-            <div class="loader"></div>
-            <p>Loading Ad...</p>
-        </div>
-    </div>
-    
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- GigaPub Ad Script -->
-    <script src="https://ad.gigapub.tech/script?id=3055"></script>
-    
+    <!-- 
+        =====================================================================
+        ====== অ্যাড নেটওয়ার্কের SDK বসানোর জায়গা (প্রথম অংশ) ======
+        =====================================================================
+        এখানে আপনার পছন্দের অ্যাড নেটওয়ার্কের দেওয়া <script> ট্যাগটি বসাতে হবে।
+        নিচের লাইনটি একটি উদাহরণ মাত্র। আপনি এটিকে পরিবর্তন করে আপনার নিজের কোড বসাবেন।
+    -->
+    <script src='//libtl.com/sdk.js' data-zone='9702412' data-sdk='show_9702412'></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const tg = window.Telegram.WebApp;
+            tg.ready();
+            tg.expand();
+            const userData = tg.initDataUnsafe.user;
+            const defaultProfilePic40 = 'https://via.placeholder.com/40';
+            const defaultProfilePic80 = 'https://via.placeholder.com/80';
 
-            // --- Configuration ---
-            const BOT_TOKEN = "8407503295:AAHkzDQXa1Dgk7KaZ_awL8e1SJGkc77waXs";
-            const BOT_USERNAME = "ICEBERG_COIN_Bot"; // Your bot's username
-            const ADMIN_CHAT_ID = "6096328186";
-            const CHANNEL_LINK = "https://t.me/PenguEarnCommunity";
-            const GROUP_LINK = "https://t.me/PenguEarnCommunity";
-            const DAILY_AD_LIMIT = 50;
-            const POINTS_PER_AD = 0.25;
-            const CHANNEL_JOIN_BONUS = 3;
-            const GROUP_JOIN_BONUS = 2;
-            const MIN_WITHDRAW_POINTS = 30;
-
-            // --- DOM Elements ---
-            const userPhotoElem = document.getElementById('user-photo');
-            const userNameElem = document.getElementById('user-name');
-            const userPointsElem = document.getElementById('user-points');
-            const dailyAdsWatchedElem = document.getElementById('daily-ads-watched');
-            const referralCountElem = document.getElementById('referral-count');
+            const navItems = document.querySelectorAll('.nav-item');
+            const pages = document.querySelectorAll('.page');
             const watchAdBtn = document.getElementById('watch-ad-btn');
-            const watchAdBtn2 = document.getElementById('watch-ad-btn-2');
-            const joinChannelBtn = document.getElementById('join-channel-btn');
-            const joinChannelBtn2 = document.getElementById('join-channel-btn-2');
-            const joinGroupBtn = document.getElementById('join-group-btn');
-            const joinGroupBtn2 = document.getElementById('join-group-btn-2');
+            const startEarningBtn = document.getElementById('start-earning-btn');
+            const withdrawBtn = document.getElementById('withdraw-btn');
             const withdrawForm = document.getElementById('withdraw-form');
-            const withdrawSubmitBtn = document.getElementById('withdraw-submit-btn');
-            const referralLinkElem = document.getElementById('referral-link');
-            const copyRefLinkBtn = document.getElementById('copy-ref-link-btn');
-            const loadingModal = document.getElementById('loading-modal');
-            const themeToggle = document.getElementById('theme-toggle');
-            const themeIcon = document.getElementById('theme-icon');
 
-            // --- State Management ---
-            let userState = {
-                points: 0,
-                dailyAdWatchCount: 0,
-                lastAdWatchDate: null,
-                referrals: [],
-                hasJoinedChannel: false,
-                hasJoinedGroup: false,
-                userId: null
-            };
+            const DAILY_ADS_LIMIT = 50;
+            const AD_REWARD = 0.02; // BDT per ad
+            const MIN_WITHDRAW_AMOUNT = 100;
 
-            const saveState = () => {
-                if(userState.userId) {
-                    localStorage.setItem(`userState_${userState.userId}`, JSON.stringify(userState));
+            if (!localStorage.getItem('earnings')) {
+                localStorage.setItem('earnings', '0');
+                localStorage.setItem('adsWatched', '0');
+                localStorage.setItem('totalReferrals', '0');
+            }
+
+            function updateUI() {
+                const earnings = parseFloat(localStorage.getItem('earnings'));
+                const adsWatched = parseInt(localStorage.getItem('adsWatched'));
+                const referrals = parseInt(localStorage.getItem('totalReferrals'));
+
+                const formattedEarnings = earnings.toFixed(2);
+
+                if(userData) {
+                    const fullName = `${userData.first_name || ''} ${userData.last_name || ''}`.trim();
+                    document.getElementById('header-user-name').textContent = fullName || 'User';
+                    document.getElementById('profile-user-name').textContent = fullName || 'User';
+                    document.getElementById('profile-user-username').textContent = userData.username ? `@${userData.username}` : 'No username';
+                    
+                    // ======================================================================
+                    // ====== প্রোফাইল ছবি দেখানোর কোড (CORS সমস্যার সমাধানসহ) ======
+                    // ======================================================================
+                    if (userData.photo_url) {
+                        // টেলিগ্রামের CORS পলিসি এড়ানোর জন্য একটি প্রক্সি ব্যবহার করা হয়েছে।
+                        const proxyUrl = 'https://api.allorigins.win/raw?url=';
+                        const proxiedPhotoUrl = `${proxyUrl}${encodeURIComponent(userData.photo_url)}`;
+                        
+                        document.getElementById('header-profile-pic').src = proxiedPhotoUrl;
+                        document.getElementById('profile-page-pic').src = proxiedPhotoUrl;
+                    } else {
+                        document.getElementById('header-profile-pic').src = defaultProfilePic40;
+                        document.getElementById('profile-page-pic').src = defaultProfilePic80;
+                    }
                 }
-            };
 
-            const loadState = (userId) => {
-                const savedState = localStorage.getItem(`userState_${userId}`);
-                if (savedState) {
-                    userState = JSON.parse(savedState);
-                    if (userState.hasJoinedGroup === undefined) userState.hasJoinedGroup = false;
-                }
-            };
+                // Update Home Page
+                document.getElementById('current-balance').textContent = `BDT ${formattedEarnings}`;
+                document.getElementById('total-earnings').textContent = `BDT ${formattedEarnings}`;
+                document.getElementById('ads-watched').textContent = adsWatched;
+                document.getElementById('total-referrals').textContent = referrals;
+
+                // Update Earn Page
+                document.getElementById('ad-progress-text').textContent = `Completed: ${adsWatched} / ${DAILY_ADS_LIMIT}`;
+                const progress = (adsWatched / DAILY_ADS_LIMIT) * 100;
+                document.getElementById('ad-progress-bar').style.width = `${progress}%`;
+                
+                watchAdBtn.disabled = adsWatched >= DAILY_ADS_LIMIT;
+                watchAdBtn.querySelector('span').textContent = adsWatched >= DAILY_ADS_LIMIT ? 'cancel' : 'play_circle_filled';
+                if(adsWatched >= DAILY_ADS_LIMIT) watchAdBtn.childNodes[0].nodeValue = "দৈনিক সীমা পৌঁছে গেছে ";
+
+                // Update Withdraw Page
+                document.getElementById('withdraw-balance-display').textContent = `BDT ${formattedEarnings}`;
+                document.getElementById('submit-withdraw-btn').disabled = earnings < MIN_WITHDRAW_AMOUNT;
+                if(earnings < MIN_WITHDRAW_AMOUNT) document.getElementById('submit-withdraw-btn').textContent = `ন্যূনতম BDT ${MIN_WITHDRAW_AMOUNT} প্রয়োজন`;
+
+                // Update Profile Page
+                document.getElementById('profile-balance').textContent = `BDT ${formattedEarnings}`;
+                document.getElementById('profile-earnings').textContent = `BDT ${formattedEarnings}`;
+                document.getElementById('profile-ads-watched').textContent = adsWatched;
+                document.getElementById('profile-referrals').textContent = referrals;
+            }
+
+            function showPage(targetPageId) {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                pages.forEach(page => page.classList.remove('active'));
+
+                const activeNavItem = document.querySelector(`[data-page="${targetPageId}"]`);
+                if (activeNavItem) activeNavItem.classList.add('active');
+                
+                const activePage = document.getElementById(targetPageId);
+                if (activePage) activePage.classList.add('active');
+            }
+
+            navItems.forEach(item => {
+                item.addEventListener('click', () => showPage(item.getAttribute('data-page')));
+            });
+
+            startEarningBtn.addEventListener('click', () => showPage('earn-page'));
+            withdrawBtn.addEventListener('click', () => showPage('withdraw-page'));
             
-            // --- Core Functions ---
-            const initApp = () => {
-                tg.ready();
-                tg.expand();
-                
-                // Set initial theme based on Telegram theme
-                setTheme(tg.colorScheme);
-                
-                const user = tg.initDataUnsafe.user;
-                if (!user || !user.id) {
-                    tg.showAlert("Could not verify user. Please open this app through Telegram.", () => tg.close());
+            watchAdBtn.addEventListener('click', () => {
+                if (parseInt(localStorage.getItem('adsWatched')) >= DAILY_ADS_LIMIT) {
+                    tg.showAlert('আপনার দৈনিক বিজ্ঞাপনের সীমা পৌঁছে গেছে।');
                     return;
                 }
-                
-                userState.userId = user.id;
-                loadState(user.id);
-                
-                const today = new Date().toISOString().slice(0, 10);
-                if (userState.lastAdWatchDate !== today) {
-                    userState.dailyAdWatchCount = 0;
-                    userState.lastAdWatchDate = today;
-                }
-                
-                updateUI();
-                setupNavigation();
-                setupEventListeners();
-                saveState();
-            };
-            
-            const setTheme = (theme) => {
-                if (theme === 'dark') {
-                    document.body.className = 'dark-theme';
-                    themeIcon.className = 'fas fa-sun';
-                } else {
-                    document.body.className = 'light-theme';
-                    themeIcon.className = 'fas fa-moon';
-                }
-            };
-            
-            const updateUI = () => {
-                const user = tg.initDataUnsafe.user;
-                if (user) {
-                    userPhotoElem.src = user.photo_url || 'https://i.imgur.com/placeholder.png';
-                    userNameElem.innerHTML = `${user.first_name || ''} ${user.last_name || ''} <i class="fas fa-check-circle verified-icon"></i>`;
-                }
-                
-                userPointsElem.textContent = userState.points.toFixed(2);
-                dailyAdsWatchedElem.textContent = userState.dailyAdWatchCount;
-                referralCountElem.textContent = userState.referrals.length;
 
-                referralLinkElem.value = `https://t.me/${BOT_USERNAME}?startapp=${userState.userId}`;
+                watchAdBtn.disabled = true;
 
-                // Update task button states
-                if (userState.hasJoinedChannel) {
-                    joinChannelBtn.innerHTML = '<span class="btn-text">Claimed</span>';
-                    joinChannelBtn.disabled = true;
-                    joinChannelBtn2.innerHTML = '<span class="btn-text">Claimed</span>';
-                    joinChannelBtn2.disabled = true;
-                }
-                if (userState.hasJoinedGroup) {
-                    joinGroupBtn.innerHTML = '<span class="btn-text">Claimed</span>';
-                    joinGroupBtn.disabled = true;
-                    joinGroupBtn2.innerHTML = '<span class="btn-text">Claimed</span>';
-                    joinGroupBtn2.disabled = true;
-                }
-                
-                // Update ad watch button if limit reached
-                if (userState.dailyAdWatchCount >= DAILY_AD_LIMIT) {
-                    watchAdBtn.innerHTML = '<span class="btn-text">Limit Reached</span>';
-                    watchAdBtn.disabled = true;
-                    watchAdBtn2.innerHTML = '<span class="btn-text">Limit Reached</span>';
-                    watchAdBtn2.disabled = true;
-                }
-            };
-            
-            const setupEventListeners = () => {
-                watchAdBtn.addEventListener('click', handleWatchAd);
-                watchAdBtn2.addEventListener('click', handleWatchAd);
-                joinChannelBtn.addEventListener('click', handleJoinChannel);
-                joinChannelBtn2.addEventListener('click', handleJoinChannel);
-                joinGroupBtn.addEventListener('click', handleJoinGroup);
-                joinGroupBtn2.addEventListener('click', handleJoinGroup);
-                withdrawForm.addEventListener('submit', handleWithdraw);
-                copyRefLinkBtn.addEventListener('click', copyReferralLink);
-                
-                // Theme toggle
-                themeToggle.addEventListener('click', toggleTheme);
-            };
-            
-            const toggleTheme = () => {
-                if (document.body.classList.contains('light-theme')) {
-                    setTheme('dark');
-                } else {
-                    setTheme('light');
-                }
-            };
-
-            const handleWatchAd = () => {
-                if (userState.dailyAdWatchCount >= DAILY_AD_LIMIT) {
-                    tg.showAlert("You have reached your daily ad watch limit."); return;
-                }
-                loadingModal.style.display = 'flex';
-                
-                // Use GigaPub's show_3055 function instead of show_144
-                if (typeof show_3055 === 'function') {
-                    show_3055().then(() => {
-                        userState.points += POINTS_PER_AD;
-                        userState.dailyAdWatchCount++;
-                        saveState();
-                        updateUI();
-                        tg.HapticFeedback.notificationOccurred('success');
-                        tg.showAlert(`Congratulations! You've earned ${POINTS_PER_AD} ICEBERG.`);
+                // --- অ্যাড নেটওয়ার্কের কোড কল করার জায়গা (দ্বিতীয় অংশ) ---
+                // ======================================================================
+                // এখানে আপনার অ্যাড নেটওয়ার্কের দেওয়া ফাংশনটি কল করতে হবে।
+                // নিচের 'show_9702412()' লাইনটি একটি উদাহরণ।
+                // ======================================================================
+                if (typeof show_9702412 === 'function') {
+                    show_9702412().then(() => {
+                        let earnings = parseFloat(localStorage.getItem('earnings')) + AD_REWARD;
+                        let currentAdsWatched = parseInt(localStorage.getItem('adsWatched')) + 1;
+                        
+                        localStorage.setItem('earnings', earnings.toString());
+                        localStorage.setItem('adsWatched', currentAdsWatched.toString());
+                        
+                        tg.showAlert(`বিজ্ঞাপনটি দেখার জন্য আপনি BDT ${AD_REWARD.toFixed(2)} পেয়েছেন!`);
                     }).catch(() => {
-                        tg.showAlert("Ad could not be loaded. Please try again later.");
+                        tg.showAlert('বিজ্ঞাপনটি দেখাতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
                     }).finally(() => {
-                        loadingModal.style.display = 'none';
+                        updateUI();
                     });
                 } else {
-                    tg.showAlert("Ad system is not available. Please try again later.");
-                    loadingModal.style.display = 'none';
-                }
-            };
-            
-            const handleJoinChannel = () => {
-                if(userState.hasJoinedChannel) {
-                    tg.showAlert('You have already claimed this bonus.'); return;
-                }
-                tg.openTelegramLink(CHANNEL_LINK);
-                setTimeout(() => {
-                    userState.points += CHANNEL_JOIN_BONUS;
-                    userState.hasJoinedChannel = true;
-                    tg.showAlert(`Thank you! You received ${CHANNEL_JOIN_BONUS} bonus ICEBERG.`);
-                    saveState();
+                    // Fallback for testing in browser without Telegram
+                    let earnings = parseFloat(localStorage.getItem('earnings')) + AD_REWARD;
+                    let currentAdsWatched = parseInt(localStorage.getItem('adsWatched')) + 1;
+                    localStorage.setItem('earnings', earnings.toString());
+                    localStorage.setItem('adsWatched', currentAdsWatched.toString());
+                    alert(`(Test Mode) You earned BDT ${AD_REWARD.toFixed(2)}!`);
                     updateUI();
-                }, 3000);
-            };
-
-            const handleJoinGroup = () => {
-                if(userState.hasJoinedGroup) {
-                    tg.showAlert('You have already claimed this bonus.'); return;
                 }
-                tg.openTelegramLink(GROUP_LINK);
-                setTimeout(() => {
-                    userState.points += GROUP_JOIN_BONUS;
-                    userState.hasJoinedGroup = true;
-                    tg.showAlert(`Thank you! You received ${GROUP_JOIN_BONUS} bonus ICEBERG.`);
-                    saveState();
-                    updateUI();
-                }, 3000);
-            };
+            });
 
-            const handleWithdraw = async (e) => {
+            withdrawForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                const method = document.getElementById('withdraw-method').value;
-                const accountNumber = document.getElementById('account-number').value;
-                const amount = parseInt(document.getElementById('amount').value, 10);
-
-                if (isNaN(amount) || amount <= 0) { tg.showAlert("Please enter a valid amount."); return; }
-                if (amount < MIN_WITHDRAW_POINTS) { tg.showAlert(`Minimum withdrawal is ${MIN_WITHDRAW_POINTS} ICEBERG.`); return; }
-                if (amount > userState.points) { tg.showAlert("You don't have enough balance."); return; }
-
-                withdrawSubmitBtn.classList.add('btn-loading');
-                withdrawSubmitBtn.disabled = true;
-
-                userState.points -= amount;
-                saveState();
-                updateUI();
+                const amount = parseFloat(document.getElementById('withdraw-amount').value);
                 
-                const user = tg.initDataUnsafe.user;
-                const message = `<b>New Withdraw Request!</b>\n-----------------------------------\n<b>User:</b> ${user.first_name || ''} ${user.last_name || ''} (@${user.username || 'N/A'})\n<b>User ID:</b> <code>${user.id}</code>\n-----------------------------------\n<b>Method:</b> ${method}\n<b>Account:</b> <code>${accountNumber}</code>\n<b>Amount:</b> ${amount} ICEBERG\n-----------------------------------\n<b>Date:</b> ${new Date().toLocaleString('en-US', { timeZone: 'Asia/Dhaka' })}`;
-                
-                const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
-                try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ chat_id: ADMIN_CHAT_ID, text: message, parse_mode: 'HTML'})
-                    });
-                    const result = await response.json();
-                    if (result.ok) {
-                        tg.HapticFeedback.notificationOccurred('success');
-                        tg.showAlert("Withdrawal request submitted successfully!");
+                tg.showConfirm(`আপনি কি আপনার উইথড্র অনুরোধ জমা দিতে চান?`, (confirmed) => {
+                    if (confirmed) {
+                        let newEarnings = parseFloat(localStorage.getItem('earnings')) - amount;
+                        localStorage.setItem('earnings', newEarnings.toString());
+                        
+                        tg.sendData(JSON.stringify({ 
+                            type: 'withdrawal', 
+                            amount: amount, 
+                            method: document.getElementById('withdraw-method').value,
+                            account: document.getElementById('account-number').value
+                        }));
+                        
                         withdrawForm.reset();
-                    } else { throw new Error(result.description); }
-                } catch (error) {
-                    tg.HapticFeedback.notificationOccurred('error');
-                    tg.showAlert("Failed to submit request. Your ICEBERG have been returned.");
-                    userState.points += amount;
-                    saveState();
-                    updateUI();
-                } finally {
-                    withdrawSubmitBtn.classList.remove('btn-loading');
-                    withdrawSubmitBtn.disabled = false;
-                }
-            };
-            
-            const copyReferralLink = () => {
-                navigator.clipboard.writeText(referralLinkElem.value).then(() => {
-                    tg.HapticFeedback.notificationOccurred('success');
-                    tg.showAlert("Referral link copied!");
+                        updateUI();
+                        tg.showAlert('আপনার উইথড্র অনুরোধ সফলভাবে জমা হয়েছে।');
+                    }
                 });
-            };
+            });
 
-            const setupNavigation = () => {
-                const navButtons = document.querySelectorAll('.nav-btn');
-                const pages = document.querySelectorAll('.page');
-                navButtons.forEach(button => {
-                    button.addEventListener('click', () => {
-                        const pageId = button.dataset.page;
-                        pages.forEach(page => page.classList.remove('active'));
-                        document.getElementById(pageId).classList.add('active');
-                        navButtons.forEach(btn => btn.classList.remove('active'));
-                        button.classList.add('active');
-                    });
-                });
-            };
-
-            initApp();
+            updateUI();
         });
     </script>
 </body>
