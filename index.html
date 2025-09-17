@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DR Token Airdrop</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -498,6 +500,7 @@
             border-radius: 10px;
             font-family: monospace;
             font-size: 16px;
+            letter-spacing: 1px;
         }
         
         .copy-btn {
@@ -507,6 +510,20 @@
             border: none;
             border-radius: 10px;
             cursor: pointer;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -615,14 +632,13 @@
                 <h2 class="section-title"><i class="fas fa-users"></i> Referral Program</h2>
                 
                 <div class="referral-code">
-                    <div class="code-value" id="user-referral-code">12345</div>
+                    <div class="code-value" id="user-referral-code">Loading...</div>
                     <button class="copy-btn" onclick="copyReferralCode()"><i class="fas fa-copy"></i></button>
                 </div>
                 
                 <div class="input-group">
                     <label class="input-label">Enter referral code (one-time use)</label>
-                    <input type="text" class="input-field" id="referral-input" placeholder="Enter someone's referral code" 
-                        <?php if ($userData && $userData->referralUsed) echo 'disabled'; ?>>
+                    <input type="text" class="input-field" id="referral-input" placeholder="Enter someone's referral code">
                     <button class="action-btn" id="submit-referral-btn" onclick="submitReferralCode()">Submit Code</button>
                 </div>
                 
@@ -746,6 +762,21 @@
     <div class="notification" id="notification"></div>
 
     <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD4UbW_Iy4kUWH3V70Q1mWCI4-_KFk6ku4",
+            authDomain: "onlinewark-a0147.firebaseapp.com",
+            databaseURL: "https://onlinewark-a0147-default-rtdb.firebaseio.com",
+            projectId: "onlinewark-a0147",
+            storageBucket: "onlinewark-a0147.appspot.com",
+            messagingSenderId: "92155538620",
+            appId: "1:92155538620:android:5e198a8eea6bf17f61f4b9"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
         // Initialize Telegram WebApp
         let tg = window.Telegram.WebApp;
         tg.expand();
@@ -767,7 +798,8 @@
             airdropClaimed: true,
             referralUsed: false,
             referralCodeUsed: null,
-            level: 1
+            level: 1,
+            referralCode: ""
         };
         
         // Initialize app
@@ -781,15 +813,14 @@
                 
                 document.getElementById('user-name').textContent = userData.username;
                 document.getElementById('user-id').textContent = userData.id;
-                document.getElementById('user-referral-code').textContent = userData.id;
                 document.getElementById('user-pic').src = userData.photoUrl || "https://via.placeholder.com/50";
             }
             
             // Check for referral parameter
             const startParam = tg.initDataUnsafe.start_param;
             if (startParam && startParam.startsWith('ref')) {
-                const referrerId = startParam.substring(3);
-                handleReferral(referrerId);
+                const referralCode = startParam.substring(3);
+                handleReferral(referralCode);
             }
             
             // Load user data from storage
@@ -808,12 +839,51 @@
                 userData.referralUsed = parsedData.referralUsed || false;
                 userData.referralCodeUsed = parsedData.referralCodeUsed || null;
                 userData.level = parsedData.level || 1;
+                userData.referralCode = parsedData.referralCode || "";
+                
+                if (userData.referralCode) {
+                    document.getElementById('user-referral-code').textContent = userData.referralCode;
+                } else {
+                    generateReferralCode();
+                }
+            } else {
+                // New user - generate referral code
+                generateReferralCode();
             }
             
             updateUI();
             generateCheckInCalendar();
             updateWithdrawalHistory();
             updateLevels();
+        }
+        
+        // Generate a unique 6-letter referral code
+        function generateReferralCode() {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let result = '';
+            for (let i = 0; i < 6; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            
+            userData.referralCode = result;
+            document.getElementById('user-referral-code').textContent = result;
+            
+            // Save referral code to Firebase
+            saveReferralCodeToFirebase(result);
+        }
+        
+        // Save referral code to Firebase
+        function saveReferralCodeToFirebase(code) {
+            database.ref('referralCodes/' + code).set({
+                userId: userData.id,
+                username: userData.username,
+                createdAt: new Date().toISOString()
+            }).then(() => {
+                console.log("Referral code saved to Firebase");
+                saveUserData();
+            }).catch((error) => {
+                console.error("Error saving referral code: ", error);
+            });
         }
         
         // Update UI with current data
@@ -1012,19 +1082,40 @@
         }
         
         // Handle referral from start parameter
-        function handleReferral(referrerId) {
+        function handleReferral(referralCode) {
             // Check if this is a new user and hasn't used a referral yet
             const isNewUser = !localStorage.getItem('dr_token_user_data');
-            if (isNewUser && !userData.referralUsed && referrerId != userData.id) {
-                userData.referralUsed = true;
-                userData.referralCodeUsed = referrerId;
-                
-                // In a real app, we would send this to the backend to reward the referrer
-                showNotification('Referral code applied! You helped someone earn 5 DR Tokens.');
-                
-                saveUserData();
-                updateUI();
+            if (isNewUser && !userData.referralUsed) {
+                // Check if the referral code exists in Firebase
+                checkReferralCode(referralCode);
             }
+        }
+        
+        // Check if a referral code exists in Firebase
+        function checkReferralCode(code) {
+            database.ref('referralCodes/' + code).once('value').then((snapshot) => {
+                if (snapshot.exists()) {
+                    const referrerData = snapshot.val();
+                    if (referrerData.userId !== userData.id) {
+                        // Valid referral code
+                        userData.referralUsed = true;
+                        userData.referralCodeUsed = code;
+                        
+                        // In a real app, we would update the referrer's data in Firebase
+                        showNotification('Referral code applied! You helped someone earn 5 DR Tokens.');
+                        
+                        saveUserData();
+                        updateUI();
+                    } else {
+                        showNotification('You cannot use your own referral code.');
+                    }
+                } else {
+                    showNotification('Invalid referral code.');
+                }
+            }).catch((error) => {
+                console.error("Error checking referral code: ", error);
+                showNotification('Error checking referral code. Please try again.');
+            });
         }
         
         // Submit referral code
@@ -1034,32 +1125,30 @@
                 return;
             }
             
-            const code = document.getElementById('referral-input').value.trim();
+            const code = document.getElementById('referral-input').value.trim().toUpperCase();
             
             if (!code) {
                 showNotification('Please enter a referral code.');
                 return;
             }
             
-            if (code == userData.id) {
+            if (code.length !== 6) {
+                showNotification('Referral code must be 6 letters.');
+                return;
+            }
+            
+            if (code === userData.referralCode) {
                 showNotification('You cannot use your own referral code.');
                 return;
             }
             
-            // Apply referral code
-            userData.referralUsed = true;
-            userData.referralCodeUsed = code;
-            
-            // In a real app, we would send this to the backend to reward the referrer
-            showNotification('Referral code applied! You helped someone earn 5 DR Tokens.');
-            
-            saveUserData();
-            updateUI();
+            // Check if the referral code exists in Firebase
+            checkReferralCode(code);
         }
         
         // Copy referral code
         function copyReferralCode() {
-            navigator.clipboard.writeText(userData.id).then(() => {
+            navigator.clipboard.writeText(userData.referralCode).then(() => {
                 showNotification('Referral code copied to clipboard!');
             });
         }
@@ -1210,7 +1299,8 @@
                 airdropClaimed: userData.airdropClaimed,
                 referralUsed: userData.referralUsed,
                 referralCodeUsed: userData.referralCodeUsed,
-                level: userData.level
+                level: userData.level,
+                referralCode: userData.referralCode
             }));
         }
         
