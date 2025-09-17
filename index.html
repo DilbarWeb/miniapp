@@ -282,6 +282,10 @@
             font-size: 16px;
         }
         
+        .input-field:disabled {
+            opacity: 0.6;
+        }
+        
         .input-field::placeholder {
             color: rgba(255, 255, 255, 0.5);
         }
@@ -302,6 +306,12 @@
         .action-btn:hover {
             opacity: 0.9;
             transform: translateY(-2px);
+        }
+        
+        .action-btn:disabled {
+            opacity: 0.6;
+            transform: none;
+            cursor: not-allowed;
         }
         
         .hidden {
@@ -434,6 +444,70 @@
             font-size: 24px;
             font-weight: bold;
         }
+        
+        .level-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: var(--accent);
+            color: var(--dark);
+            font-weight: bold;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        .referral-levels {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .level-card {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .level-card.active {
+            background: var(--accent);
+            color: var(--dark);
+        }
+        
+        .level-card.active .stat-value {
+            color: var(--dark);
+        }
+        
+        .level-title {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .referral-code {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .code-value {
+            flex: 1;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 16px;
+        }
+        
+        .copy-btn {
+            padding: 12px;
+            background: var(--accent);
+            color: var(--dark);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -447,7 +521,7 @@
                 </div>
             </div>
             <div>
-                <div style="text-align: right;">Level: Member</div>
+                <div style="text-align: right;">Level: <span id="user-level">1</span></div>
                 <div style="text-align: right;">DR Tokens: <span id="header-balance">0</span></div>
             </div>
         </div>
@@ -489,24 +563,24 @@
                 <h2 class="section-title"><i class="fas fa-tasks"></i> Channel Tasks</h2>
                 <div class="task-item">
                     <div class="task-info">
-                        <div class="task-name">Join Crypto News Channel</div>
-                        <div class="task-desc">Stay updated with latest crypto news</div>
+                        <div class="task-name">Join DR Token Community</div>
+                        <div class="task-desc">Stay updated with DR Token news and announcements</div>
                     </div>
                     <div class="task-reward">+2 <span class="token-icon">DR</span></div>
                     <button class="task-btn" onclick="joinChannel(0)">Join</button>
                 </div>
                 <div class="task-item">
                     <div class="task-info">
-                        <div class="task-name">Join DR Token Channel</div>
-                        <div class="task-desc">Get updates about DR Token</div>
+                        <div class="task-name">Join DR Token Announcements</div>
+                        <div class="task-desc">Get important updates about DR Token</div>
                     </div>
                     <div class="task-reward">+2 <span class="token-icon">DR</span></div>
                     <button class="task-btn" onclick="joinChannel(1)">Join</button>
                 </div>
                 <div class="task-item">
                     <div class="task-info">
-                        <div class="task-name">Join Airdrop Channel</div>
-                        <div class="task-desc">Find more airdrop opportunities</div>
+                        <div class="task-name">Join DR Token Discussion</div>
+                        <div class="task-desc">Discuss DR Token with the community</div>
                     </div>
                     <div class="task-reward">+2 <span class="token-icon">DR</span></div>
                     <button class="task-btn" onclick="joinChannel(2)">Join</button>
@@ -539,13 +613,19 @@
         <div id="referrals-tab" class="tab-content hidden">
             <div class="section">
                 <h2 class="section-title"><i class="fas fa-users"></i> Referral Program</h2>
-                <div class="referral-box">
-                    <div class="input-label">Your Referral Link:</div>
-                    <div class="input-field" id="referral-link">https://t.me/DrToken_RoBot?startapp=12345</div>
-                    <button class="action-btn" style="margin-top: 10px;" onclick="copyReferralLink()">
-                        <i class="fas fa-copy"></i> Copy Link
-                    </button>
+                
+                <div class="referral-code">
+                    <div class="code-value" id="user-referral-code">12345</div>
+                    <button class="copy-btn" onclick="copyReferralCode()"><i class="fas fa-copy"></i></button>
                 </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Enter referral code (one-time use)</label>
+                    <input type="text" class="input-field" id="referral-input" placeholder="Enter someone's referral code" 
+                        <?php if ($userData && $userData->referralUsed) echo 'disabled'; ?>>
+                    <button class="action-btn" id="submit-referral-btn" onclick="submitReferralCode()">Submit Code</button>
+                </div>
+                
                 <div class="referral-stats">
                     <div class="stat-item">
                         <div class="stat-value" id="referral-count">0</div>
@@ -555,6 +635,35 @@
                         <div class="stat-value" id="referral-earnings">0</div>
                         <div class="stat-label">Earnings</div>
                     </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title"><i class="fas fa-trophy"></i> Referral Levels</h2>
+                
+                <div class="referral-levels">
+                    <div class="level-card" id="level-1">
+                        <div class="level-title">Level 1</div>
+                        <div class="stat-value">0/10</div>
+                        <div class="stat-label">Referrals</div>
+                    </div>
+                    <div class="level-card" id="level-2">
+                        <div class="level-title">Level 2</div>
+                        <div class="stat-value">0/100</div>
+                        <div class="stat-label">Referrals</div>
+                    </div>
+                    <div class="level-card" id="level-3">
+                        <div class="level-title">Level 3</div>
+                        <div class="stat-value">100</div>
+                        <div class="stat-label">DR Reward</div>
+                    </div>
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress" id="level-progress"></div>
+                </div>
+                <div style="text-align: center; font-size: 14px; margin-top: 10px;">
+                    <span id="level-progress-text">0% to next level</span>
                 </div>
             </div>
             
@@ -655,7 +764,10 @@
             lastCheckIn: 0,
             checkInStreak: 0,
             withdrawalHistory: [],
-            airdropClaimed: true
+            airdropClaimed: true,
+            referralUsed: false,
+            referralCodeUsed: null,
+            level: 1
         };
         
         // Initialize app
@@ -669,6 +781,7 @@
                 
                 document.getElementById('user-name').textContent = userData.username;
                 document.getElementById('user-id').textContent = userData.id;
+                document.getElementById('user-referral-code').textContent = userData.id;
                 document.getElementById('user-pic').src = userData.photoUrl || "https://via.placeholder.com/50";
             }
             
@@ -692,11 +805,15 @@
                 userData.checkInStreak = parsedData.checkInStreak;
                 userData.withdrawalHistory = parsedData.withdrawalHistory || [];
                 userData.airdropClaimed = parsedData.airdropClaimed;
+                userData.referralUsed = parsedData.referralUsed || false;
+                userData.referralCodeUsed = parsedData.referralCodeUsed || null;
+                userData.level = parsedData.level || 1;
             }
             
             updateUI();
             generateCheckInCalendar();
             updateWithdrawalHistory();
+            updateLevels();
         }
         
         // Update UI with current data
@@ -704,6 +821,7 @@
             document.getElementById('header-balance').textContent = userData.drBalance;
             document.getElementById('dr-balance').textContent = userData.drBalance;
             document.getElementById('ton-balance').textContent = userData.tonBalance.toFixed(4);
+            document.getElementById('user-level').textContent = userData.level;
             
             // Update task buttons
             const taskButtons = document.querySelectorAll('.task-btn');
@@ -718,7 +836,6 @@
             // Update referral stats
             document.getElementById('referral-count').textContent = userData.referralCount;
             document.getElementById('referral-earnings').textContent = userData.referralEarnings;
-            document.getElementById('referral-link').textContent = `https://t.me/DrToken_RoBot?startapp=${userData.id}`;
             
             // Update progress bars
             document.getElementById('max-ton').textContent = userData.tonBalance.toFixed(4) + ' TON';
@@ -750,6 +867,45 @@
                 document.getElementById('airdrop-btn').textContent = "Received";
                 document.getElementById('airdrop-btn').classList.add('completed');
                 document.getElementById('airdrop-btn').disabled = true;
+            }
+            
+            // Update referral input if already used
+            if (userData.referralUsed) {
+                document.getElementById('referral-input').value = userData.referralCodeUsed;
+                document.getElementById('referral-input').disabled = true;
+                document.getElementById('submit-referral-btn').disabled = true;
+                document.getElementById('submit-referral-btn').textContent = "Code Applied";
+            }
+        }
+        
+        // Update referral levels
+        function updateLevels() {
+            // Update level cards
+            document.getElementById('level-1').classList.toggle('active', userData.level >= 1);
+            document.getElementById('level-2').classList.toggle('active', userData.level >= 2);
+            document.getElementById('level-3').classList.toggle('active', userData.level >= 3);
+            
+            // Update level progress
+            let nextLevelThreshold = 10;
+            if (userData.level === 1) nextLevelThreshold = 10;
+            else if (userData.level === 2) nextLevelThreshold = 100;
+            
+            const progress = userData.level < 3 ? 
+                Math.min((userData.referralCount / nextLevelThreshold) * 100, 100) : 100;
+            
+            document.getElementById('level-progress').style.width = progress + '%';
+            
+            const progressText = userData.level < 3 ? 
+                `${Math.round(progress)}% to next level` : "Max level reached!";
+            
+            document.getElementById('level-progress-text').textContent = progressText;
+            
+            // Update level values
+            if (userData.level === 1) {
+                document.querySelector('#level-1 .stat-value').textContent = `${userData.referralCount}/10`;
+                document.querySelector('#level-2 .stat-value').textContent = `0/100`;
+            } else if (userData.level === 2) {
+                document.querySelector('#level-2 .stat-value').textContent = `${userData.referralCount}/100`;
             }
         }
         
@@ -802,6 +958,9 @@
             btn.textContent = "Joining...";
             btn.disabled = true;
             
+            // Open the channel (all tasks point to the same channel)
+            window.open('https://t.me/drtokencommunity', '_blank');
+            
             let progress = 0;
             const interval = setInterval(() => {
                 progress += 20;
@@ -852,24 +1011,56 @@
             return `${hours}h ${minutes}m`;
         }
         
-        // Handle referral
+        // Handle referral from start parameter
         function handleReferral(referrerId) {
-            // Check if this is a new user
+            // Check if this is a new user and hasn't used a referral yet
             const isNewUser = !localStorage.getItem('dr_token_user_data');
-            if (isNewUser && referrerId != userData.id) {
-                // In a real app, we would send this to the backend to reward the referrer
-                showNotification('Referral accepted! Welcome to DR Token Airdrop.');
+            if (isNewUser && !userData.referralUsed && referrerId != userData.id) {
+                userData.referralUsed = true;
+                userData.referralCodeUsed = referrerId;
                 
-                // Here we would typically make an API call to reward the referrer
-                // For demo purposes, we'll just show a notification
+                // In a real app, we would send this to the backend to reward the referrer
+                showNotification('Referral code applied! You helped someone earn 5 DR Tokens.');
+                
+                saveUserData();
+                updateUI();
             }
         }
         
-        // Copy referral link
-        function copyReferralLink() {
-            const referralLink = `https://t.me/DrToken_RoBot?startapp=${userData.id}`;
-            navigator.clipboard.writeText(referralLink).then(() => {
-                showNotification('Referral link copied to clipboard!');
+        // Submit referral code
+        function submitReferralCode() {
+            if (userData.referralUsed) {
+                showNotification('You have already used a referral code.');
+                return;
+            }
+            
+            const code = document.getElementById('referral-input').value.trim();
+            
+            if (!code) {
+                showNotification('Please enter a referral code.');
+                return;
+            }
+            
+            if (code == userData.id) {
+                showNotification('You cannot use your own referral code.');
+                return;
+            }
+            
+            // Apply referral code
+            userData.referralUsed = true;
+            userData.referralCodeUsed = code;
+            
+            // In a real app, we would send this to the backend to reward the referrer
+            showNotification('Referral code applied! You helped someone earn 5 DR Tokens.');
+            
+            saveUserData();
+            updateUI();
+        }
+        
+        // Copy referral code
+        function copyReferralCode() {
+            navigator.clipboard.writeText(userData.id).then(() => {
+                showNotification('Referral code copied to clipboard!');
             });
         }
         
@@ -1016,7 +1207,10 @@
                 lastCheckIn: userData.lastCheckIn,
                 checkInStreak: userData.checkInStreak,
                 withdrawalHistory: userData.withdrawalHistory,
-                airdropClaimed: userData.airdropClaimed
+                airdropClaimed: userData.airdropClaimed,
+                referralUsed: userData.referralUsed,
+                referralCodeUsed: userData.referralCodeUsed,
+                level: userData.level
             }));
         }
         
