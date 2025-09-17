@@ -541,7 +541,7 @@
                 <h2 class="section-title"><i class="fas fa-users"></i> Referral Program</h2>
                 <div class="referral-box">
                     <div class="input-label">Your Referral Link:</div>
-                    <div class="input-field" id="referral-link">https://t.me/DrToken_RoBot?startapp=ref12345</div>
+                    <div class="input-field" id="referral-link">https://t.me/DrToken_RoBot?startapp=12345</div>
                     <button class="action-btn" style="margin-top: 10px;" onclick="copyReferralLink()">
                         <i class="fas fa-copy"></i> Copy Link
                     </button>
@@ -867,7 +867,7 @@
         
         // Copy referral link
         function copyReferralLink() {
-            const referralLink = `https://t.me/DrToken_RoBot?startapp=ref${userData.id}`;
+            const referralLink = `https://t.me/DrToken_RoBot?startapp=${userData.id}`;
             navigator.clipboard.writeText(referralLink).then(() => {
                 showNotification('Referral link copied to clipboard!');
             });
