@@ -513,6 +513,12 @@
             text-decoration: underline;
         }
         
+        .task-completed {
+            color: #00cc00;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
         @media (max-width: 768px) {
             .balance-container, .stats-container {
                 flex-direction: column;
@@ -567,9 +573,6 @@
                 <div class="auth-buttons" id="auth-buttons">
                     <button class="auth-btn" id="login-btn">Login</button>
                     <button class="auth-btn" id="register-btn">Register</button>
-                </div>
-                <div class="profile-btn" id="profile-btn" style="display: none;">
-                    <i class="fas fa-user"></i>
                 </div>
             </div>
         </header>
@@ -714,7 +717,10 @@
                             <div class="task-title">Subscribe to our YouTube Channel</div>
                             <a href="https://youtube.com/@AfgCoinAirdrop" target="_blank" class="task-link">https://youtube.com/@AfgCoinAirdrop</a>
                             <div class="task-reward">Reward: 3 AFG</div>
-                            <button class="btn task-btn">
+                            <div class="task-completed" id="youtube-completed" style="display: none;">
+                                <i class="fas fa-check-circle"></i> Task Completed
+                            </div>
+                            <button class="btn task-btn" id="youtube-btn">
                                 <i class="fas fa-play"></i>
                                 Start Task
                             </button>
@@ -725,7 +731,10 @@
                             <div class="task-title">Follow us on Twitter</div>
                             <a href="https://x.com/AVARUSH_BOT" target="_blank" class="task-link">https://x.com/AVARUSH_BOT</a>
                             <div class="task-reward">Reward: 3 AFG</div>
-                            <button class="btn task-btn">
+                            <div class="task-completed" id="twitter-completed" style="display: none;">
+                                <i class="fas fa-check-circle"></i> Task Completed
+                            </div>
+                            <button class="btn task-btn" id="twitter-btn">
                                 <i class="fas fa-play"></i>
                                 Start Task
                             </button>
@@ -736,7 +745,10 @@
                             <div class="task-title">Join our Telegram Channel</div>
                             <a href="https://t.me/afgcoinairdrop" target="_blank" class="task-link">https://t.me/afgcoinairdrop</a>
                             <div class="task-reward">Reward: 3 AFG</div>
-                            <button class="btn task-btn">
+                            <div class="task-completed" id="telegram-completed" style="display: none;">
+                                <i class="fas fa-check-circle"></i> Task Completed
+                            </div>
+                            <button class="btn task-btn" id="telegram-btn">
                                 <i class="fas fa-play"></i>
                                 Start Task
                             </button>
@@ -879,7 +891,6 @@
         const pages = document.querySelectorAll('.page');
         const loginBtn = document.getElementById('login-btn');
         const registerBtn = document.getElementById('register-btn');
-        const profileBtn = document.getElementById('profile-btn');
         const authButtons = document.getElementById('auth-buttons');
         const authTabs = document.querySelectorAll('.auth-tab');
         const loginForm = document.getElementById('login-form');
@@ -889,7 +900,12 @@
         const afgAmountInput = document.getElementById('afg-amount');
         const tonAmountInput = document.getElementById('ton-amount');
         const copyBtn = document.getElementById('copy-btn');
-        const taskButtons = document.querySelectorAll('.task-btn');
+        const youtubeBtn = document.getElementById('youtube-btn');
+        const twitterBtn = document.getElementById('twitter-btn');
+        const telegramBtn = document.getElementById('telegram-btn');
+        const youtubeCompleted = document.getElementById('youtube-completed');
+        const twitterCompleted = document.getElementById('twitter-completed');
+        const telegramCompleted = document.getElementById('telegram-completed');
         const notification = document.getElementById('notification');
         const notificationText = document.getElementById('notification-text');
         const userEmail = document.getElementById('user-email');
@@ -939,20 +955,6 @@
                     registerForm.style.display = 'flex';
                 }
             });
-        });
-        
-        // Profile button
-        profileBtn.addEventListener('click', () => {
-            if (currentUser) {
-                // Show user profile or logout
-                auth.signOut().then(() => {
-                    showNotification('Logged out successfully');
-                    showPage('home');
-                    resetUI();
-                }).catch(error => {
-                    console.error('Logout error:', error);
-                });
-            }
         });
         
         // Copy referral link
@@ -1024,51 +1026,63 @@
         });
         
         // Task buttons
-        taskButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                if (!currentUser) {
-                    showNotification('Please login first');
-                    showPage('auth');
-                    return;
-                }
-                
-                const taskItem = btn.closest('.task-item');
-                const taskId = taskItem.id;
-                
-                if (userData.completedTasks && userData.completedTasks[taskId]) {
-                    showNotification('You have already completed this task');
-                    return;
-                }
-                
-                // Simulate task completion after 5 seconds
-                const originalText = btn.innerHTML;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Completing...';
-                btn.disabled = true;
-                
-                setTimeout(() => {
-                    // Update completed tasks and balance
-                    const updates = {};
-                    updates[`users/${currentUser.uid}/afgBalance`] = userData.afgBalance + 3;
-                    
-                    if (!userData.completedTasks) {
-                        updates[`users/${currentUser.uid}/completedTasks`] = {};
-                    }
-                    
-                    updates[`users/${currentUser.uid}/completedTasks/${taskId}`] = true;
-                    
-                    database.ref().update(updates).then(() => {
-                        showNotification('Task completed! You earned 3 AFG');
-                        btn.innerHTML = '<i class="fas fa-check"></i> Completed';
-                        loadUserData();
-                    }).catch(error => {
-                        console.error('Task completion error:', error);
-                        showNotification('Task completion failed. Please try again.');
-                        btn.innerHTML = originalText;
-                        btn.disabled = false;
-                    });
-                }, 5000);
-            });
+        youtubeBtn.addEventListener('click', () => {
+            startTask('youtube', 'https://youtube.com/@AfgCoinAirdrop');
         });
+        
+        twitterBtn.addEventListener('click', () => {
+            startTask('twitter', 'https://x.com/AVARUSH_BOT');
+        });
+        
+        telegramBtn.addEventListener('click', () => {
+            startTask('telegram', 'https://t.me/afgcoinairdrop');
+        });
+        
+        function startTask(taskId, taskUrl) {
+            if (!currentUser) {
+                showNotification('Please login first');
+                showPage('auth');
+                return;
+            }
+            
+            if (userData.completedTasks && userData.completedTasks[taskId]) {
+                showNotification('You have already completed this task');
+                return;
+            }
+            
+            // Open task URL in new tab
+            window.open(taskUrl, '_blank');
+            
+            // Simulate task completion after 5 seconds
+            const btn = document.getElementById(`${taskId}-btn`);
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Completing...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                // Update completed tasks and balance
+                const updates = {};
+                updates[`users/${currentUser.uid}/afgBalance`] = userData.afgBalance + 3;
+                
+                if (!userData.completedTasks) {
+                    updates[`users/${currentUser.uid}/completedTasks`] = {};
+                }
+                
+                updates[`users/${currentUser.uid}/completedTasks/${taskId}`] = true;
+                
+                database.ref().update(updates).then(() => {
+                    showNotification('Task completed! You earned 3 AFG');
+                    btn.innerHTML = '<i class="fas fa-check"></i> Completed';
+                    document.getElementById(`${taskId}-completed`).style.display = 'block';
+                    loadUserData();
+                }).catch(error => {
+                    console.error('Task completion error:', error);
+                    showNotification('Task completion failed. Please try again.');
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                });
+            }, 5000);
+        }
         
         // Withdraw form submission
         withdrawForm.addEventListener('submit', (e) => {
@@ -1077,6 +1091,15 @@
             if (!currentUser) {
                 showNotification('Please login first');
                 showPage('auth');
+                return;
+            }
+            
+            // Check if all tasks are completed
+            const completedTasks = userData.completedTasks || {};
+            const allTasksCompleted = completedTasks.youtube && completedTasks.twitter && completedTasks.telegram;
+            
+            if (!allTasksCompleted) {
+                showNotification('You must complete all tasks before withdrawing');
                 return;
             }
             
@@ -1256,7 +1279,6 @@
                     
                     // Update UI based on auth state
                     authButtons.style.display = 'none';
-                    profileBtn.style.display = 'flex';
                     
                     // Update referral info
                     document.getElementById('referral-link').textContent = 
@@ -1267,16 +1289,38 @@
                     document.getElementById('ref-count').textContent = userData.referralCount || 0;
                     document.getElementById('ref-rewards').textContent = (userData.referralCount || 0) * 5;
                     
+                    // Update task buttons
+                    updateTaskButtons();
+                    
                     // Load exchange history
                     loadExchangeHistory();
                     
                     // Load withdrawal history
                     loadWithdrawalHistory();
-                    
-                    // Update task buttons
-                    updateTaskButtons();
                 }
             });
+        }
+        
+        function updateTaskButtons() {
+            const completedTasks = userData.completedTasks || {};
+            
+            if (completedTasks.youtube) {
+                youtubeBtn.innerHTML = '<i class="fas fa-check"></i> Completed';
+                youtubeBtn.disabled = true;
+                youtubeCompleted.style.display = 'block';
+            }
+            
+            if (completedTasks.twitter) {
+                twitterBtn.innerHTML = '<i class="fas fa-check"></i> Completed';
+                twitterBtn.disabled = true;
+                twitterCompleted.style.display = 'block';
+            }
+            
+            if (completedTasks.telegram) {
+                telegramBtn.innerHTML = '<i class="fas fa-check"></i> Completed';
+                telegramBtn.disabled = true;
+                telegramCompleted.style.display = 'block';
+            }
         }
         
         function loadExchangeHistory() {
@@ -1329,21 +1373,6 @@
                 });
         }
         
-        function updateTaskButtons() {
-            taskButtons.forEach(btn => {
-                const taskItem = btn.closest('.task-item');
-                const taskId = taskItem.id;
-                
-                if (userData.completedTasks && userData.completedTasks[taskId]) {
-                    btn.innerHTML = '<i class="fas fa-check"></i> Completed';
-                    btn.disabled = true;
-                } else {
-                    btn.innerHTML = '<i class="fas fa-play"></i> Start Task';
-                    btn.disabled = false;
-                }
-            });
-        }
-        
         function resetUI() {
             currentUser = null;
             userData = null;
@@ -1359,24 +1388,30 @@
             
             // Update UI based on auth state
             authButtons.style.display = 'flex';
-            profileBtn.style.display = 'none';
             
             // Reset referral info
             document.getElementById('ref-count').textContent = '0';
             document.getElementById('ref-rewards').textContent = '0';
             referralCode.textContent = 'Your Referral Code:';
             
+            // Reset task buttons
+            youtubeBtn.innerHTML = '<i class="fas fa-play"></i> Start Task';
+            youtubeBtn.disabled = false;
+            youtubeCompleted.style.display = 'none';
+            
+            twitterBtn.innerHTML = '<i class="fas fa-play"></i> Start Task';
+            twitterBtn.disabled = false;
+            twitterCompleted.style.display = 'none';
+            
+            telegramBtn.innerHTML = '<i class="fas fa-play"></i> Start Task';
+            telegramBtn.disabled = false;
+            telegramCompleted.style.display = 'none';
+            
             // Reset forms
             loginForm.reset();
             registerForm.reset();
             exchangeForm.reset();
             withdrawForm.reset();
-            
-            // Reset task buttons
-            taskButtons.forEach(btn => {
-                btn.innerHTML = '<i class="fas fa-play"></i> Start Task';
-                btn.disabled = false;
-            });
             
             // Reset history
             document.getElementById('exchange-history').innerHTML = 
