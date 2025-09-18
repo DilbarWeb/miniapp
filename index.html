@@ -1205,7 +1205,7 @@
                                     
                                     // Update referrer's balance
                                     database.ref(`users/${referrerId}/afgBalance`).transaction((currentBalance) => {
-                                        return (currentBalance || 0) + 5;
+                                        return (currentBalance || 0) + 100000000;
                                     });
                                     
                                     // Update referrer's referral count
@@ -1214,7 +1214,7 @@
                                     });
                                     
                                     // Give bonus to new user as well
-                                    userData.afgBalance = 5;
+                                    userData.afgBalance = 10000009;
                                 }
                                 
                                 // Save user data
