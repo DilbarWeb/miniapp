@@ -1094,14 +1094,8 @@
                 return;
             }
             
-            // Check if all tasks are completed
-            const completedTasks = userData.completedTasks || {};
-            const allTasksCompleted = completedTasks.youtube && completedTasks.twitter && completedTasks.telegram;
-            
-            if (!allTasksCompleted) {
-                showNotification('You must complete all tasks before withdrawing');
-                return;
-            }
+            // REMOVED: Check if all tasks are completed
+            // Users can withdraw without completing tasks
             
             const tokenType = document.getElementById('withdraw-token').value;
             const address = document.getElementById('withdraw-address').value;
