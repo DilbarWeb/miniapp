@@ -3,917 +3,477 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AFG Token</title>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <title>AFG Token Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary: #6a11cb;
-            --secondary: #2575fc;
-            --accent: #00c6ff;
-            --dark: #1a202c;
-            --light: #f8f9fa;
-            --success: #0f9d58;
-            --warning: #f4b400;
-            --danger: #db4437;
-            --card-bg: rgba(255, 255, 255, 0.1);
-            --card-border: rgba(255, 255, 255, 0.2);
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: var(--light);
-            min-height: 100vh;
-            padding-bottom: 80px;
-        }
-        
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--card-bg);
-            padding: 15px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--card-border);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 24px;
-            font-weight: bold;
-        }
-        
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), var(--secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .user-menu {
-            position: relative;
-        }
-        
-        .user-btn {
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--card-border);
-            color: white;
-            padding: 10px 15px;
-            border-radius: 15px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .dropdown {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            margin-top: 10px;
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--card-border);
-            border-radius: 15px;
-            padding: 10px;
-            width: 150px;
-            display: none;
-            z-index: 100;
-        }
-        
-        .dropdown.show {
-            display: block;
-        }
-        
-        .dropdown-item {
-            padding: 10px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        
-        .dropdown-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-        
-        .auth-container {
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--card-border);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            margin: 50px auto;
-        }
-        
-        .auth-title {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 24px;
-        }
-        
-        .auth-tabs {
-            display: flex;
-            margin-bottom: 20px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 15px;
-            padding: 5px;
-        }
-        
-        .auth-tab {
-            flex: 1;
-            text-align: center;
-            padding: 10px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        
-        .auth-tab.active {
-            background: var(--accent);
-            color: var(--dark);
-            font-weight: bold;
-        }
-        
-        .balance-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .balance-card {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 20px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--card-border);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-        
-        .balance-label {
-            font-size: 14px;
-            opacity: 0.8;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-        }
-        
-        .balance-amount {
-            font-size: 24px;
-            font-weight: bold;
-            margin: 5px 0;
-            color: #fff;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        
-        .balance-subtext {
-            font-size: 12px;
-            opacity: 0.7;
-        }
-        
-        .nav {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .nav-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            color: white;
-            padding: 12px 5px;
-            border-radius: 15px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s;
-            backdrop-filter: blur(10px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .nav-btn i {
-            font-size: 18px;
-        }
-        
-        .nav-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-2px);
-        }
-        
-        .nav-btn.active {
-            background: var(--accent);
-            color: var(--dark);
-            font-weight: bold;
-        }
-        
-        .section {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--card-border);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-        
-        .section-title {
-            font-size: 20px;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--card-border);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .section-title i {
-            color: var(--accent);
-        }
-        
-        .task-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .task-item:last-child {
-            border-bottom: none;
-        }
-        
-        .task-info {
-            flex: 1;
-        }
-        
-        .task-name {
-            font-weight: 500;
-            margin-bottom: 5px;
-        }
-        
-        .task-desc {
-            font-size: 12px;
-            opacity: 0.8;
-        }
-        
-        .task-reward {
-            color: var(--accent);
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .task-btn {
-            background: var(--accent);
-            border: none;
-            color: var(--dark);
-            padding: 8px 15px;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .task-btn:hover {
-            opacity: 0.9;
-            transform: scale(1.05);
-        }
-        
-        .task-btn.completed {
-            background: var(--success);
-            color: white;
-        }
-        
-        .task-btn.pending {
-            background: var(--warning);
-            color: var(--dark);
-        }
-        
-        .referral-box {
-            background: rgba(0, 0, 0, 0.2);
-            padding: 15px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .referral-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 15px;
-        }
-        
-        .stat-item {
-            background: rgba(0, 0, 0, 0.2);
-            padding: 15px;
-            border-radius: 15px;
-            text-align: center;
-        }
-        
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--accent);
-            margin-bottom: 5px;
-        }
-        
-        .stat-label {
-            font-size: 14px;
-            opacity: 0.8;
-        }
-        
-        .input-group {
-            margin-bottom: 20px;
-        }
-        
-        .input-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        
-        .input-field {
-            width: 100%;
-            padding: 15px;
-            border-radius: 12px;
-            border: 1px solid var(--card-border);
-            background: rgba(0, 0, 0, 0.1);
-            color: white;
-            font-size: 16px;
-        }
-        
-        .input-field:disabled {
-            opacity: 0.6;
-        }
-        
-        .input-field::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-        
-        .action-btn {
-            width: 100%;
-            padding: 15px;
-            background: var(--accent);
-            color: var(--dark);
-            border: none;
-            border-radius: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 16px;
-        }
-        
-        .action-btn:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-        }
-        
-        .action-btn:disabled {
-            opacity: 0.6;
-            transform: none;
-            cursor: not-allowed;
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
-        .tab-content {
-            min-height: 300px;
-        }
-        
-        .notification {
+        .page { display: none; }
+        .active { display: block; }
+        .toast {
             position: fixed;
             top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--dark);
-            color: white;
+            right: 20px;
             padding: 15px 25px;
-            border-radius: 10px;
-            z-index: 1000;
-            display: none;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            animation: slideIn 0.3s ease;
-        }
-        
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translate(-50%, -20px);
-            }
-            to {
-                opacity: 1;
-                transform: translate(-50%, 0);
-            }
-        }
-        
-        .withdrawal-history {
-            margin-top: 20px;
-        }
-        
-        .history-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .history-item:last-child {
-            border-bottom: none;
-        }
-        
-        .swap-rate {
-            text-align: center;
-            margin: 15px 0;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            font-size: 14px;
-        }
-        
-        .token-icon {
-            width: 24px;
-            height: 24px;
-            display: inline-block;
-            vertical-align: middle;
-            margin: 0 5px;
-            background: var(--accent);
-            border-radius: 50%;
-            text-align: center;
-            line-height: 24px;
-            font-weight: bold;
-        }
-        
-        .progress-bar {
-            height: 6px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
-            overflow: hidden;
-            margin: 10px 0;
-        }
-        
-        .progress {
-            height: 100%;
-            background: var(--accent);
-            border-radius: 3px;
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-        
-        .check-in-calendar {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
-            margin-top: 15px;
-        }
-        
-        .calendar-day {
-            padding: 8px;
-            text-align: center;
-            border-radius: 10px;
-            background: rgba(0, 0, 0, 0.2);
-        }
-        
-        .calendar-day.checked {
-            background: var(--success);
+            background: #4CAF50;
             color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s, transform 0.3s;
         }
-        
-        .calendar-day.today {
-            border: 2px solid var(--accent);
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
         }
-        
-        .token-info {
-            text-align: center;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 15px;
-            margin-top: 20px;
-        }
-        
-        .token-logo {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), var(--secondary));
-            margin: 0 auto 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
-        }
-        
-        .level-badge {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 20px;
-            background: var(--accent);
-            color: var(--dark);
-            font-weight: bold;
-            font-size: 12px;
-            margin-left: 10px;
-        }
-        
-        .referral-levels {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .level-card {
-            background: rgba(0, 0, 0, 0.2);
-            padding: 15px;
-            border-radius: 15px;
-            text-align: center;
-        }
-        
-        .level-card.active {
-            background: var(--accent);
-            color: var(--dark);
-        }
-        
-        .level-card.active .stat-value {
-            color: var(--dark);
-        }
-        
-        .level-title {
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-        
-        .referral-code {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .code-value {
-            flex: 1;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            font-family: monospace;
-            font-size: 16px;
-            letter-spacing: 1px;
-        }
-        
-        .copy-btn {
-            padding: 12px;
-            background: var(--accent);
-            color: var(--dark);
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-        
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .form-error {
-            color: var(--danger);
-            font-size: 14px;
-            margin-top: 5px;
-            display: none;
+        .toast.error {
+            background: #f44336;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <!-- Header with Logo and User Menu -->
-        <div class="header">
-            <div class="logo">
-                <div class="logo-icon">AFG</div>
-                <span>AFG Token</span>
-            </div>
-            <div class="user-menu">
-                <button class="user-btn" id="user-menu-btn">
-                    <i class="fas fa-user"></i>
-                    <span id="username-display">Guest</span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <div class="dropdown" id="user-dropdown">
-                    <div class="dropdown-item" onclick="logout()">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </div>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Auth Page -->
+    <div id="auth-page" class="page active">
+        <div class="flex min-h-screen items-center justify-center p-4">
+            <div class="w-full max-w-md bg-white rounded-lg shadow-md p-6">
+                <div class="text-center mb-6">
+                    <h1 class="text-3xl font-bold text-blue-600">AFG Token Platform</h1>
+                    <p class="text-gray-600 mt-2">Earn and swap AFG tokens</p>
                 </div>
-            </div>
-        </div>
-        
-        <!-- Authentication Forms -->
-        <div id="auth-forms" class="auth-container">
-            <h2 class="auth-title">Welcome to AFG Token</h2>
-            
-            <div class="auth-tabs">
-                <div class="auth-tab active" id="login-tab">Login</div>
-                <div class="auth-tab" id="register-tab">Register</div>
-            </div>
-            
-            <div id="login-form">
-                <div class="input-group">
-                    <label class="input-label">Email</label>
-                    <input type="email" class="input-field" id="login-email" placeholder="Enter your email">
-                    <div class="form-error" id="login-email-error"></div>
+
+                <div id="auth-tabs" class="flex border-b mb-4">
+                    <button id="login-tab" class="py-2 px-4 font-medium text-blue-600 border-b-2 border-blue-600">Login</button>
+                    <button id="register-tab" class="py-2 px-4 font-medium text-gray-500">Register</button>
                 </div>
-                
-                <div class="input-group">
-                    <label class="input-label">Password</label>
-                    <input type="password" class="input-field" id="login-password" placeholder="Enter your password">
-                    <div class="form-error" id="login-password-error"></div>
-                </div>
-                
-                <button class="action-btn" onclick="login()">Login</button>
-            </div>
-            
-            <div id="register-form" class="hidden">
-                <div class="input-group">
-                    <label class="input-label">Username</label>
-                    <input type="text" class="input-field" id="register-username" placeholder="Choose a username">
-                    <div class="form-error" id="register-username-error"></div>
-                </div>
-                
-                <div class="input-group">
-                    <label class="input-label">Email</label>
-                    <input type="email" class="input-field" id="register-email" placeholder="Enter your email">
-                    <div class="form-error" id="register-email-error"></div>
-                </div>
-                
-                <div class="input-group">
-                    <label class="input-label">Password</label>
-                    <input type="password" class="input-field" id="register-password" placeholder="Create a password">
-                    <div class="form-error" id="register-password-error"></div>
-                </div>
-                
-                <div class="input-group">
-                    <label class="input-label">Referral Code (Optional)</label>
-                    <input type="text" class="input-field" id="register-referral" placeholder="Enter referral code">
-                    <div class="form-error" id="register-referral-error"></div>
-                </div>
-                
-                <button class="action-btn" onclick="register()">Create Account</button>
-            </div>
-        </div>
-        
-        <!-- Main App Content (Hidden until logged in) -->
-        <div id="app-content" class="hidden">
-            <div class="balance-section">
-                <div class="balance-card">
-                    <div class="balance-label"><i class="fas fa-coins"></i> AFG Tokens</div>
-                    <div class="balance-amount" id="afg-balance">0</div>
-                    <div class="balance-subtext">≈ $0.00</div>
-                </div>
-                <div class="balance-card">
-                    <div class="balance-label"><i class="fab fa-bitcoin"></i> TON Balance</div>
-                    <div class="balance-amount" id="ton-balance">0.00</div>
-                    <div class="balance-subtext">≈ $0.00</div>
-                </div>
-            </div>
-            
-            <div class="nav">
-                <button class="nav-btn active" onclick="showTab('tasks')">
-                    <i class="fas fa-tasks"></i>
-                    <span>Tasks</span>
-                </button>
-                <button class="nav-btn" onclick="showTab('referrals')">
-                    <i class="fas fa-users"></i>
-                    <span>Referrals</span>
-                </button>
-                <button class="nav-btn" onclick="showTab('withdraw')">
-                    <i class="fas fa-wallet"></i>
-                    <span>Withdraw</span>
-                </button>
-                <button class="nav-btn" onclick="showTab('swap')">
-                    <i class="fas fa-exchange-alt"></i>
-                    <span>Swap</span>
-                </button>
-            </div>
-            
-            <div id="tasks-tab" class="tab-content">
-                <div class="section">
-                    <h2 class="section-title"><i class="fas fa-tasks"></i> Channel Tasks</h2>
-                    <div class="task-item">
-                        <div class="task-info">
-                            <div class="task-name">Join AFG Community</div>
-                            <div class="task-desc">Stay updated with AFG news and announcements</div>
-                        </div>
-                        <div class="task-reward">+2 <span class="token-icon">AFG</span></div>
-                        <button class="task-btn" onclick="joinChannel(0)">Join</button>
+
+                <form id="login-form" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" id="login-email" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
-                    <div class="task-item">
-                        <div class="task-info">
-                            <div class="task-name">Join AFG Announcements</div>
-                            <div class="task-desc">Get important updates about AFG</div>
-                        </div>
-                        <div class="task-reward">+2 <span class="token-icon">AFG</span></div>
-                        <button class="task-btn" onclick="joinChannel(1)">Join</button>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <input type="password" id="login-password" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
-                    <div class="task-item">
-                        <div class="task-info">
-                            <div class="task-name">Join AFG Discussion</div>
-                            <div class="task-desc">Discuss AFG with the community</div>
-                        </div>
-                        <div class="task-reward">+2 <span class="token-icon">AFG</span></div>
-                        <button class="task-btn" onclick="joinChannel(2)">Join</button>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Login</button>
+                </form>
+
+                <form id="register-form" class="space-y-4 hidden">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                        <input type="text" id="register-username" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
-                </div>
-                
-                <div class="section">
-                    <h2 class="section-title"><i class="fas fa-calendar-check"></i> Daily Check-in</h2>
-                    <div class="task-item">
-                        <div class="task-info">
-                            <div class="task-name">Daily Reward</div>
-                            <div class="task-desc">Check in daily to earn AFG Tokens</div>
-                        </div>
-                        <div class="task-reward">+2 <span class="token-icon">AFG</span></div>
-                        <button class="task-btn" id="checkin-btn" onclick="dailyCheckIn()">Check In</button>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" id="register-email" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
-                    <div class="check-in-calendar" id="checkin-calendar">
-                        <!-- Calendar will be generated by JS -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <input type="password" id="register-password" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
-                </div>
-                
-                <div class="token-info">
-                    <div class="token-logo">AFG</div>
-                    <h3>AFG Token</h3>
-                    <p>Utility token for the AFG ecosystem</p>
-                    <p>Total Supply: 10,000,000 AFG</p>
-                </div>
-            </div>
-            
-            <div id="referrals-tab" class="tab-content hidden">
-                <div class="section">
-                    <h2 class="section-title"><i class="fas fa-users"></i> Referral Program</h2>
-                    
-                    <div class="referral-code">
-                        <div class="code-value" id="user-referral-code">Loading...</div>
-                        <button class="copy-btn" onclick="copyReferralCode()"><i class="fas fa-copy"></i></button>
-                    </div>
-                    
-                    <div class="referral-stats">
-                        <div class="stat-item">
-                            <div class="stat-value" id="referral-count">0</div>
-                            <div class="stat-label">Referrals</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value" id="referral-earnings">0</div>
-                            <div class="stat-label">Earnings</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="section">
-                    <h2 class="section-title"><i class="fas fa-trophy"></i> Referral Levels</h2>
-                    
-                    <div class="referral-levels">
-                        <div class="level-card" id="level-1">
-                            <div class="level-title">Level 1</div>
-                            <div class="stat-value">0/10</div>
-                            <div class="stat-label">Referrals</div>
-                        </div>
-                        <div class="level-card" id="level-2">
-                            <div class="level-title">Level 2</div>
-                            <div class="stat-value">0/100</div>
-                            <div class="stat-label">Referrals</div>
-                        </div>
-                        <div class="level-card" id="level-3">
-                            <div class="level-title">Level 3</div>
-                            <div class="stat-value">100</div>
-                            <div class="stat-label">AFG Reward</div>
-                        </div>
-                    </div>
-                    
-                    <div class="progress-bar">
-                        <div class="progress" id="level-progress"></div>
-                    </div>
-                    <div style="text-align: center; font-size: 14px; margin-top: 10px;">
-                        <span id="level-progress-text">0% to next level</span>
-                    </div>
-                </div>
-                
-                <div class="section">
-                    <h2 class="section-title"><i class="fas fa-gift"></i> Airdrop Bonus</h2>
-                    <div class="task-item">
-                        <div class="task-info">
-                            <div class="task-name">Join Airdrop</div>
-                            <div class="task-desc">You've received a bonus for joining</div>
-                        </div>
-                        <div class="task-reward">+10 <span class="token-icon">AFG</span></div>
-                        <button class="task-btn completed" id="airdrop-btn">Received</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="withdraw-tab" class="tab-content hidden">
-                <div class="section">
-                    <h2 class="section-title"><i class="fas fa-wallet"></i> Withdraw TON</h2>
-                    <div class="input-group">
-                        <label class="input-label">TON Wallet Address or Binance ID</label>
-                        <input type="text" class="input-field" id="withdraw-address" placeholder="Enter your address">
-                    </div>
-                    <div class="input-group">
-                        <label class="input-label">Amount to withdraw (min 0.1 TON)</label>
-                        <input type="number" class="input-field" id="withdraw-amount" placeholder="Enter amount">
-                        <div class="progress-bar">
-                            <div class="progress" id="withdraw-progress"></div>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; font-size: 12px;">
-                            <span>0 TON</span>
-                            <span id="max-ton">0 TON</span>
-                        </div>
-                    </div>
-                    <button class="action-btn" onclick="withdrawTon()">
-                        <i class="fas fa-paper-plane"></i> Withdraw TON
-                    </button>
-                    
-                    <div class="withdrawal-history">
-                        <h3 style="margin: 20px 0 10px;">Withdrawal History</h3>
-                        <div id="withdrawal-history-list">
-                            <!-- Withdrawal history will be populated by JS -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="swap-tab" class="tab-content hidden">
-                <div class="section">
-                    <h2 class="section-title"><i class="fas fa-exchange-alt"></i> Swap AFG to TON</h2>
-                    
-                    <div class="swap-rate">
-                        <i class="fas fa-exchange-alt"></i> 1 AFG Token = 0.001 TON
-                    </div>
-                    
-                    <div class="input-group">
-                        <label class="input-label">AFG Tokens to swap (min 10 AFG)</label>
-                        <input type="number" class="input-field" id="swap-amount" placeholder="Enter amount" oninput="updateSwapResult()">
-                        <div class="progress-bar">
-                            <div class="progress" id="swap-progress"></div>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; font-size: 12px;">
-                            <span>0 AFG</span>
-                            <span id="max-afg">0 AFG</span>
-                        </div>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label class="input-label">You will receive</label>
-                        <input type="text" class="input-field" id="swap-result" placeholder="0 TON" readonly>
-                    </div>
-                    
-                    <button class="action-btn" onclick="swapTokens()">
-                        <i class="fas fa-sync-alt"></i> Swap Now
-                    </button>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Register</button>
+                </form>
+
+                <div class="mt-4 text-center text-sm text-gray-600">
+                    <p>By signing in, you agree to our Terms of Service and Privacy Policy</p>
                 </div>
             </div>
         </div>
     </div>
-    
-    <div class="notification" id="notification"></div>
+
+    <!-- App Container (shown after auth) -->
+    <div id="app-container" class="page">
+        <!-- Header -->
+        <header class="bg-white shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center py-4">
+                    <div class="flex items-center">
+                        <h1 class="text-xl font-bold text-blue-600">AFG Token Platform</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="hidden md:flex items-center space-x-2">
+                            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                                <span class="text-blue-600 font-medium" id="user-avatar"></span>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium" id="header-username"></p>
+                                <p class="text-xs text-gray-500">Balance: <span id="header-balance">0</span> AFG</p>
+                            </div>
+                        </div>
+                        <button id="logout-btn" class="text-sm text-gray-500 hover:text-gray-700">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="bg-white shadow-md">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center py-2 overflow-x-auto">
+                    <div class="flex space-x-1 md:space-x-4">
+                        <button data-page="dashboard" class="nav-link active px-3 py-2 rounded-md text-sm font-medium">Dashboard</button>
+                        <button data-page="tasks" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Tasks</button>
+                        <button data-page="swap" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Swap</button>
+                        <button data-page="withdraw" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Withdraw</button>
+                        <button data-page="referrals" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Referrals</button>
+                        <button data-page="activity" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Activity</button>
+                        <button data-page="profile" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Profile</button>
+                        <button data-page="admin" class="nav-link px-3 py-2 rounded-md text-sm font-medium hidden" id="admin-nav">Admin</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <!-- Dashboard Page -->
+            <div id="dashboard-page" class="page-section active">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h2 class="text-lg font-medium text-gray-900 mb-4">Account Summary</h2>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">AFG Balance:</span>
+                                <span class="font-medium" id="dashboard-afg">0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">TON Balance:</span>
+                                <span class="font-medium" id="dashboard-ton">0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Referrals:</span>
+                                <span class="font-medium" id="dashboard-refs">0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Referral Rewards:</span>
+                                <span class="font-medium" id="dashboard-ref-rewards">0 AFG</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h2 class="text-lg font-medium text-gray-900 mb-4">Quick Actions</h2>
+                        <div class="space-y-4">
+                            <button data-page="tasks" class="w-full bg-blue-100 text-blue-700 py-2 px-4 rounded-md text-sm font-medium hover:bg-blue-200 transition-colors">
+                                Complete Tasks to Earn AFG
+                            </button>
+                            <button data-page="swap" class="w-full bg-green-100 text-green-700 py-2 px-4 rounded-md text-sm font-medium hover:bg-green-200 transition-colors">
+                                Swap AFG to TON
+                            </button>
+                            <button data-page="withdraw" class="w-full bg-purple-100 text-purple-700 py-2 px-4 rounded-md text-sm font-medium hover:bg-purple-200 transition-colors">
+                                Withdraw TON
+                            </button>
+                            <button data-page="referrals" class="w-full bg-orange-100 text-orange-700 py-2 px-4 rounded-md text-sm font-medium hover:bg-orange-200 transition-colors">
+                                Invite Friends & Earn Rewards
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-lg font-medium text-gray-900 mb-4">Recent Activity</h2>
+                    <div id="recent-activity" class="space-y-3">
+                        <div class="text-center py-4 text-gray-500">
+                            <p>No recent activity</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tasks Page -->
+            <div id="tasks-page" class="page-section">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-lg font-medium text-gray-900 mb-4">Complete Tasks & Earn AFG</h2>
+                    <p class="text-gray-600 mb-6">Complete these simple tasks to earn AFG tokens. Each task rewards 2 AFG.</p>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 border rounded-lg">
+                            <div>
+                                <h3 class="font-medium">Join our Telegram Channel</h3>
+                                <p class="text-sm text-gray-600">Stay updated with the latest news</p>
+                            </div>
+                            <button class="task-btn bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700" data-task="telegram">
+                                Complete Task
+                            </button>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-4 border rounded-lg">
+                            <div>
+                                <h3 class="font-medium">Follow us on Twitter</h3>
+                                <p class="text-sm text-gray-600">Get the latest updates</p>
+                            </div>
+                            <button class="task-btn bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700" data-task="twitter">
+                                Complete Task
+                            </button>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-4 border rounded-lg">
+                            <div>
+                                <h3 class="font-medium">Join our Discord</h3>
+                                <p class="text-sm text-gray-600">Connect with our community</p>
+                            </div>
+                            <button class="task-btn bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700" data-task="discord">
+                                Complete Task
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Swap Page -->
+            <div id="swap-page" class="page-section">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-lg font-medium text-gray-900 mb-4">Swap AFG to TON</h2>
+                    <p class="text-gray-600 mb-6">Exchange rate: 1 AFG = 0.001 TON. Minimum swap: 1 AFG.</p>
+                    
+                    <form id="swap-form" class="space-y-4 max-w-md">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">AFG Amount</label>
+                            <input type="number" id="swap-amount" min="1" step="0.1" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <p class="text-xs text-gray-500 mt-1">Your balance: <span id="swap-balance">0</span> AFG</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">You will receive (TON)</label>
+                            <input type="text" id="ton-receive" readonly class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">TON Address</label>
+                            <input type="text" id="ton-address" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your TON wallet address">
+                        </div>
+                        <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Swap Now</button>
+                    </form>
+
+                    <div class="mt-8">
+                        <h3 class="font-medium text-gray-900 mb-3">Swap History</h3>
+                        <div id="swap-history" class="space-y-2">
+                            <div class="text-center py-4 text-gray-500">
+                                <p>No swap history</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Withdraw Page -->
+            <div id="withdraw-page" class="page-section">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-lg font-medium text-gray-900 mb-4">Withdraw TON</h2>
+                    <p class="text-gray-600 mb-6">Minimum withdrawal: 0.1 TON. Withdrawals are processed manually and may take up to 24 hours.</p>
+                    
+                    <form id="withdraw-form" class="space-y-4 max-w-md">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">TON Amount</label>
+                            <input type="number" id="withdraw-amount" min="0.1" step="0.01" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <p class="text-xs text-gray-500 mt-1">Your TON balance: <span id="withdraw-balance">0</span> TON</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Destination Type</label>
+                            <select id="destination-type" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="binance">Binance ID</option>
+                                <option value="ton">TON Address</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" id="destination-label">Binance ID</label>
+                            <input type="text" id="destination-value" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your Binance ID">
+                        </div>
+                        <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Request Withdrawal</button>
+                    </form>
+
+                    <div class="mt-8">
+                        <h3 class="font-medium text-gray-900 mb-3">Withdrawal History</h3>
+                        <div id="withdraw-history" class="space-y-2">
+                            <div class="text-center py-4 text-gray-500">
+                                <p>No withdrawal history</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Referrals Page -->
+            <div id="referrals-page" class="page-section">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-lg font-medium text-gray-900 mb-4">Referral Program</h2>
+                    <p class="text-gray-600 mb-6">Invite friends and earn 5 AFG for each successful referral.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h3 class="font-medium text-blue-800 mb-2">Your Referral Stats</h3>
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-blue-600">Total Referrals:</span>
+                                    <span class="font-medium" id="ref-count">0</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-blue-600">Referral Rewards:</span>
+                                    <span class="font-medium" id="ref-rewards">0 AFG</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h3 class="font-medium text-green-800 mb-2">Your Referral Link</h3>
+                            <div class="flex items-center">
+                                <input type="text" id="ref-link" readonly class="flex-1 px-3 py-2 border border-gray-300 rounded-l-md bg-white">
+                                <button id="copy-ref" class="bg-green-600 text-white px-3 py-2 rounded-r-md hover:bg-green-700">Copy</button>
+                            </div>
+                            <p class="text-sm text-green-600 mt-2">Share this link with your friends</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="font-medium text-gray-900 mb-3">Referral History</h3>
+                        <div id="ref-history" class="space-y-2">
+                            <div class="text-center py-4 text-gray-500">
+                                <p>No referral history</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Page -->
+            <div id="activity-page" class="page-section">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-lg font-medium text-gray-900 mb-4">Activity History</h2>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
+                                </tr>
+                            </thead>
+                            <tbody id="activity-list" class="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td colspan="4" class="px-6 py-4 text-center text-gray-500">No activity recorded</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Page -->
+            <div id="profile-page" class="page-section">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-lg font-medium text-gray-900 mb-4">Your Profile</h2>
+                    
+                    <form id="profile-form" class="space-y-4 max-w-md">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                            <input type="text" id="profile-username" readonly class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input type="email" id="profile-email" readonly class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Registration Date</label>
+                            <input type="text" id="profile-created" readonly class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100">
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Admin Page -->
+            <div id="admin-page" class="page-section">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-lg font-medium text-gray-900 mb-4">Admin Panel</h2>
+                    
+                    <div class="mb-6 flex space-x-4 border-b">
+                        <button data-tab="admin-withdrawals" class="admin-tab py-2 px-4 font-medium text-blue-600 border-b-2 border-blue-600">Withdrawal Requests</button>
+                        <button data-tab="admin-swaps" class="admin-tab py-2 px-4 font-medium text-gray-500">Swap Requests</button>
+                        <button data-tab="admin-users" class="admin-tab py-2 px-4 font-medium text-gray-500">Users</button>
+                    </div>
+
+                    <!-- Withdrawal Requests -->
+                    <div id="admin-withdrawals" class="admin-tab-content">
+                        <h3 class="font-medium text-gray-900 mb-3">Withdrawal Requests</h3>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Destination</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-withdraw-list" class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">No withdrawal requests</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Swap Requests -->
+                    <div id="admin-swaps" class="admin-tab-content hidden">
+                        <h3 class="font-medium text-gray-900 mb-3">Swap Requests</h3>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">AFG Amount</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">TON Amount</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">TON Address</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-swap-list" class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td colspan="7" class="px-6 py-4 text-center text-gray-500">No swap requests</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Users -->
+                    <div id="admin-users" class="admin-tab-content hidden">
+                        <h3 class="font-medium text-gray-900 mb-3">Users</h3>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">AFG Balance</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">TON Balance</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Referrals</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-user-list" class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">No users</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
 
     <script>
         // Firebase configuration
@@ -930,261 +490,1037 @@
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-        const database = firebase.database();
+        const db = firebase.database();
 
-        // User data
-        let userData = {
-            uid: "",
-            username: "",
-            email: "",
-            afgBalance: 10, // Starting airdrop bonus
-            tonBalance: 0,
-            completedTasks: [false, false, false],
-            referralCount: 0,
-            referralEarnings: 0,
-            lastCheckIn: 0,
-            checkInStreak: 0,
-            withdrawalHistory: [],
-            airdropClaimed: true,
-            referralCode: "",
-            referredBy: "",
-            level: 1
-        };
-        
-        // Initialize app
-        function initApp() {
-            // Set up auth state listener
-            auth.onAuthStateChanged((user) => {
-                if (user) {
-                    // User is signed in
-                    loadUserData(user.uid);
-                } else {
-                    // User is signed out
-                    showAuthForms();
-                }
-            });
-            
-            // Set up tab switching
-            document.getElementById('login-tab').addEventListener('click', () => switchAuthTab('login'));
-            document.getElementById('register-tab').addEventListener('click', () => switchAuthTab('register'));
-            
-            // Set up user menu
-            document.getElementById('user-menu-btn').addEventListener('click', toggleUserMenu);
-        }
-        
-        // Switch between login and register forms
-        function switchAuthTab(tab) {
-            if (tab === 'login') {
-                document.getElementById('login-tab').classList.add('active');
-                document.getElementById('register-tab').classList.remove('active');
-                document.getElementById('login-form').classList.remove('hidden');
-                document.getElementById('register-form').classList.add('hidden');
+        // DOM Elements
+        const authPage = document.getElementById('auth-page');
+        const appContainer = document.getElementById('app-container');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const loginTab = document.getElementById('login-tab');
+        const registerTab = document.getElementById('register-tab');
+        const logoutBtn = document.getElementById('logout-btn');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const pageSections = document.querySelectorAll('.page-section');
+        const toast = document.getElementById('toast');
+        const adminNav = document.getElementById('admin-nav');
+        const adminTabs = document.querySelectorAll('.admin-tab');
+        const adminTabContents = document.querySelectorAll('.admin-tab-content');
+
+        // Current user data
+        let currentUser = null;
+        let userData = null;
+
+        // Auth state observer
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                currentUser = user;
+                authPage.classList.remove('active');
+                appContainer.classList.add('active');
+                loadUserData();
+                checkAdminStatus();
             } else {
-                document.getElementById('register-tab').classList.add('active');
-                document.getElementById('login-tab').classList.remove('active');
-                document.getElementById('register-form').classList.remove('hidden');
-                document.getElementById('login-form').classList.add('hidden');
+                currentUser = null;
+                userData = null;
+                appContainer.classList.remove('active');
+                authPage.classList.add('active');
             }
-        }
-        
-        // Toggle user menu dropdown
-        function toggleUserMenu() {
-            document.getElementById('user-dropdown').classList.toggle('show');
-        }
-        
-        // Show authentication forms
-        function showAuthForms() {
-            document.getElementById('auth-forms').classList.remove('hidden');
-            document.getElementById('app-content').classList.add('hidden');
-            document.getElementById('username-display').textContent = 'Guest';
-        }
-        
-        // Show main app content
-        function showAppContent() {
-            document.getElementById('auth-forms').classList.add('hidden');
-            document.getElementById('app-content').classList.remove('hidden');
-            document.getElementById('username-display').textContent = userData.username;
-            
-            updateUI();
-            generateCheckInCalendar();
-            updateWithdrawalHistory();
-            updateLevels();
-        }
-        
-        // Register new user
-        function register() {
-            const username = document.getElementById('register-username').value.trim();
-            const email = document.getElementById('register-email').value.trim();
-            const password = document.getElementById('register-password').value;
-            const referralCode = document.getElementById('register-referral').value.trim().toUpperCase();
-            
-            // Basic validation
-            if (!username) {
-                showError('register-username-error', 'Username is required');
-                return;
-            }
-            
-            if (!email) {
-                showError('register-email-error', 'Email is required');
-                return;
-            }
-            
-            if (password.length < 6) {
-                showError('register-password-error', 'Password must be at least 6 characters');
-                return;
-            }
-            
-            // Create user with email and password
-            auth.createUserWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    // User created successfully
-                    const user = userCredential.user;
-                    
-                    // Generate referral code
-                    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                    let referralCode = '';
-                    for (let i = 0; i < 6; i++) {
-                        referralCode += characters.charAt(Math.floor(Math.random() * characters.length));
-                    }
-                    
-                    // Prepare user data
-                    userData.uid = user.uid;
-                    userData.username = username;
-                    userData.email = email;
-                    userData.referralCode = referralCode;
-                    
-                    // If a referral code was provided, validate it
-                    if (referralCode) {
-                        validateReferralCode(referralCode, user.uid);
-                    }
-                    
-                    // Save user data to Firebase
-                    return database.ref('users/' + user.uid).set(userData);
-                })
-                .then(() => {
-                    // Save referral code to Firebase
-                    return database.ref('referralCodes/' + userData.referralCode).set({
-                        userId: userData.uid,
-                        username: userData.username,
-                        createdAt: new Date().toISOString()
-                    });
-                })
-                .then(() => {
-                    showNotification('Account created successfully!');
-                    showAppContent();
-                })
-                .catch((error) => {
-                    console.error("Error creating user: ", error);
-                    showNotification('Error creating account: ' + error.message);
-                });
-        }
-        
-        // Validate referral code
-        function validateReferralCode(code, newUserId) {
-            database.ref('referralCodes/' + code).once('value').then((snapshot) => {
-                if (snapshot.exists()) {
-                    const referrerData = snapshot.val();
-                    
-                    // Update the new user's data
-                    userData.referredBy = code;
-                    
-                    // Update the referrer's data
-                    database.ref('users/' + referrerData.userId).transaction((user) => {
-                        if (user) {
-                            user.referralCount = (user.referralCount || 0) + 1;
-                            user.referralEarnings = (user.referralEarnings || 0) + 5;
-                            user.afgBalance = (user.afgBalance || 0) + 5;
-                        }
-                        return user;
-                    });
-                }
-            });
-        }
-        
-        // Login user
-        function login() {
-            const email = document.getElementById('login-email').value.trim();
+        });
+
+        // Auth tabs
+        loginTab.addEventListener('click', () => {
+            loginForm.classList.remove('hidden');
+            registerForm.classList.add('hidden');
+            loginTab.classList.add('text-blue-600', 'border-blue-600');
+            registerTab.classList.remove('text-blue-600', 'border-blue-600');
+            registerTab.classList.add('text-gray-500');
+        });
+
+        registerTab.addEventListener('click', () => {
+            registerForm.classList.remove('hidden');
+            loginForm.classList.add('hidden');
+            registerTab.classList.add('text-blue-600', 'border-blue-600');
+            loginTab.classList.remove('text-blue-600', 'border-blue-600');
+            loginTab.classList.add('text-gray-500');
+        });
+
+        // Login form
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
-            
-            if (!email) {
-                showError('login-email-error', 'Email is required');
-                return;
-            }
-            
-            if (!password) {
-                showError('login-password-error', 'Password is required');
-                return;
-            }
-            
+
             auth.signInWithEmailAndPassword(email, password)
                 .then((userCredential) => {
-                    // User signed in successfully
-                    const user = userCredential.user;
-                    loadUserData(user.uid);
+                    showToast('Login successful!');
                 })
                 .catch((error) => {
-                    console.error("Error signing in: ", error);
-                    showNotification('Error signing in: ' + error.message);
+                    showToast(error.message, true);
+                });
+        });
+
+        // Register form
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('register-username').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+
+            // Check for referral code in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const refUid = urlParams.get('ref');
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    
+                    // Create user profile
+                    const userData = {
+                        uid: user.uid,
+                        username: username,
+                        email: email,
+                        balanceAFG: 0,
+                        balanceTON: 0,
+                        referralCount: 0,
+                        referralRewards: 0,
+                        completedTasks: {},
+                        createdAt: firebase.database.ServerValue.TIMESTAMP
+                    };
+
+                    // Save user data
+                    db.ref('users/' + user.uid).set(userData)
+                        .then(() => {
+                            // Process referral if exists
+                            if (refUid) {
+                                processReferral(refUid, user.uid);
+                            }
+                            
+                            showToast('Registration successful!');
+                        })
+                        .catch((error) => {
+                            showToast(error.message, true);
+                        });
+                })
+                .catch((error) => {
+                    showToast(error.message, true);
+                });
+        });
+
+        // Process referral
+        function processReferral(refUid, newUserId) {
+            // Add referral to referrer's data
+            const refData = {
+                referredId: newUserId,
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            };
+            
+            db.ref('referrals/' + refUid + '/' + newUserId).set(refData);
+            
+            // Update referrer's stats and add reward
+            db.ref('users/' + refUid).transaction((user) => {
+                if (user) {
+                    user.referralCount = (user.referralCount || 0) + 1;
+                    user.referralRewards = (user.referralRewards || 0) + 5;
+                    user.balanceAFG = (user.balanceAFG || 0) + 5;
+                }
+                return user;
+            });
+            
+            // Log activity for referrer
+            const activityData = {
+                type: 'referral_reward',
+                amount: 5,
+                details: 'Referral reward for ' + newUserId,
+                date: firebase.database.ServerValue.TIMESTAMP
+            };
+            
+            db.ref('activity/' + refUid).push(activityData);
+        }
+
+        // Logout
+        logoutBtn.addEventListener('click', () => {
+            auth.signOut()
+                .then(() => {
+                    showToast('Logged out successfully');
+                })
+                .catch((error) => {
+                    showToast(error.message, true);
+                });
+        });
+
+        // Navigation
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                const targetPage = link.getAttribute('data-page');
+                
+                // Update active nav link
+                navLinks.forEach(navLink => {
+                    navLink.classList.remove('active');
+                });
+                link.classList.add('active');
+                
+                // Show target page
+                pageSections.forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(targetPage + '-page').classList.add('active');
+                
+                // Load page-specific data
+                if (targetPage === 'tasks') {
+                    loadTasks();
+                } else if (targetPage === 'swap') {
+                    loadSwapData();
+                } else if (targetPage === 'withdraw') {
+                    loadWithdrawData();
+                } else if (targetPage === 'referrals') {
+                    loadReferralData();
+                } else if (targetPage === 'activity') {
+                    loadActivity();
+                } else if (targetPage === 'profile') {
+                    loadProfile();
+                } else if (targetPage === 'admin') {
+                    loadAdminData();
+                }
+            });
+        });
+
+        // Admin tabs
+        adminTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetTab = tab.getAttribute('data-tab');
+                
+                // Update active admin tab
+                adminTabs.forEach(adminTab => {
+                    adminTab.classList.remove('text-blue-600', 'border-blue-600');
+                    adminTab.classList.add('text-gray-500');
+                });
+                tab.classList.add('text-blue-600', 'border-blue-600');
+                tab.classList.remove('text-gray-500');
+                
+                // Show target tab content
+                adminTabContents.forEach(content => {
+                    content.classList.add('hidden');
+                });
+                document.getElementById(targetTab).classList.remove('hidden');
+            });
+        });
+
+        // Load user data
+        function loadUserData() {
+            if (!currentUser) return;
+            
+            db.ref('users/' + currentUser.uid).on('value', (snapshot) => {
+                userData = snapshot.val();
+                if (userData) {
+                    updateUIWithUserData();
+                }
+            });
+        }
+
+        // Update UI with user data
+        function updateUIWithUserData() {
+            if (!userData) return;
+            
+            // Update header
+            document.getElementById('header-username').textContent = userData.username;
+            document.getElementById('header-balance').textContent = userData.balanceAFG || 0;
+            document.getElementById('user-avatar').textContent = userData.username.charAt(0).toUpperCase();
+            
+            // Update dashboard
+            document.getElementById('dashboard-afg').textContent = userData.balanceAFG || 0;
+            document.getElementById('dashboard-ton').textContent = userData.balanceTON || 0;
+            document.getElementById('dashboard-refs').textContent = userData.referralCount || 0;
+            document.getElementById('dashboard-ref-rewards').textContent = (userData.referralRewards || 0) + ' AFG';
+            
+            // Load recent activity
+            loadRecentActivity();
+        }
+
+        // Load recent activity
+        function loadRecentActivity() {
+            if (!currentUser) return;
+            
+            db.ref('activity/' + currentUser.uid).limitToLast(5).once('value')
+                .then(snapshot => {
+                    const activityList = document.getElementById('recent-activity');
+                    activityList.innerHTML = '';
+                    
+                    if (!snapshot.exists()) {
+                        activityList.innerHTML = '<div class="text-center py-4 text-gray-500"><p>No recent activity</p></div>';
+                        return;
+                    }
+                    
+                    const activities = [];
+                    snapshot.forEach(childSnapshot => {
+                        activities.push({
+                            id: childSnapshot.key,
+                            ...childSnapshot.val()
+                        });
+                    });
+                    
+                    // Sort by date (newest first)
+                    activities.sort((a, b) => b.date - a.date);
+                    
+                    activities.forEach(activity => {
+                        const date = new Date(activity.date);
+                        const activityEl = document.createElement('div');
+                        activityEl.className = 'flex justify-between items-center p-3 bg-gray-50 rounded-md';
+                        activityEl.innerHTML = `
+                            <div>
+                                <p class="text-sm font-medium">${activity.type.replace(/_/g, ' ')}</p>
+                                <p class="text-xs text-gray-500">${activity.details}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm font-medium ${activity.amount > 0 ? 'text-green-600' : 'text-red-600'}">${activity.amount > 0 ? '+' : ''}${activity.amount} ${activity.type.includes('TON') ? 'TON' : 'AFG'}</p>
+                                <p class="text-xs text-gray-500">${date.toLocaleDateString()}</p>
+                            </div>
+                        `;
+                        activityList.appendChild(activityEl);
+                    });
                 });
         }
-        
-        // Load user data from Firebase
-        function loadUserData(uid) {
-            database.ref('users/' + uid).once('value').then((snapshot) => {
-                if (snapshot.exists()) {
-                    const data = snapshot.val();
-                    userData = data;
-                    showAppContent();
-                } else {
-                    // User data doesn't exist (shouldn't happen)
-                    showNotification('User data not found. Please contact support.');
-                    logout();
+
+        // Load tasks
+        function loadTasks() {
+            if (!currentUser) return;
+            
+            // Check which tasks are already completed
+            db.ref('users/' + currentUser.uid + '/completedTasks').once('value')
+                .then(snapshot => {
+                    const completedTasks = snapshot.val() || {};
+                    
+                    document.querySelectorAll('.task-btn').forEach(btn => {
+                        const task = btn.getAttribute('data-task');
+                        if (completedTasks[task]) {
+                            btn.textContent = 'Completed';
+                            btn.disabled = true;
+                            btn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                            btn.classList.add('bg-gray-400', 'cursor-not-allowed');
+                        } else {
+                            btn.textContent = 'Complete Task';
+                            btn.disabled = false;
+                            btn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                            btn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                        }
+                    });
+                });
+            
+            // Add event listeners to task buttons
+            document.querySelectorAll('.task-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    if (btn.disabled) return;
+                    
+                    const task = btn.getAttribute('data-task');
+                    completeTask(task);
+                });
+            });
+        }
+
+        // Complete task
+        function completeTask(task) {
+            if (!currentUser) return;
+            
+            // Mark task as completed and add reward
+            db.ref('users/' + currentUser.uid).transaction((user) => {
+                if (user) {
+                    if (!user.completedTasks) user.completedTasks = {};
+                    if (user.completedTasks[task]) return user; // Already completed
+                    
+                    user.completedTasks[task] = true;
+                    user.balanceAFG = (user.balanceAFG || 0) + 2;
                 }
-            }).catch((error) => {
-                console.error("Error loading user data: ", error);
-                showNotification('Error loading user data.');
+                return user;
+            }).then(() => {
+                // Log activity
+                const activityData = {
+                    type: 'task_complete',
+                    amount: 2,
+                    details: 'Completed ' + task + ' task',
+                    date: firebase.database.ServerValue.TIMESTAMP
+                };
+                
+                db.ref('activity/' + currentUser.uid).push(activityData);
+                
+                showToast('Task completed! You earned 2 AFG.');
+                loadTasks(); // Refresh tasks
+            }).catch(error => {
+                showToast(error.message, true);
             });
         }
-        
-        // Logout user
-        function logout() {
-            auth.signOut().then(() => {
-                showNotification('Logged out successfully');
-                showAuthForms();
-            }).catch((error) => {
-                console.error("Error signing out: ", error);
+
+        // Load swap data
+        function loadSwapData() {
+            if (!currentUser) return;
+            
+            // Set current balance
+            document.getElementById('swap-balance').textContent = userData.balanceAFG || 0;
+            
+            // Calculate TON amount when AFG input changes
+            document.getElementById('swap-amount').addEventListener('input', (e) => {
+                const afgAmount = parseFloat(e.target.value) || 0;
+                const tonAmount = afgAmount * 0.001;
+                document.getElementById('ton-receive').value = tonAmount.toFixed(6);
+            });
+            
+            // Swap form submission
+            document.getElementById('swap-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const afgAmount = parseFloat(document.getElementById('swap-amount').value);
+                const tonAmount = afgAmount * 0.001;
+                const tonAddress = document.getElementById('ton-address').value;
+                
+                if (afgAmount < 1) {
+                    showToast('Minimum swap amount is 1 AFG', true);
+                    return;
+                }
+                
+                if (afgAmount > (userData.balanceAFG || 0)) {
+                    showToast('Insufficient AFG balance', true);
+                    return;
+                }
+                
+                if (!tonAddress) {
+                    showToast('Please enter a TON address', true);
+                    return;
+                }
+                
+                // Process swap
+                processSwap(afgAmount, tonAmount, tonAddress);
+            });
+            
+            // Load swap history
+            loadSwapHistory();
+        }
+
+        // Process swap
+        function processSwap(afgAmount, tonAmount, tonAddress) {
+            if (!currentUser) return;
+            
+            // Update user balances
+            db.ref('users/' + currentUser.uid).transaction((user) => {
+                if (user) {
+                    if (user.balanceAFG < afgAmount) {
+                        return; // Insufficient balance
+                    }
+                    
+                    user.balanceAFG -= afgAmount;
+                    user.balanceTON = (user.balanceTON || 0) + tonAmount;
+                }
+                return user;
+            }).then(() => {
+                // Create swap record
+                const swapData = {
+                    uid: currentUser.uid,
+                    username: userData.username,
+                    afgAmount: afgAmount,
+                    tonAmount: tonAmount,
+                    tonAddress: tonAddress,
+                    status: 'pending',
+                    createdAt: firebase.database.ServerValue.TIMESTAMP
+                };
+                
+                db.ref('swaps/').push(swapData)
+                    .then((ref) => {
+                        // Create admin notification
+                        const notificationData = {
+                            type: 'swap_request',
+                            refId: ref.key,
+                            payload: {
+                                username: userData.username,
+                                afgAmount: afgAmount,
+                                tonAmount: tonAmount
+                            },
+                            date: firebase.database.ServerValue.TIMESTAMP
+                        };
+                        
+                        db.ref('adminNotifications/').push(notificationData);
+                        
+                        // Log activity
+                        const activityData = {
+                            type: 'swap',
+                            amount: -afgAmount,
+                            details: 'Swapped ' + afgAmount + ' AFG for ' + tonAmount + ' TON',
+                            date: firebase.database.ServerValue.TIMESTAMP
+                        };
+                        
+                        db.ref('activity/' + currentUser.uid).push(activityData);
+                        
+                        showToast('Swap request submitted successfully!');
+                        document.getElementById('swap-form').reset();
+                        loadSwapHistory();
+                    });
+            }).catch(error => {
+                showToast(error.message, true);
             });
         }
-        
-        // Show error message
-        function showError(elementId, message) {
-            const element = document.getElementById(elementId);
-            element.textContent = message;
-            element.style.display = 'block';
+
+        // Load swap history
+        function loadSwapHistory() {
+            if (!currentUser) return;
             
-            // Hide error after 3 seconds
+            db.ref('swaps/').orderByChild('uid').equalTo(currentUser.uid).once('value')
+                .then(snapshot => {
+                    const historyList = document.getElementById('swap-history');
+                    historyList.innerHTML = '';
+                    
+                    if (!snapshot.exists()) {
+                        historyList.innerHTML = '<div class="text-center py-4 text-gray-500"><p>No swap history</p></div>';
+                        return;
+                    }
+                    
+                    const swaps = [];
+                    snapshot.forEach(childSnapshot => {
+                        swaps.push({
+                            id: childSnapshot.key,
+                            ...childSnapshot.val()
+                        });
+                    });
+                    
+                    // Sort by date (newest first)
+                    swaps.sort((a, b) => b.createdAt - a.createdAt);
+                    
+                    swaps.forEach(swap => {
+                        const date = new Date(swap.createdAt);
+                        const statusClass = swap.status === 'processed' ? 'bg-green-100 text-green-800' : 
+                                          swap.status === 'rejected' ? 'bg-red-100 text-red-800' : 
+                                          'bg-yellow-100 text-yellow-800';
+                        
+                        const swapEl = document.createElement('div');
+                        swapEl.className = 'flex justify-between items-center p-3 bg-gray-50 rounded-md';
+                        swapEl.innerHTML = `
+                            <div>
+                                <p class="text-sm font-medium">${swap.afgAmount} AFG → ${swap.tonAmount} TON</p>
+                                <p class="text-xs text-gray-500">${date.toLocaleDateString()}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs text-gray-500">${swap.tonAddress.substring(0, 6)}...${swap.tonAddress.substring(swap.tonAddress.length - 4)}</p>
+                                <span class="inline-block px-2 py-1 text-xs rounded-full ${statusClass}">${swap.status}</span>
+                            </div>
+                        `;
+                        historyList.appendChild(swapEl);
+                    });
+                });
+        }
+
+        // Load withdraw data
+        function loadWithdrawData() {
+            if (!currentUser) return;
+            
+            // Set current balance
+            document.getElementById('withdraw-balance').textContent = userData.balanceTON || 0;
+            
+            // Change destination label based on type
+            document.getElementById('destination-type').addEventListener('change', (e) => {
+                const label = document.getElementById('destination-label');
+                const input = document.getElementById('destination-value');
+                
+                if (e.target.value === 'binance') {
+                    label.textContent = 'Binance ID';
+                    input.placeholder = 'Enter your Binance ID';
+                } else {
+                    label.textContent = 'TON Address';
+                    input.placeholder = 'Enter your TON wallet address';
+                }
+            });
+            
+            // Withdraw form submission
+            document.getElementById('withdraw-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const tonAmount = parseFloat(document.getElementById('withdraw-amount').value);
+                const destinationType = document.getElementById('destination-type').value;
+                const destinationValue = document.getElementById('destination-value').value;
+                
+                if (tonAmount < 0.1) {
+                    showToast('Minimum withdrawal amount is 0.1 TON', true);
+                    return;
+                }
+                
+                if (tonAmount > (userData.balanceTON || 0)) {
+                    showToast('Insufficient TON balance', true);
+                    return;
+                }
+                
+                if (!destinationValue) {
+                    showToast('Please enter destination', true);
+                    return;
+                }
+                
+                // Process withdrawal
+                processWithdrawal(tonAmount, destinationType, destinationValue);
+            });
+            
+            // Load withdrawal history
+            loadWithdrawalHistory();
+        }
+
+        // Process withdrawal
+        function processWithdrawal(tonAmount, destinationType, destinationValue) {
+            if (!currentUser) return;
+            
+            // Update user balance
+            db.ref('users/' + currentUser.uid).transaction((user) => {
+                if (user) {
+                    if (user.balanceTON < tonAmount) {
+                        return; // Insufficient balance
+                    }
+                    
+                    user.balanceTON -= tonAmount;
+                }
+                return user;
+            }).then(() => {
+                // Create withdrawal request
+                const withdrawData = {
+                    uid: currentUser.uid,
+                    username: userData.username,
+                    destinationType: destinationType,
+                    destinationValue: destinationValue,
+                    amountTON: tonAmount,
+                    status: 'pending',
+                    createdAt: firebase.database.ServerValue.TIMESTAMP
+                };
+                
+                db.ref('withdrawRequests/').push(withdrawData)
+                    .then((ref) => {
+                        // Create admin notification
+                        const notificationData = {
+                            type: 'withdraw_request',
+                            refId: ref.key,
+                            payload: {
+                                username: userData.username,
+                                amount: tonAmount,
+                                destination: destinationValue
+                            },
+                            date: firebase.database.ServerValue.TIMESTAMP
+                        };
+                        
+                        db.ref('adminNotifications/').push(notificationData);
+                        
+                        // Log activity
+                        const activityData = {
+                            type: 'withdraw',
+                            amount: -tonAmount,
+                            details: 'Withdrawal request for ' + tonAmount + ' TON',
+                            date: firebase.database.ServerValue.TIMESTAMP
+                        };
+                        
+                        db.ref('activity/' + currentUser.uid).push(activityData);
+                        
+                        showToast('Withdrawal request submitted successfully!');
+                        document.getElementById('withdraw-form').reset();
+                        loadWithdrawalHistory();
+                    });
+            }).catch(error => {
+                showToast(error.message, true);
+            });
+        }
+
+        // Load withdrawal history
+        function loadWithdrawalHistory() {
+            if (!currentUser) return;
+            
+            db.ref('withdrawRequests/').orderByChild('uid').equalTo(currentUser.uid).once('value')
+                .then(snapshot => {
+                    const historyList = document.getElementById('withdraw-history');
+                    historyList.innerHTML = '';
+                    
+                    if (!snapshot.exists()) {
+                        historyList.innerHTML = '<div class="text-center py-4 text-gray-500"><p>No withdrawal history</p></div>';
+                        return;
+                    }
+                    
+                    const withdrawals = [];
+                    snapshot.forEach(childSnapshot => {
+                        withdrawals.push({
+                            id: childSnapshot.key,
+                            ...childSnapshot.val()
+                        });
+                    });
+                    
+                    // Sort by date (newest first)
+                    withdrawals.sort((a, b) => b.createdAt - a.createdAt);
+                    
+                    withdrawals.forEach(withdrawal => {
+                        const date = new Date(withdrawal.createdAt);
+                        const statusClass = withdrawal.status === 'paid' ? 'bg-green-100 text-green-800' : 
+                                           withdrawal.status === 'rejected' ? 'bg-red-100 text-red-800' : 
+                                           'bg-yellow-100 text-yellow-800';
+                        
+                        const withdrawEl = document.createElement('div');
+                        withdrawEl.className = 'flex justify-between items-center p-3 bg-gray-50 rounded-md';
+                        withdrawEl.innerHTML = `
+                            <div>
+                                <p class="text-sm font-medium">${withdrawal.amountTON} TON</p>
+                                <p class="text-xs text-gray-500">${withdrawal.destinationType}: ${withdrawal.destinationValue.substring(0, 6)}...${withdrawal.destinationValue.substring(withdrawal.destinationValue.length - 4)}</p>
+                                <p class="text-xs text-gray-500">${date.toLocaleDateString()}</p>
+                            </div>
+                            <span class="inline-block px-2 py-1 text-xs rounded-full ${statusClass}">${withdrawal.status}</span>
+                        `;
+                        historyList.appendChild(withdrawEl);
+                    });
+                });
+        }
+
+        // Load referral data
+        function loadReferralData() {
+            if (!currentUser) return;
+            
+            // Set referral stats
+            document.getElementById('ref-count').textContent = userData.referralCount || 0;
+            document.getElementById('ref-rewards').textContent = (userData.referralRewards || 0) + ' AFG';
+            
+            // Set referral link
+            const refLink = window.location.origin + window.location.pathname + '?ref=' + currentUser.uid;
+            document.getElementById('ref-link').value = refLink;
+            
+            // Copy referral link
+            document.getElementById('copy-ref').addEventListener('click', () => {
+                document.getElementById('ref-link').select();
+                document.execCommand('copy');
+                showToast('Referral link copied to clipboard!');
+            });
+            
+            // Load referral history
+            loadReferralHistory();
+        }
+
+        // Load referral history
+        function loadReferralHistory() {
+            if (!currentUser) return;
+            
+            db.ref('referrals/' + currentUser.uid).once('value')
+                .then(snapshot => {
+                    const historyList = document.getElementById('ref-history');
+                    historyList.innerHTML = '';
+                    
+                    if (!snapshot.exists()) {
+                        historyList.innerHTML = '<div class="text-center py-4 text-gray-500"><p>No referral history</p></div>';
+                        return;
+                    }
+                    
+                    const referrals = [];
+                    snapshot.forEach(childSnapshot => {
+                        referrals.push({
+                            id: childSnapshot.key,
+                            ...childSnapshot.val()
+                        });
+                    });
+                    
+                    // Sort by date (newest first)
+                    referrals.sort((a, b) => b.timestamp - a.timestamp);
+                    
+                    // Get user data for each referral
+                    const userPromises = referrals.map(ref => {
+                        return db.ref('users/' + ref.referredId).once('value')
+                            .then(userSnapshot => {
+                                return {
+                                    ...ref,
+                                    username: userSnapshot.val()?.username || 'Unknown'
+                                };
+                            });
+                    });
+                    
+                    Promise.all(userPromises).then(referralsWithUsers => {
+                        referralsWithUsers.forEach(ref => {
+                            const date = new Date(ref.timestamp);
+                            const refEl = document.createElement('div');
+                            refEl.className = 'flex justify-between items-center p-3 bg-gray-50 rounded-md';
+                            refEl.innerHTML = `
+                                <div>
+                                    <p class="text-sm font-medium">${ref.username}</p>
+                                    <p class="text-xs text-gray-500">Referred on ${date.toLocaleDateString()}</p>
+                                </div>
+                                <span class="inline-block px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">+5 AFG</span>
+                            `;
+                            historyList.appendChild(refEl);
+                        });
+                    });
+                });
+        }
+
+        // Load activity
+        function loadActivity() {
+            if (!currentUser) return;
+            
+            db.ref('activity/' + currentUser.uid).once('value')
+                .then(snapshot => {
+                    const activityList = document.getElementById('activity-list');
+                    activityList.innerHTML = '';
+                    
+                    if (!snapshot.exists()) {
+                        activityList.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">No activity recorded</td></tr>';
+                        return;
+                    }
+                    
+                    const activities = [];
+                    snapshot.forEach(childSnapshot => {
+                        activities.push({
+                            id: childSnapshot.key,
+                            ...childSnapshot.val()
+                        });
+                    });
+                    
+                    // Sort by date (newest first)
+                    activities.sort((a, b) => b.date - a.date);
+                    
+                    activities.forEach(activity => {
+                        const date = new Date(activity.date);
+                        const activityEl = document.createElement('tr');
+                        activityEl.innerHTML = `
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${date.toLocaleDateString()}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${activity.type.replace(/_/g, ' ')}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm ${activity.amount > 0 ? 'text-green-600' : 'text-red-600'}">${activity.amount > 0 ? '+' : ''}${activity.amount} ${activity.type.includes('TON') ? 'TON' : 'AFG'}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">${activity.details}</td>
+                        `;
+                        activityList.appendChild(activityEl);
+                    });
+                });
+        }
+
+        // Load profile
+        function loadProfile() {
+            if (!userData) return;
+            
+            document.getElementById('profile-username').value = userData.username;
+            document.getElementById('profile-email').value = userData.email;
+            
+            if (userData.createdAt) {
+                const date = new Date(userData.createdAt);
+                document.getElementById('profile-created').value = date.toLocaleDateString();
+            }
+        }
+
+        // Check admin status
+        function checkAdminStatus() {
+            if (!currentUser) return;
+            
+            // In a real app, you would check against a list of admin UIDs
+            // For demo purposes, we'll consider the first user as admin
+            db.ref('users').orderByChild('createdAt').limitToFirst(1).once('value')
+                .then(snapshot => {
+                    snapshot.forEach(childSnapshot => {
+                        if (childSnapshot.key === currentUser.uid) {
+                            adminNav.classList.remove('hidden');
+                        }
+                    });
+                });
+        }
+
+        // Load admin data
+        function loadAdminData() {
+            if (!currentUser) return;
+            
+            // Load withdrawal requests
+            db.ref('withdrawRequests/').orderByChild('createdAt').once('value')
+                .then(snapshot => {
+                    const withdrawList = document.getElementById('admin-withdraw-list');
+                    withdrawList.innerHTML = '';
+                    
+                    if (!snapshot.exists()) {
+                        withdrawList.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">No withdrawal requests</td></tr>';
+                        return;
+                    }
+                    
+                    const withdrawals = [];
+                    snapshot.forEach(childSnapshot => {
+                        withdrawals.push({
+                            id: childSnapshot.key,
+                            ...childSnapshot.val()
+                        });
+                    });
+                    
+                    // Sort by date (newest first)
+                    withdrawals.sort((a, b) => b.createdAt - a.createdAt);
+                    
+                    withdrawals.forEach(withdrawal => {
+                        const date = new Date(withdrawal.createdAt);
+                        const statusClass = withdrawal.status === 'paid' ? 'bg-green-100 text-green-800' : 
+                                           withdrawal.status === 'rejected' ? 'bg-red-100 text-red-800' : 
+                                           'bg-yellow-100 text-yellow-800';
+                        
+                        const withdrawEl = document.createElement('tr');
+                        withdrawEl.innerHTML = `
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${withdrawal.username}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${withdrawal.amountTON} TON</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">${withdrawal.destinationType}: ${withdrawal.destinationValue}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${date.toLocaleDateString()}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-block px-2 py-1 text-xs rounded-full ${statusClass}">${withdrawal.status}</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                ${withdrawal.status === 'pending' ? 
+                                `<button class="mr-2 text-green-600 hover:text-green-900 approve-withdraw" data-id="${withdrawal.id}">Approve</button>
+                                 <button class="text-red-600 hover:text-red-900 reject-withdraw" data-id="${withdrawal.id}">Reject</button>` : 
+                                ''}
+                            </td>
+                        `;
+                        withdrawList.appendChild(withdrawEl);
+                    });
+                    
+                    // Add event listeners to action buttons
+                    document.querySelectorAll('.approve-withdraw').forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            updateWithdrawStatus(btn.getAttribute('data-id'), 'paid');
+                        });
+                    });
+                    
+                    document.querySelectorAll('.reject-withdraw').forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            updateWithdrawStatus(btn.getAttribute('data-id'), 'rejected');
+                        });
+                    });
+                });
+            
+            // Load swap requests
+            db.ref('swaps/').orderByChild('createdAt').once('value')
+                .then(snapshot => {
+                    const swapList = document.getElementById('admin-swap-list');
+                    swapList.innerHTML = '';
+                    
+                    if (!snapshot.exists()) {
+                        swapList.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-gray-500">No swap requests</td></tr>';
+                        return;
+                    }
+                    
+                    const swaps = [];
+                    snapshot.forEach(childSnapshot => {
+                        swaps.push({
+                            id: childSnapshot.key,
+                            ...childSnapshot.val()
+                        });
+                    });
+                    
+                    // Sort by date (newest first)
+                    swaps.sort((a, b) => b.createdAt - a.createdAt);
+                    
+                    swaps.forEach(swap => {
+                        const date = new Date(swap.createdAt);
+                        const statusClass = swap.status === 'processed' ? 'bg-green-100 text-green-800' : 
+                                          swap.status === 'rejected' ? 'bg-red-100 text-red-800' : 
+                                          'bg-yellow-100 text-yellow-800';
+                        
+                        const swapEl = document.createElement('tr');
+                        swapEl.innerHTML = `
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${swap.username}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${swap.afgAmount} AFG</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${swap.tonAmount} TON</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">${swap.tonAddress.substring(0, 10)}...</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${date.toLocaleDateString()}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-block px-2 py-1 text-xs rounded-full ${statusClass}">${swap.status}</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                ${swap.status === 'pending' ? 
+                                `<button class="mr-2 text-green-600 hover:text-green-900 approve-swap" data-id="${swap.id}">Process</button>
+                                 <button class="text-red-600 hover:text-red-900 reject-swap" data-id="${swap.id}">Reject</button>` : 
+                                ''}
+                            </td>
+                        `;
+                        swapList.appendChild(swapEl);
+                    });
+                    
+                    // Add event listeners to action buttons
+                    document.querySelectorAll('.approve-swap').forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            updateSwapStatus(btn.getAttribute('data-id'), 'processed');
+                        });
+                    });
+                    
+                    document.querySelectorAll('.reject-swap').forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            updateSwapStatus(btn.getAttribute('data-id'), 'rejected');
+                        });
+                    });
+                });
+            
+            // Load users
+            db.ref('users/').once('value')
+                .then(snapshot => {
+                    const userList = document.getElementById('admin-user-list');
+                    userList.innerHTML = '';
+                    
+                    if (!snapshot.exists()) {
+                        userList.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">No users</td></tr>';
+                        return;
+                    }
+                    
+                    const users = [];
+                    snapshot.forEach(childSnapshot => {
+                        users.push({
+                            id: childSnapshot.key,
+                            ...childSnapshot.val()
+                        });
+                    });
+                    
+                    // Sort by date (newest first)
+                    users.sort((a, b) => b.createdAt - a.createdAt);
+                    
+                    users.forEach(user => {
+                        const date = new Date(user.createdAt);
+                        const userEl = document.createElement('tr');
+                        userEl.innerHTML = `
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${user.username}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">${user.email}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${user.balanceAFG || 0} AFG</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${user.balanceTON || 0} TON</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${user.referralCount || 0}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${date.toLocaleDateString()}</td>
+                        `;
+                        userList.appendChild(userEl);
+                    });
+                });
+        }
+
+        // Update withdrawal status
+        function updateWithdrawStatus(id, status) {
+            db.ref('withdrawRequests/' + id).update({
+                status: status
+            }).then(() => {
+                showToast('Withdrawal request updated');
+                loadAdminData();
+            }).catch(error => {
+                showToast(error.message, true);
+            });
+        }
+
+        // Update swap status
+        function updateSwapStatus(id, status) {
+            db.ref('swaps/' + id).update({
+                status: status
+            }).then(() => {
+                showToast('Swap request updated');
+                loadAdminData();
+            }).catch(error => {
+                showToast(error.message, true);
+            });
+        }
+
+        // Show toast notification
+        function showToast(message, isError = false) {
+            toast.textContent = message;
+            toast.className = isError ? 'toast error' : 'toast';
+            toast.classList.add('show');
+            
             setTimeout(() => {
-                element.style.display = 'none';
+                toast.classList.remove('show');
             }, 3000);
         }
-        
-        // The rest of the functions remain the same as previous implementation
-        // (updateUI, generateCheckInCalendar, joinChannel, dailyCheckIn, etc.)
-        // They would need to be adjusted to work with Firebase instead of localStorage
-        
-        // Show notification
-        function showNotification(message) {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.style.display = 'block';
+
+        // Initialize the app
+        function init() {
+            // Check for referral parameter in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const refUid = urlParams.get('ref');
             
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 3000);
+            if (refUid) {
+                // Store referral in localStorage for use after registration
+                localStorage.setItem('ref', refUid);
+            }
         }
-        
-        // Initialize the app when the page loads
-        window.onload = initApp;
+
+        // Run initialization
+        init();
     </script>
 </body>
 </html> 
