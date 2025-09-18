@@ -454,7 +454,7 @@
         }
         
         .auth-form {
-            display: flex;
+            display: flexible;
             flex-direction: column;
             gap: 15px;
         }
@@ -517,6 +517,12 @@
             color: #00cc00;
             font-weight: 600;
             margin-top: 10px;
+        }
+        
+        .task-description {
+            font-size: 14px;
+            margin-bottom: 15px;
+            color: #ccc;
         }
         
         @media (max-width: 768px) {
@@ -630,7 +636,7 @@
                     <h2 class="card-title">
                         <i class="fas fa-user-plus"></i>
                         Referral Program
-                    </h2>
+                    </2>
                     <p>Invite your friends and earn 5 AFG tokens for each successful referral.</p>
                     
                     <div class="referral-section">
@@ -655,6 +661,61 @@
                         <div class="stat-item">
                             <div class="stat-value" id="ref-rewards">0</div>
                             <div class="stat-label">Referral Rewards</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tasks Page -->
+            <div class="page" id="tasks-page">
+                <div class="card">
+                    <h2 class="card-title">
+                        <i class="fas fa-tasks"></i>
+                        Complete Tasks & Earn Rewards
+                    </h2>
+                    <p>Complete these simple tasks to earn AFG tokens. Each task rewards 3 AFG.</p>
+                    
+                    <div class="tasks-container">
+                        <div class="task-item" id="task-youtube">
+                            <div class="task-icon"><i class="fab fa-youtube"></i></div>
+                            <div class="task-title">Subscribe to our YouTube Channel</div>
+                            <div class="task-description">Click "Start Task" to open YouTube and subscribe to our channel</div>
+                            <div class="task-reward">Reward: 3 AFG</div>
+                            <div class="task-completed" id="youtube-completed" style="display: none;">
+                                <i class="fas fa-check-circle"></i> Task Completed
+                            </div>
+                            <button class="btn task-btn" id="youtube-btn">
+                                <i class="fas fa-play"></i>
+                                Start Task
+                            </button>
+                        </div>
+                        
+                        <div class="task-item" id="task-twitter">
+                            <div class="task-icon"><i class="fab fa-twitter"></i></div>
+                            <div class="task-title">Follow us on Twitter</div>
+                            <div class="task-description">Click "Start Task" to open Twitter and follow our account</div>
+                            <div class="task-reward">Reward: 3 AFG</div>
+                            <div class="task-completed" id="twitter-completed" style="display: none;">
+                                <i class="fas fa-check-circle"></i> Task Completed
+                            </div>
+                            <button class="btn task-btn" id="twitter-btn">
+                                <i class="fas fa-play"></i>
+                                Start Task
+                            </button>
+                        </div>
+                        
+                        <div class="task-item" id="task-telegram">
+                            <div class="task-icon"><i class="fab fa-telegram"></i></div>
+                            <div class="task-title">Join our Telegram Channel</div>
+                            <div class="task-description">Click "Start Task" to open Telegram and join our channel</div>
+                            <div class="task-reward">Reward: 3 AFG</div>
+                            <div class="task-completed" id="telegram-completed" style="display: none;">
+                                <i class="fas fa-check-circle"></i> Task Completed
+                            </div>
+                            <button class="btn task-btn" id="telegram-btn">
+                                <i class="fas fa-play"></i>
+                                Start Task
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -697,61 +758,6 @@
                     <div class="history-container" id="exchange-history">
                         <div class="history-item">
                             <div>No exchange history yet</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tasks Page -->
-            <div class="page" id="tasks-page">
-                <div class="card">
-                    <h2 class="card-title">
-                        <i class="fas fa-tasks"></i>
-                        Complete Tasks & Earn Rewards
-                    </h2>
-                    <p>Complete these simple tasks to earn AFG tokens. Each task rewards 3 AFG.</p>
-                    
-                    <div class="tasks-container">
-                        <div class="task-item" id="task-youtube">
-                            <div class="task-icon"><i class="fab fa-youtube"></i></div>
-                            <div class="task-title">Subscribe to our YouTube Channel</div>
-                            <a href="https://youtube.com/@AfgCoinAirdrop" target="_blank" class="task-link">https://youtube.com/@AfgCoinAirdrop</a>
-                            <div class="task-reward">Reward: 3 AFG</div>
-                            <div class="task-completed" id="youtube-completed" style="display: none;">
-                                <i class="fas fa-check-circle"></i> Task Completed
-                            </div>
-                            <button class="btn task-btn" id="youtube-btn">
-                                <i class="fas fa-play"></i>
-                                Start Task
-                            </button>
-                        </div>
-                        
-                        <div class="task-item" id="task-twitter">
-                            <div class="task-icon"><i class="fab fa-twitter"></i></div>
-                            <div class="task-title">Follow us on Twitter</div>
-                            <a href="https://x.com/AVARUSH_BOT" target="_blank" class="task-link">https://x.com/AVARUSH_BOT</a>
-                            <div class="task-reward">Reward: 3 AFG</div>
-                            <div class="task-completed" id="twitter-completed" style="display: none;">
-                                <i class="fas fa-check-circle"></i> Task Completed
-                            </div>
-                            <button class="btn task-btn" id="twitter-btn">
-                                <i class="fas fa-play"></i>
-                                Start Task
-                            </button>
-                        </div>
-                        
-                        <div class="task-item" id="task-telegram">
-                            <div class="task-icon"><i class="fab fa-telegram"></i></div>
-                            <div class="task-title">Join our Telegram Channel</div>
-                            <a href="https://t.me/afgcoinairdrop" target="_blank" class="task-link">https://t.me/afgcoinairdrop</a>
-                            <div class="task-reward">Reward: 3 AFG</div>
-                            <div class="task-completed" id="telegram-completed" style="display: none;">
-                                <i class="fas fa-check-circle"></i> Task Completed
-                            </div>
-                            <button class="btn task-btn" id="telegram-btn">
-                                <i class="fas fa-play"></i>
-                                Start Task
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -853,7 +859,7 @@
                         <button type="submit" class="btn">
                             <i class="fas fa-user-plus"></i>
                             Register
-                        </button>
+                            </button>
                     </form>
                 </div>
             </div>
@@ -915,6 +921,13 @@
         // Global variables
         let currentUser = null;
         let userData = null;
+        
+        // Task URLs
+        const taskUrls = {
+            youtube: "https://youtube.com/@AfgCoinAirdrop",
+            twitter: "https://x.com/AVARUSH_BOT",
+            telegram: "https://t.me/afgcoinairdrop"
+        };
         
         // Navigation
         navLinks.forEach(link => {
@@ -1027,18 +1040,18 @@
         
         // Task buttons
         youtubeBtn.addEventListener('click', () => {
-            startTask('youtube', 'https://youtube.com/@AfgCoinAirdrop');
+            startTask('youtube');
         });
         
         twitterBtn.addEventListener('click', () => {
-            startTask('twitter', 'https://x.com/AVARUSH_BOT');
+            startTask('twitter');
         });
         
         telegramBtn.addEventListener('click', () => {
-            startTask('telegram', 'https://t.me/afgcoinairdrop');
+            startTask('telegram');
         });
         
-        function startTask(taskId, taskUrl) {
+        function startTask(taskId) {
             if (!currentUser) {
                 showNotification('Please login first');
                 showPage('auth');
@@ -1051,7 +1064,7 @@
             }
             
             // Open task URL in new tab
-            window.open(taskUrl, '_blank');
+            window.open(taskUrls[taskId], '_blank');
             
             // Simulate task completion after 5 seconds
             const btn = document.getElementById(`${taskId}-btn`);
@@ -1349,7 +1362,7 @@
         }
         
         function loadWithdrawalHistory() {
-            database.ref(`withdrawHistory/${currentUser.uid}`).orderByChild('timestamp').limitToLast(5).once('value')
+            database.ref(`withdrawHistory/${currentUser.uid`).orderByChild('timestamp').limitToLast(5).once('value')
                 .then((snapshot) => {
                     const historyContainer = document.getElementById('withdraw-history');
                     
