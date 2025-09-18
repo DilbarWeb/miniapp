@@ -129,17 +129,20 @@
             box-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
         }
         
-        .profile-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--gold-dark) 0%, var(--primary-color) 100%);
+        .auth-buttons {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
+            gap: 10px;
+        }
+        
+        .auth-btn {
+            background: linear-gradient(135deg, var(--gold-dark) 0%, var(--primary-color) 100%);
             color: var(--secondary-color);
-            font-weight: bold;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
             box-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
         }
         
@@ -497,6 +500,19 @@
             border: 1px solid var(--gold-dark);
         }
         
+        .task-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            display: block;
+            margin: 10px 0;
+            word-break: break-all;
+        }
+        
+        .task-link:hover {
+            text-decoration: underline;
+        }
+        
         @media (max-width: 768px) {
             .balance-container, .stats-container {
                 flex-direction: column;
@@ -526,6 +542,10 @@
             .user-email {
                 display: none;
             }
+            
+            .auth-buttons {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -544,7 +564,11 @@
                 <div class="balance-card">
                     <span id="ton-balance">0</span> TON
                 </div>
-                <div class="profile-btn" id="profile-btn">
+                <div class="auth-buttons" id="auth-buttons">
+                    <button class="auth-btn" id="login-btn">Login</button>
+                    <button class="auth-btn" id="register-btn">Register</button>
+                </div>
+                <div class="profile-btn" id="profile-btn" style="display: none;">
                     <i class="fas fa-user"></i>
                 </div>
             </div>
@@ -608,7 +632,7 @@
                     
                     <div class="referral-section">
                         <div class="referral-link-box">
-                            <div class="referral-link" id="referral-link">https://miniapp-nine-opal.vercel.app=</div>
+                            <div class="referral-link" id="referral-link">https://afgcoin-nine-opal.vercel.app?ref=</div>
                             <button class="btn btn-copy" id="copy-btn">
                                 <i class="fas fa-copy"></i>
                                 Copy
@@ -688,6 +712,7 @@
                         <div class="task-item" id="task-youtube">
                             <div class="task-icon"><i class="fab fa-youtube"></i></div>
                             <div class="task-title">Subscribe to our YouTube Channel</div>
+                            <a href="https://youtube.com/@AfgCoinAirdrop" target="_blank" class="task-link">https://youtube.com/@AfgCoinAirdrop</a>
                             <div class="task-reward">Reward: 3 AFG</div>
                             <button class="btn task-btn">
                                 <i class="fas fa-play"></i>
@@ -698,6 +723,7 @@
                         <div class="task-item" id="task-twitter">
                             <div class="task-icon"><i class="fab fa-twitter"></i></div>
                             <div class="task-title">Follow us on Twitter</div>
+                            <a href="https://x.com/AVARUSH_BOT" target="_blank" class="task-link">https://x.com/AVARUSH_BOT</a>
                             <div class="task-reward">Reward: 3 AFG</div>
                             <button class="btn task-btn">
                                 <i class="fas fa-play"></i>
@@ -708,6 +734,7 @@
                         <div class="task-item" id="task-telegram">
                             <div class="task-icon"><i class="fab fa-telegram"></i></div>
                             <div class="task-title">Join our Telegram Channel</div>
+                            <a href="https://t.me/afgcoinairdrop" target="_blank" class="task-link">https://t.me/afgcoinairdrop</a>
                             <div class="task-reward">Reward: 3 AFG</div>
                             <button class="btn task-btn">
                                 <i class="fas fa-play"></i>
@@ -850,7 +877,10 @@
         // DOM Elements
         const navLinks = document.querySelectorAll('.nav-link');
         const pages = document.querySelectorAll('.page');
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
         const profileBtn = document.getElementById('profile-btn');
+        const authButtons = document.getElementById('auth-buttons');
         const authTabs = document.querySelectorAll('.auth-tab');
         const loginForm = document.getElementById('login-form');
         const registerForm = document.getElementById('register-form');
@@ -882,6 +912,17 @@
             });
         });
         
+        // Auth buttons
+        loginBtn.addEventListener('click', () => {
+            showPage('auth');
+            authTabs[0].click();
+        });
+        
+        registerBtn.addEventListener('click', () => {
+            showPage('auth');
+            authTabs[1].click();
+        });
+        
         // Auth tabs
         authTabs.forEach(tab => {
             tab.addEventListener('click', () => {
@@ -911,8 +952,6 @@
                 }).catch(error => {
                     console.error('Logout error:', error);
                 });
-            } else {
-                showPage('auth');
             }
         });
         
@@ -1215,9 +1254,13 @@
                     // Update user email
                     userEmail.textContent = userData.email;
                     
+                    // Update UI based on auth state
+                    authButtons.style.display = 'none';
+                    profileBtn.style.display = 'flex';
+                    
                     // Update referral info
                     document.getElementById('referral-link').textContent = 
-                        `https://dilbarweb.github.io/miniapp?ref=${userData.referralCode}`;
+                        `https://afgcoin-nine-opal.vercel.app?ref=${userData.referralCode}`;
                     
                     referralCode.textContent = `Your Referral Code: ${userData.referralCode}`;
                     
@@ -1313,6 +1356,10 @@
             
             // Reset user email
             userEmail.textContent = 'Not logged in';
+            
+            // Update UI based on auth state
+            authButtons.style.display = 'flex';
+            profileBtn.style.display = 'none';
             
             // Reset referral info
             document.getElementById('ref-count').textContent = '0';
