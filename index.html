@@ -3,211 +3,893 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>DOGS Coin Rewards</title>
+    <title>Afghan Rewards Hub</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-    <!-- GigaPub Ads Script -->
+    <!-- د GigaPub اعلاناتو سکریپټ -->
     <script src="https://ad.gigapub.tech/script?id=1602"></script>
     <style>
         :root {
             --font-family: 'Poppins', sans-serif;
-            --primary-color: #FF6B35; --secondary-color: #FFA726;
-            --accent-color: #4ECDC4; --accent-secondary: #45B7AF;
-            --background-light: #F8F9FA; --surface-light: #FFFFFF; --text-primary-light: #2C3E50; --text-secondary-light: #808B96; --border-light: #EAEDED;
-            --background-dark: #1B2631; --surface-dark: #283747; --text-primary-dark: #FDFEFE; --text-secondary-dark: #ABB2B9; --border-dark: #566573;
-            --success: #27AE60; --danger: #C0392B; --pending: #F39C12;
-            --dogs-gradient: linear-gradient(135deg, #FF6B35, #FFA726);
-            --dogs-light: #FFF3E0;
+            --primary-color: #8B4513; /* د افغانستان د رنګونو سره سم */
+            --secondary-color: #D2691E;
+            --accent-color: #CD853F;
+            --background-light: #FDF6E3; /* سپین رنګ */
+            --surface-light: #FFFFFF;
+            --text-primary-light: #2C3E50;
+            --text-secondary-light: #7E8C9A;
+            --border-light: #E8E8E8;
+            --background-dark: #1A1A1A;
+            --surface-dark: #2D2D2D;
+            --text-primary-dark: #F5F5F5;
+            --text-secondary-dark: #B0B0B0;
+            --border-dark: #404040;
+            --success: #27AE60;
+            --danger: #C0392B;
+            --pending: #F39C12;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --card-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: var(--font-family); transition: background-color 0.3s, color 0.3s; -webkit-font-smoothing: antialiased; }
-        body.light-theme { background-color: var(--background-light); color: var(--text-primary-light); }
-        body.dark-theme { background-color: var(--background-dark); color: var(--text-primary-dark); }
-        #app { max-width: 500px; margin: 0 auto; padding-bottom: 80px; }
-        .page { display: none; padding: 15px; }
-        .page.active { display: block; animation: fadeIn 0.4s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         
-        .profile-header {
-            padding: 25px 15px; border-radius: 0 0 20px 20px;
-            display: flex; flex-direction: column; align-items: center; text-align: center;
-            background: var(--dogs-gradient);
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body { 
+            font-family: var(--font-family); 
+            transition: background-color 0.3s, color 0.3s; 
+            -webkit-font-smoothing: antialiased;
+            background: linear-gradient(135deg, #FDF6E3 0%, #F5E6D3 100%);
+        }
+        
+        body.light-theme { 
+            background-color: var(--background-light); 
+            color: var(--text-primary-light); 
+        }
+        
+        body.dark-theme { 
+            background-color: var(--background-dark); 
+            color: var(--text-primary-dark); 
+        }
+        
+        #app { 
+            max-width: 500px; 
+            margin: 0 auto; 
+            padding-bottom: 80px;
+            min-height: 100vh;
+        }
+        
+        .page { 
+            display: none; 
+            padding: 15px; 
+        }
+        
+        .page.active { 
+            display: block; 
+            animation: fadeIn 0.4s ease-in-out; 
+        }
+        
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(15px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        
+        /* نوی هدر ډیزاین */
+        .app-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 20px 15px;
+            border-radius: 0 0 20px 20px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 15px;
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .app-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .profile-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        #user-photo { 
+            width: 70px; 
+            height: 70px; 
+            border-radius: 50%; 
+            border: 3px solid rgba(255, 255, 255, 0.5); 
+            object-fit: cover; 
+        }
+        
+        .user-info {
+            flex-grow: 1;
+        }
+        
+        #user-name { 
+            font-size: 1.2rem; 
+            font-weight: 600; 
+            margin-bottom: 5px; 
+        }
+        
+        #user-balance-container { 
+            font-size: 0.9rem; 
+            opacity: 0.9;
+        }
+        
+        #user-balance { 
+            font-size: 1.1rem; 
+            font-weight: 700; 
+        }
+        
+        /* نوی کارډ ډیزاین */
+        .card {
+            background-color: var(--surface-light);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid var(--border-light);
+        }
+        
+        .dark-theme .card {
+            background-color: var(--surface-dark);
+            border-color: var(--border-dark);
+        }
+        
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--card-shadow-hover);
+        }
+        
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .card-title i {
+            color: var(--primary-color);
+        }
+        
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+            margin: 20px 0; 
+        }
+        
+        .stat-card { 
+            padding: 15px; 
+            border-radius: 12px; 
+            text-align: center; 
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .stat-card h3 { 
+            font-size: 0.85rem; 
+            font-weight: 500; 
+            margin-bottom: 8px; 
+            text-transform: uppercase; 
+            opacity: 0.9;
+        }
+        
+        .stat-card p { 
+            font-size: 1.4rem; 
+            font-weight: 700; 
+        }
+        
+        .chart-container, .earning-wallet-card { 
+            padding: 20px; 
+            border-radius: 16px; 
+            margin-top: 20px; 
+            background-color: var(--surface-light);
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-light);
+        }
+        
+        .dark-theme .chart-container, .dark-theme .earning-wallet-card { 
+            background-color: var(--surface-dark); 
+            border-color: var(--border-dark); 
+        }
+        
+        .chart { 
+            display: flex; 
+            justify-content: space-around; 
+            align-items: flex-end; 
+            height: 150px; 
+            border-left: 1px solid; 
+            border-bottom: 1px solid; 
+            padding-top: 10px; 
+            margin-bottom: 10px;
+        }
+        
+        .light-theme .chart { border-color: var(--border-light); } 
+        .dark-theme .chart { border-color: var(--border-dark); }
+        
+        .bar { 
+            width: 12%; 
+            background: linear-gradient(to top, var(--primary-color), var(--secondary-color)); 
+            border-radius: 5px 5px 0 0; 
+            position: relative; 
+            cursor: pointer; 
+        }
+        
+        .bar .tooltip { 
+            position: absolute; 
+            top: -30px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: var(--secondary); 
+            color: white; 
+            padding: 3px 7px; 
+            border-radius: 5px; 
+            font-size: 0.8rem; 
+            white-space: nowrap; 
+            opacity: 0; 
+            transition: opacity 0.2s; 
+            pointer-events: none; 
+        }
+        
+        .bar:hover .tooltip { opacity: 1; }
+        
+        .chart-labels { 
+            display: flex; 
+            justify-content: space-around; 
+            font-size: 0.75rem; 
+            margin-top: 5px; 
+        }
+        
+        .history-item { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 15px; 
+            border-radius: 10px; 
+            margin-bottom: 10px; 
+            background-color: var(--surface-light);
+            border: 1px solid var(--border-light);
+            transition: transform 0.2s;
+        }
+        
+        .dark-theme .history-item { 
+            background-color: var(--surface-dark); 
+            border: 1px solid var(--border-dark); 
+        }
+        
+        .history-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .history-details p { margin: 0; } 
+        .history-details p:first-child { font-weight: 600; }
+        
+        .history-status { 
+            padding: 5px 10px; 
+            border-radius: 20px; 
+            font-size: 0.8rem; 
+            font-weight: 600; 
+            color: white; 
+            text-transform: capitalize; 
+        }
+        
+        .status-completed { background-color: var(--success); } 
+        .status-pending { background-color: var(--pending); } 
+        .status-rejected { background-color: var(--danger); }
+        
+        .progress-container { margin-bottom: 20px; }
+        
+        .progress-info { 
+            display: flex; 
+            justify-content: space-between; 
+            margin-bottom: 5px; 
+            font-size: 0.9rem; 
+            font-weight: 500; 
+        }
+        
+        .progress-bar-bg { 
+            width: 100%; 
+            height: 10px; 
+            border-radius: 5px; 
+            overflow: hidden;
+        }
+        
+        .light-theme .progress-bar-bg { background-color: var(--border-light); }
+        .dark-theme .progress-bar-bg { background-color: var(--border-dark); }
+        
+        .progress-bar-fg { 
+            height: 100%; 
+            border-radius: 5px; 
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)); 
+            transition: width 0.3s ease; 
+        }
+        
+        form input, form select, form textarea { 
+            transition: all 0.2s ease-in-out; 
+            border: 1px solid; 
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            font-family: var(--font-family);
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+        
+        .light-theme form input, .light-theme form select { 
+            background-color: var(--surface-light);
+            border-color: var(--border-light); 
+            color: var(--text-primary-light);
+        }
+        
+        .dark-theme form input, .dark-theme form select { 
+            background-color: var(--surface-dark);
+            border-color: var(--border-dark); 
+            color: var(--text-primary-dark);
+        }
+        
+        form input:focus, form select:focus, form textarea:focus { 
+            outline: none; 
+            border-color: var(--primary-color) !important; 
+            box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.2); 
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .popup-overlay { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.6); 
+            display: none; 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 10000; 
+        }
+        
+        .popup-content { 
+            padding: 30px; 
+            border-radius: 20px; 
+            text-align: center; 
+            max-width: 80%; 
+            background-color: var(--surface-light);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .dark-theme .popup-content { background-color: var(--surface-dark); }
+        
+        .popup-content h2 { margin-bottom: 15px; color: var(--primary-color); } 
+        .popup-content p { margin-bottom: 20px; }
+        
+        .popup-close-btn { 
+            padding: 10px 25px; 
+            border: none; 
+            border-radius: 8px; 
+            color: #fff; 
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            cursor: pointer; 
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        
+        .popup-close-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .popup-loader .spinner { 
+            width: 40px; 
+            height: 40px; 
+            border-radius: 50%; 
+            border: 4px solid; 
+            border-color: var(--primary-color) transparent; 
+            animation: spin 1s linear infinite; 
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        #app-loader { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            z-index: 9999; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+        }
+        
+        #app-loader .spinner { 
+            width: 50px; 
+            height: 50px; 
+            border-radius: 50%; 
+            border: 5px solid; 
+            border-color: rgba(255, 255, 255, 0.3) transparent; 
+            animation: spin 1s linear infinite; 
+        }
+        
+        #loading-progress { 
+            margin-top: 15px; 
+            font-size: 1.2rem; 
+            font-weight: 600; 
+        }
+        
+        .bottom-nav { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            max-width: 500px; 
+            margin: 0 auto; 
+            display: flex; 
+            justify-content: space-around; 
+            padding: 12px 0; 
+            border-top: 1px solid; 
+            z-index: 1000; 
+            background-color: var(--surface-light);
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .dark-theme .bottom-nav { 
+            background-color: var(--surface-dark); 
+            border-top-color: var(--border-dark); 
+        }
+        
+        .nav-btn { 
+            background: none; 
+            border: none; 
+            cursor: pointer; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            font-family: var(--font-family); 
+            font-size: 0.75rem; 
+            transition: all 0.2s; 
+            flex-grow: 1; 
+            padding: 5px;
+            border-radius: 10px;
+        }
+        
+        .light-theme .nav-btn { color: var(--text-secondary-light); } 
+        .dark-theme .nav-btn { color: var(--text-secondary-dark); }
+        
+        .nav-btn i { 
+            font-size: 1.5rem; 
+            margin-bottom: 4px; 
+            transition: all 0.2s;
+        } 
+        
+        .nav-btn.active { 
+            color: var(--primary-color); 
+            transform: translateY(-5px);
+        }
+        
+        .nav-btn.active i {
+            transform: scale(1.1);
+        }
+        
+        .task-container { 
+            padding: 20px; 
+            border-radius: 16px; 
+            margin-bottom: 15px; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            background-color: var(--surface-light);
+            border: 1px solid var(--border-light);
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .dark-theme .task-container { 
+            background-color: var(--surface-dark); 
+            border: 1px solid var(--border-dark); 
+        }
+        
+        .task-container:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--card-shadow-hover);
+        }
+        
+        .task-icon-img { 
+            width: 50px; 
+            height: 50px; 
+            border-radius: 12px; 
+            object-fit: cover; 
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .task-info h3 { 
+            font-size: 1.1rem; 
+            font-weight: 600; 
+            margin-bottom: 5px;
+        } 
+        
+        .task-info p { 
+            font-size: 0.85rem; 
+            opacity: 0.8;
+        }
+        
+        .action-btn { 
+            padding: 10px 20px; 
+            font-size: 0.9rem; 
+            font-weight: 600; 
+            color: #fff; 
+            border: none; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            transition: all 0.2s; 
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            margin-left: auto; 
+            white-space: nowrap;
+            box-shadow: 0 4px 10px rgba(139, 69, 19, 0.3);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(139, 69, 19, 0.4);
+        }
+        
+        .action-btn:disabled { 
+            background: #808B96; 
+            cursor: not-allowed; 
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .leaderboard-toggle { 
+            display: flex; 
+            justify-content: space-around; 
+            margin-bottom: 15px; 
+            background-color: var(--surface-light);
+            border-radius: 12px;
+            padding: 5px;
+            border: 1px solid var(--border-light);
+        }
+        
+        .dark-theme .leaderboard-toggle {
+            background-color: var(--surface-dark);
+            border-color: var(--border-dark);
+        }
+        
+        .toggle-btn { 
+            padding: 10px 20px; 
+            border: none; 
+            background: none; 
+            font-size: 1rem; 
+            cursor: pointer; 
+            border-radius: 8px;
+            flex: 1;
+            transition: all 0.2s;
+        }
+        
+        .light-theme .toggle-btn { color: var(--text-secondary-light); } 
+        .dark-theme .toggle-btn { color: var(--text-secondary-dark); }
+        
+        .toggle-btn.active { 
+            font-weight: 700; 
+            color: var(--primary-color); 
+            background-color: rgba(139, 69, 19, 0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .leaderboard-list { list-style: none; }
+        
+        .leaderboard-item { 
+            display: flex; 
+            align-items: center; 
+            padding: 15px; 
+            margin-bottom: 10px; 
+            border-radius: 12px; 
+            background-color: var(--surface-light);
+            border: 1px solid var(--border-light);
+            transition: transform 0.2s;
+        }
+        
+        .dark-theme .leaderboard-item { 
+            background-color: var(--surface-dark); 
+            border-color: var(--border-dark);
+        }
+        
+        .leaderboard-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .rank { 
+            font-size: 1.2rem; 
+            font-weight: 700; 
+            color: var(--primary-color); 
+            width: 40px; 
+        }
+        
+        .leaderboard-item img { 
+            width: 40px; 
+            height: 40px; 
+            border-radius: 50%; 
+            margin-right: 10px; 
+            object-fit: cover; 
+        }
+        
+        .leaderboard-name { 
+            font-weight: 600; 
+            flex-grow: 1; 
+        } 
+        
+        .leaderboard-score { 
+            font-weight: 600; 
+            color: var(--primary-color); 
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 25px 0 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title:after {
+            content: '';
+            flex-grow: 1;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-color), transparent);
+        }
+        
+        .wallet-card {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
             position: relative;
             overflow: hidden;
         }
-        .profile-header::before {
+        
+        .wallet-card:before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
-            background-size: cover;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(30deg);
         }
-        #user-photo { width: 80px; height: 80px; border-radius: 50%; border: 4px solid white; object-fit: cover; margin-bottom: 10px; z-index: 1; }
-        #user-name { font-size: 1.4rem; font-weight: 700; margin-bottom: 5px; z-index: 1; }
-        #user-balance-container { font-size: 1rem; font-weight: 500; z-index: 1; }
-        #user-balance { font-size: 1.1rem; font-weight: 700; color: white; }
         
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
-        .stat-card { padding: 15px; border-radius: 12px; text-align: center; border: none; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
-        .light-theme .stat-card { background-color: var(--surface-light); }
-        .dark-theme .stat-card { background-color: var(--surface-dark); }
-        .stat-card h3 { font-size: 0.85rem; font-weight: 500; margin-bottom: 8px; text-transform: uppercase; }
-        .light-theme .stat-card h3 { color: var(--text-secondary-light); } .dark-theme .stat-card h3 { color: var(--text-secondary-dark); }
-        .stat-card p { font-size: 1.4rem; font-weight: 600; color: var(--primary-color); }
+        .wallet-title {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
         
-        .chart-container, .earning-wallet-card { padding: 20px; border-radius: 12px; margin-top: 20px; border: none; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
-        .light-theme .chart-container, .light-theme .earning-wallet-card { background-color: var(--surface-light); }
-        .dark-theme .chart-container, .dark-theme .earning-wallet-card { background-color: var(--surface-dark); }
-        .chart { display: flex; justify-content: space-around; align-items: flex-end; height: 150px; border-left: 1px solid; border-bottom: 1px solid; padding-top: 10px; }
-        .light-theme .chart { border-color: var(--border-light); } .dark-theme .chart { border-color: var(--border-dark); }
-        .bar { width: 12%; background: var(--dogs-gradient); border-radius: 5px 5px 0 0; position: relative; cursor: pointer; }
-        .bar .tooltip { position: absolute; top: -30px; left: 50%; transform: translateX(-50%); background: var(--secondary-color); color: white; padding: 3px 7px; border-radius: 5px; font-size: 0.8rem; white-space: nowrap; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
-        .bar:hover .tooltip { opacity: 1; }
-        .chart-labels { display: flex; justify-content: space-around; font-size: 0.75rem; margin-top: 5px; }
-
-        .history-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .light-theme .history-item { background-color: var(--surface-light); }
-        .dark-theme .history-item { background-color: var(--surface-dark); }
-        .history-details p { margin: 0; } .history-details p:first-child { font-weight: 600; }
-        .history-status { padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: white; text-transform: capitalize; }
-        .status-completed { background-color: var(--success); } .status-pending { background-color: var(--pending); } .status-rejected { background-color: var(--danger); }
-
-        .progress-container { margin-bottom: 20px; }
-        .progress-info { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9rem; font-weight: 500; }
-        .progress-bar-bg { width: 100%; height: 10px; border-radius: 5px; }
-        .light-theme .progress-bar-bg { background-color: var(--border-light); }
-        .dark-theme .progress-bar-bg { background-color: var(--border-dark); }
-        .progress-bar-fg { height: 100%; border-radius: 5px; background: var(--dogs-gradient); transition: width 0.3s ease; }
+        .wallet-balance {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
         
-        form input, form select, form textarea { transition: all 0.2s ease-in-out; border: 1px solid; border-radius: 8px; padding: 12px; }
-        .light-theme form input, .light-theme form select { border-color: var(--border-light); background: var(--surface-light); }
-        .dark-theme form input, .dark-theme form select { border-color: var(--border-dark); background: var(--surface-dark); }
-        form input:focus, form select:focus, form textarea:focus { outline: none; border-color: var(--primary-color) !important; box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2); }
-
-        .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 10000; }
-        .popup-content { padding: 30px; border-radius: 15px; text-align: center; max-width: 80%; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        .light-theme .popup-content { background-color: var(--surface-light); } .dark-theme .popup-content { background-color: var(--surface-dark); }
-        .popup-content h2 { margin-bottom: 15px; color: var(--primary-color); } .popup-content p { margin-bottom: 20px; }
-        .popup-close-btn { padding: 10px 25px; border: none; border-radius: 8px; color: #fff; background: var(--dogs-gradient); cursor: pointer; font-weight: 600; }
-        .popup-loader .spinner { width: 40px; height: 40px; border-radius: 50%; border: 4px solid; border-color: var(--primary-color) transparent; animation: spin 1s linear infinite; margin: 0 auto 15px;}
-        @keyframes spin { to { transform: rotate(360deg); } }
+        .referral-card {
+            background: linear-gradient(135deg, #27AE60 0%, #2ECC71 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+        }
         
-        #app-loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .light-theme #app-loader { background-color: var(--background-light); } .dark-theme #app-loader { background-color: var(--background-dark); }
-        #app-loader .spinner { width: 50px; height: 50px; border-radius: 50%; border: 5px solid; border-color: var(--primary-color) transparent; animation: spin 1s linear infinite; }
-        #loading-progress { margin-top: 15px; font-size: 1.2rem; font-weight: 600; }
-        .light-theme #loading-progress { color: var(--text-primary-light); } .dark-theme #loading-progress { color: var(--text-primary-dark); }
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary-light);
+        }
         
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; max-width: 500px; margin: 0 auto; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid; z-index: 1000; backdrop-filter: blur(10px); }
-        .light-theme .bottom-nav { background-color: rgba(255,255,255,0.9); border-top-color: var(--border-light); }
-        .dark-theme .bottom-nav { background-color: rgba(40, 55, 71, 0.9); border-top-color: var(--border-dark); }
-        .nav-btn { background: none; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; font-family: var(--font-family); font-size: 0.75rem; transition: all 0.2s; flex-grow: 1; padding: 8px 0; border-radius: 8px; margin: 0 5px; }
-        .light-theme .nav-btn { color: var(--text-secondary-light); } .dark-theme .nav-btn { color: var(--text-secondary-dark); }
-        .nav-btn i { font-size: 1.5rem; margin-bottom: 4px; } 
-        .nav-btn.active { color: var(--primary-color); background: rgba(255, 107, 53, 0.1); }
+        .dark-theme .empty-state {
+            color: var(--text-secondary-dark);
+        }
         
-        .task-container { padding: 20px; border-radius: 12px; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
-        .light-theme .task-container { background-color: var(--surface-light); }
-        .dark-theme .task-container { background-color: var(--surface-dark); }
-        .task-icon-img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
-        .task-info h3 { font-size: 1.1rem; font-weight: 600; } .task-info p { font-size: 0.85rem; }
-        .action-btn { padding: 10px 20px; font-size: 0.9rem; font-weight: 600; color: #fff; border: none; border-radius: 8px; cursor: pointer; transition: all 0.2s; background: var(--dogs-gradient); margin-left: auto; white-space: nowrap; box-shadow: 0 4px 8px rgba(255, 107, 53, 0.3); }
-        .action-btn:disabled { background: #808B96; box-shadow: none; cursor: not-allowed; }
-        .action-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(255, 107, 53, 0.4); }
-        
-        .leaderboard-toggle { display: flex; justify-content: space-around; margin-bottom: 15px; background: var(--surface-light); border-radius: 10px; padding: 5px; }
-        .light-theme .leaderboard-toggle { background-color: var(--surface-light); } .dark-theme .leaderboard-toggle { background-color: var(--surface-dark); }
-        .toggle-btn { padding: 10px 20px; border: none; background: none; font-size: 1rem; cursor: pointer; border-radius: 8px; flex: 1; }
-        .light-theme .toggle-btn { color: var(--text-secondary-light); } .dark-theme .toggle-btn { color: var(--text-secondary-dark); }
-        .toggle-btn.active { font-weight: 700; color: var(--primary-color); background: rgba(255, 107, 53, 0.1); }
-        .leaderboard-list { list-style: none; }
-        .leaderboard-item { display: flex; align-items: center; padding: 10px; margin-bottom: 8px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .light-theme .leaderboard-item { background-color: var(--surface-light); } .dark-theme .leaderboard-item { background-color: var(--surface-dark); }
-        .rank { font-size: 1.2rem; font-weight: 700; color: var(--primary-color); width: 40px; }
-        .leaderboard-item img { width: 40px; height: 40px; border-radius: 50%; margin-right: 10px; object-fit: cover; }
-        .leaderboard-name { font-weight: 600; flex-grow: 1; } .leaderboard-score { font-weight: 600; color: var(--primary-color); }
-        
-        .coin-badge { display: inline-flex; align-items: center; background: var(--dogs-light); color: var(--primary-color); padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 0.9rem; }
-        .coin-badge i { margin-right: 5px; }
-        
-        .dogs-header { display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
-        .dogs-logo { width: 40px; height: 40px; margin-right: 10px; }
-        
-        .section-title { display: flex; align-items: center; margin: 20px 0 15px; font-size: 1.2rem; }
-        .section-title i { margin-right: 10px; color: var(--primary-color); }
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
     </style>
 </head>
-<body>
-    <div id="app-loader"><div class="spinner"></div><p id="loading-progress">0%</p></div>
-    <div id="popup" class="popup-overlay"><div class="popup-content"><div id="popup-body"></div></div></div>
+<body class="light-theme">
+    <div id="app-loader">
+        <div class="spinner"></div>
+        <p id="loading-progress">0%</p>
+        <p style="margin-top: 10px; font-size: 1rem;">Afghan Rewards Hub</p>
+    </div>
+    
+    <div id="popup" class="popup-overlay">
+        <div class="popup-content">
+            <div id="popup-body"></div>
+        </div>
+    </div>
+    
     <div id="app" style="display: none;">
-        <header class="profile-header">
-            <div class="dogs-header">
-                <img class="dogs-logo" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwIDBDOC45NTQgMCAwIDguOTU0IDAgMjBTOC45NTQgNDAgMjAgNDBTNDAgMzEuMDQ2IDQwIDIwUzMxLjA0NiAwIDIwIDBaIiBmaWxsPSIjRkZGN0UwIi8+CjxwYXRoIGQ9Ik0yNi41IDE1LjVDMjYuNSAxOC4yNjEgMjQuMjYxIDIwLjUgMjEuNSAyMC41QzE4LjczOSAyMC41IDE2LjUgMTguMjYxIDE2LjUgMTUuNUMxNi41IDEyLjczOSAxOC43MzkgMTAuNSAyMS41IDEwLjVDMjQuMjYxIDEwLjUgMjYuNSAxMi43MzkgMjYuNSAxNS41WiIgZmlsbD0iI0ZGNkIzNSIvPgo8cGF0aCBkPSJNMTUuNSAyNC41QzE1LjUgMjUuODc5IDE0LjM3OSAyNyAxMyAyN0MxMS42MjEgMjcgMTAuNSAyNS44NzkgMTAuNSAyNC41QzEwLjUgMjMuMTIxIDExLjYyMSAyMiAxMyAyMkMxNC4zNzkgMjIgMTUuNSAyMy4xMjEgMTUuNSAyNC41WiIgZmlsbD0iI0ZGNkIzNSIvPgo8cGF0aCBkPSJNMzAgMjQuNUMzMCAyNS44NzkgMjguODc5IDI3IDI3LjUgMjdDMjYuMTIxIDI3IDI1IDI1Ljg3OSAyNSAyNC41QzI1IDIzLjEyMSAyNi4xMjEgMjIgMjcuNSAyMkMyOC44NzkgMjIgMzAgMjMuMTIxIDMwIDI0LjVaIiBmaWxsPSIjRkY2QjM1Ii8+CjxwYXRoIGQ9Ik0xMy41IDMyQzE0LjMyODQgMzIgMTUgMzEuMzI4NCAxNSAzMC41QzE1IDI5LjY3MTYgMTQuMzI4NCAyOSAxMy41IDI5QzEyLjY3MTYgMjkgMTIgMjkuNjcxNiAxMiAzMC41QzEyIDMxLjMyODQgMTIuNjcxNiAzMiAxMy41IDMyWiIgZmlsbD0iI0ZGNkIzNSIvPgo8cGF0aCBkPSJNMjcuNSAzMkMyOC4zMjg0IDMyIDI5IDMxLjMyODQgMjkgMzAuNUMyOSAyOS42NzE2IDI4LjMyODQgMjkgMjcuNSAyOUMyNi42NzE2IDI5IDI2IDI5LjY3MTYgMjYgMzAuNUMyNiAzMS4zMjg0IDI2LjY3MTYgMzIgMjcuNSAzMloiIGZpbGw9IiNGRjZCMzUiLz4KPC9zdmc+Cg==" alt="DOGS Coin">
-                <h1>DOGS Coin Rewards</h1>
+        <header class="app-header">
+            <div class="header-top">
+                <div class="app-title">Afghan Rewards Hub</div>
+                <button class="theme-toggle" id="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
             </div>
-            <img id="user-photo" src="https://via.placeholder.com/80" alt="User">
-            <h1 id="user-name">Loading...</h1>
-            <div id="user-balance-container">Main Balance: <span id="user-balance">0.00</span> DOGS</div>
+            <div class="profile-card">
+                <img id="user-photo" src="https://via.placeholder.com/80" alt="User">
+                <div class="user-info">
+                    <h1 id="user-name">Loading...</h1>
+                    <div id="user-balance-container">Balance: <span id="user-balance">0.00</span> AFN</div>
+                </div>
+            </div>
         </header>
+        
         <main id="main-content">
             <div id="home-page" class="page active">
                 <div class="stats-grid">
-                    <div class="stat-card"><h3>Today's Ads</h3><p id="daily-ads-watched">0 / 0</p></div>
-                    <div class="stat-card"><h3>Total Referrals</h3><p id="referral-count">0</p></div>
-                    <div class="stat-card"><h3>Total Ads Watched</h3><p id="total-ads-watched">0</p></div>
-                    <div class="stat-card"><h3>Total Income</h3><p id="total-earned">0.00</p></div>
+                    <div class="stat-card">
+                        <h3>Today's Ads</h3>
+                        <p id="daily-ads-watched">0 / 0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Referrals</h3>
+                        <p id="referral-count">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Ads</h3>
+                        <p id="total-ads-watched">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Income</h3>
+                        <p id="total-earned">0.00</p>
+                    </div>
                 </div>
-                <div id="earnings-graph-container" class="chart-container">
-                    <h3><i class="fas fa-chart-line"></i> Last 7 Days Earnings</h3>
-                    <div id="earnings-chart" class="chart"></div><div id="earnings-chart-labels" class="chart-labels"></div>
+                
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-chart-line"></i>
+                        Weekly Earnings
+                    </div>
+                    <div id="earnings-chart" class="chart"></div>
+                    <div id="earnings-chart-labels" class="chart-labels"></div>
                 </div>
-                <div class="section-title"><i class="fas fa-link"></i> Useful Links</div>
-                <div id="dynamic-links-container" style="margin-top: 10px;"></div>
+                
+                <h2 class="section-title">Quick Actions</h2>
+                <div id="dynamic-links-container"></div>
             </div>
+            
             <div id="tasks-page" class="page">
-                <div class="earning-wallet-card">
-                    <h3><i class="fas fa-wallet"></i> Earning Wallet</h3>
-                    <p style="font-size: 1.8rem; font-weight: 700; color: var(--primary-color); margin: 10px 0;"><span id="earning-wallet-balance">0.00</span> DOGS</p>
-                    <small>Minimum 10 DOGS to move to main balance.</small>
-                    <button id="move-to-balance-btn" class="action-btn" style="width:100%; margin-top: 15px;" disabled>Move to Main Balance</button>
+                <div class="wallet-card">
+                    <div class="wallet-title">Earning Wallet</div>
+                    <div class="wallet-balance"><span id="earning-wallet-balance">0.00</span> AFN</div>
+                    <small>Minimum 10 AFN to transfer to main balance</small>
+                    <button id="move-to-balance-btn" class="action-btn" style="width:100%; margin-top: 15px;" disabled>Transfer to Main Balance</button>
                 </div>
-                <div class="section-title"><i class="fas fa-ad"></i> Daily Ads</div>
-                <div id="ad-progress-container" class="progress-container" style="margin-top:10px;"></div>
-                <div id="ad-task-container"></div>
-                <div class="section-title"><i class="fas fa-gift"></i> Bonus Tasks</div>
+                
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-tv"></i>
+                        Daily Ad Progress
+                    </div>
+                    <div id="ad-progress-container" class="progress-container"></div>
+                    <div id="ad-task-container"></div>
+                </div>
+                
+                <h2 class="section-title">Bonus Tasks</h2>
                 <div id="dynamic-tasks-container"></div>
             </div>
+            
             <div id="leaderboard-page" class="page">
-                <h2><i class="fas fa-trophy"></i> Leaderboard</h2>
+                <h2 class="section-title">Leaderboards</h2>
+                
                 <div class="leaderboard-toggle">
                     <button class="toggle-btn active" data-board="referral">Top Referrers</button>
                     <button class="toggle-btn" data-board="earning">Top Earners</button>
                 </div>
-                <div id="referral-board"><ul class="leaderboard-list" id="referral-leaderboard-list"></ul></div>
-                <div id="earning-board" style="display: none;"><ul class="leaderboard-list" id="earning-leaderboard-list"></ul></div>
+                
+                <div id="referral-board">
+                    <ul class="leaderboard-list" id="referral-leaderboard-list"></ul>
+                </div>
+                <div id="earning-board" style="display: none;">
+                    <ul class="leaderboard-list" id="earning-leaderboard-list"></ul>
+                </div>
             </div>
+            
             <div id="profile-page" class="page">
-                <div id="referral-section"></div>
-                <div class="section-title"><i class="fas fa-money-bill-wave"></i> Withdraw</div>
-                <div id="withdraw-section"></div>
-                <div id="withdrawal-history-section" style="margin-top: 20px;">
-                    <h2><i class="fas fa-history"></i> Withdrawal History</h2><div id="withdrawal-history-list"></div>
+                <div class="referral-card">
+                    <h3>Invite Friends & Earn</h3>
+                    <p>Share your referral link and earn <strong>${appConfig.referralBonus || 0} AFN</strong> for each friend who joins!</p>
+                    <div id="referral-section" style="margin-top: 15px;"></div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-wallet"></i>
+                        Withdraw Funds
+                    </div>
+                    <div id="withdraw-section"></div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-history"></i>
+                        Withdrawal History
+                    </div>
+                    <div id="withdrawal-history-list"></div>
                 </div>
             </div>
         </main>
+        
         <nav class="bottom-nav">
-            <button class="nav-btn active" data-page="home-page"><i class="fas fa-home"></i><span>Home</span></button>
-            <button class="nav-btn" data-page="tasks-page"><i class="fas fa-tasks"></i><span>Tasks</span></button>
-            <button class="nav-btn" data-page="leaderboard-page"><i class="fas fa-trophy"></i><span>Leaderboard</span></button>
-            <button class="nav-btn" data-page="profile-page"><i class="fas fa-user-alt"></i><span>Profile</span></button>
+            <button class="nav-btn active" data-page="home-page">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </button>
+            <button class="nav-btn" data-page="tasks-page">
+                <i class="fas fa-tasks"></i>
+                <span>Tasks</span>
+            </button>
+            <button class="nav-btn" data-page="leaderboard-page">
+                <i class="fas fa-trophy"></i>
+                <span>Leaderboard</span>
+            </button>
+            <button class="nav-btn" data-page="profile-page">
+                <i class="fas fa-user-alt"></i>
+                <span>Profile</span>
+            </button>
         </nav>
     </div>
 
@@ -219,13 +901,13 @@
     document.addEventListener('DOMContentLoaded', () => {
         const tg = window.Telegram.WebApp;
         const firebaseConfig = {
-            apiKey: "AIzaSyAp23PL-3iLuSuucGJhIjlfqd8BF_ns0Zo",
-            authDomain: "afginvest-1f83c.firebaseapp.com",
-            databaseURL: "https://afginvest-1f83c-default-rtdb.firebaseio.com",
-            projectId: "afginvest-1f83c",
-            storageBucket: "afginvest-1f83c.firebasestorage.app",
-            messagingSenderId: "996885515180",
-            appId: "1:996885515180:web:ec13280871e7c0e4810809"
+            apiKey: "AIzaSyD4UbW_Iy4kUWH3V70Q1mWCI4-_KFk6ku4",
+            authDomain: "onlinewark-a0147.firebaseapp.com",
+            databaseURL: "https://onlinewark-a0147-default-rtdb.firebaseio.com",
+            projectId: "onlinewark-a0147",
+            storageBucket: "onlinewark-a0147.appspot.com",
+            messagingSenderId: "92155538620",
+            appId: "1:92155538620:android:5e198a8eea6bf17f61f4b9"
         };
         
         let appConfig = {}; let userState = {}; let tgUser = {}; let earningWalletBalance = 0;
@@ -278,7 +960,7 @@
                     document.getElementById('app-loader').style.display = 'none';
                     document.getElementById('app').style.display = 'block';
                     if (appConfig.welcomeMessage && !userState.welcomed) {
-                        showPopup(`<h2>Welcome to DOGS Coin Rewards!</h2><p>${appConfig.welcomeMessage}</p><button class="popup-close-btn">Start Earning</button>`);
+                        showPopup(`<h2>Welcome!</h2><p>${appConfig.welcomeMessage}</p><button class="popup-close-btn">Continue</button>`);
                         db.ref(`users/${tgUser.id}/welcomed`).set(true);
                     }
                 }, 300);
@@ -349,7 +1031,7 @@
             const container = document.getElementById('ad-progress-container');
             const dailyLimit = appConfig.dailyAdLimit || 1;
             const watchedCount = userState.dailyAdCount || 0;
-            const percentage = (watchedCount / dailyLimit) * 100;
+            const percentage = (watchedCount / dailyLimit) * 10;
             container.innerHTML = `<div class="progress-info"><span>Daily Ad Progress</span><span>${watchedCount} / ${dailyLimit}</span></div><div class="progress-bar-bg"><div class="progress-bar-fg" style="width: ${percentage}%;"></div></div>`;
         };
         
@@ -363,9 +1045,9 @@
             const earningsData = snapshots.map(snap => snap.val() || 0);
             const maxEarning = Math.max(...earningsData, 1);
             earningsData.forEach((earning, index) => {
-                const height = (earning / maxEarning) * 100;
-                const dateLabel = new Date(dates[index]).toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
-                chartEl.innerHTML += `<div class="bar" style="height: ${height}%;"><span class="tooltip">${earning.toFixed(2)} DOGS</span></div>`;
+                const height = (earning / maxEarning) * 10;
+                const dateLabel = new Date(dates[index]).toLocaleDateString('en-US', { day: 'numeric' });
+                chartEl.innerHTML += `<div class="bar" style="height: ${height}%;"><span class="tooltip">${earning.toFixed(2)} AFN</span></div>`;
                 labelsEl.innerHTML += `<span>${dateLabel}</span>`;
             });
         };
@@ -378,11 +1060,11 @@
                 tg.showAlert(`Please wait for ${remaining} more minutes.`); return;
             }
             
-            // Show GigaPub ad
+            // د GigaPub اعلان ښکاره کول
             showPopup(`<div class="popup-loader"><div class="spinner"></div></div><h2>Loading Ad</h2><p>Please wait a moment...</p>`);
             
             try {
-                // Show GigaPub ad
+                // د GigaPub اعلان ښکاره کول
                 await window.showGiga();
                 
                 closePopup();
@@ -410,7 +1092,7 @@
                 await db.ref(`userEarnings/${tgUser.id}/${today}`).set(firebase.database.ServerValue.increment(adValue));
 
                 tg.HapticFeedback.notificationOccurred('success');
-                tg.showAlert(`+${adValue.toFixed(2)} DOGS added to your Earning Wallet.`);
+                tg.showAlert(`+${adValue.toFixed(2)} AFN added to your Earning Wallet.`);
                 
                 renderUI();
 
@@ -422,7 +1104,7 @@
         };
 
         const handleMoveToBalance = async () => {
-            if(earningWalletBalance < 10) { tg.showAlert("You need at least 10 DOGS to move."); return; }
+            if(earningWalletBalance < 10) { tg.showAlert("You need at least 10 AFN to move."); return; }
             const btn = document.getElementById('move-to-balance-btn'); btn.disabled = true; btn.textContent = 'Moving...';
             try {
                 const db = firebase.database();
@@ -442,7 +1124,7 @@
             listEl.innerHTML = userTransactions.map(item => `
                 <div class="history-item">
                     <div class="history-details">
-                        <p>${item.amount.toFixed(2)} DOGS - ${item.method}</p>
+                        <p>${item.amount.toFixed(2)} AFN - ${item.method}</p>
                         <small>${new Date(item.timestamp).toLocaleString()}</small>
                     </div>
                     <span class="history-status status-${item.status}">${item.status}</span>
@@ -491,7 +1173,7 @@
             } else if (limitReached) {
                 html = `<div class="task-container"><img class="task-icon-img" src="https://img.icons8.com/ios-filled/100/stop-circled.png" alt="icon"><div class="task-info"><h3>Daily Limit Reached</h3><p>Come back tomorrow for more ads.</p></div><button class="action-btn" disabled>Limit</button></div>`;
             } else {
-                html = `<div class="task-container"><img class="task-icon-img" src="https://img.icons8.com/ios-filled/100/play-button-circled.png" alt="icon"><div class="task-info"><h3>Watch a Rewarded Ad</h3><p>Earn ${appConfig.adValue || 0} DOGS for every ad.</p></div><button id="watch-ad-btn" class="action-btn">Watch Ad</button></div>`;
+                html = `<div class="task-container"><img class="task-icon-img" src="https://img.icons8.com/ios-filled/100/play-button-circled.png" alt="icon"><div class="task-info"><h3>Watch a Rewarded Ad</h3><p>Earn ${appConfig.adValue || 0} AFN for every ad.</p></div><button id="watch-ad-btn" class="action-btn">Watch Ad</button></div>`;
             }
             container.innerHTML = html;
             if (!onBreak && !limitReached) { document.getElementById('watch-ad-btn').addEventListener('click', handleWatchAd); }
@@ -513,7 +1195,7 @@
                         if (!userState.completedTasks) userState.completedTasks = {};
                         userState.completedTasks[taskId] = true;
                         tg.HapticFeedback.notificationOccurred('success');
-                        tg.showAlert(`Thank you! You received ${task.reward} bonus DOGS.`);
+                        tg.showAlert(`Thank you! You received ${task.reward} bonus AFN.`);
                         renderUI();
                     } catch (error) { tg.showAlert('Failed to claim bonus.'); e.target.disabled = false; e.target.textContent = 'Claim Bonus'; }
                 }, 5000);
@@ -539,7 +1221,7 @@
             
             if (isNaN(amount) || amount <= 0) { tg.showAlert("Please enter a valid amount."); return; }
             if (!selectedMethod) { tg.showAlert("Invalid withdrawal method."); return; }
-            if (amount < selectedMethod.min) { tg.showAlert(`Minimum withdrawal for ${selectedMethod.name} is ${selectedMethod.min} DOGS.`); return; }
+            if (amount < selectedMethod.min) { tg.showAlert(`Minimum withdrawal for ${selectedMethod.name} is ${selectedMethod.min} AFN.`); return; }
             if (amount > userState.balance) { tg.showAlert("You don't have enough balance."); return; }
             
             const btn = document.getElementById('withdraw-submit-btn'); btn.disabled = true; btn.textContent = 'Submitting...';
@@ -598,7 +1280,7 @@
             data.forEach((user, index) => {
                 const score = activeBoard === 'referral' ? (user.referrals || 0) : (user.totalEarned || 0).toFixed(2);
                 const item = document.createElement('li'); item.className = 'leaderboard-item';
-                item.innerHTML = `<span class="rank">#${index + 1}</span><img src="${user.photoUrl || 'https://via.placeholder.com/40'}" alt="User"><span class="leaderboard-name">${user.firstName}</span><span class="leaderboard-score">${score} DOGS</span>`;
+                item.innerHTML = `<span class="rank">#${index + 1}</span><img src="${user.photoUrl || 'https://via.placeholder.com/40'}" alt="User"><span class="leaderboard-name">${user.firstName}</span><span class="leaderboard-score">${score}</span>`;
                 listEl.appendChild(item);
             });
         };
@@ -612,7 +1294,7 @@
                 tasks.forEach(task => {
                     const isCompleted = userState.completedTasks && userState.completedTasks[task.key];
                     const el = document.createElement('div'); el.className = 'task-container';
-                    el.innerHTML = `<img class="task-icon-img" src="${task.icon}" alt="icon"><div class="task-info"><h3>${task.name}</h3><p>Get ${task.reward} bonus DOGS.</p></div><button class="action-btn" data-task-id="${task.key}" data-task-url="${task.url}" ${isCompleted ? 'disabled' : ''}>${isCompleted ? 'Claimed' : 'Claim Bonus'}</button>`;
+                    el.innerHTML = `<img class="task-icon-img" src="${task.icon}" alt="icon"><div class="task-info"><h3>${task.name}</h3><p>Get ${task.reward} bonus AFN.</p></div><button class="action-btn" data-task-id="${task.key}" data-task-url="${task.url}" ${isCompleted ? 'disabled' : ''}>${isCompleted ? 'Claimed' : 'Claim Bonus'}</button>`;
                     container.appendChild(el);
                 });
             }
@@ -621,12 +1303,12 @@
         const renderReferralSection = () => {
             const container = document.getElementById('referral-section');
             const refLink = `https://t.me/${appConfig.botUsername}/app?startapp=${tgUser.id}`;
-            container.innerHTML = `<div class="task-container" style="flex-direction: column; align-items: stretch;"><h3><i class="fas fa-user-plus"></i> Refer & Earn More!</h3><p>Invite friends and earn ${appConfig.referralBonus || 0} DOGS per referral.</p><input type="text" id="referral-link" value="${refLink}" readonly style="padding: 10px; text-align: center; border-radius: 8px; border: 1px dashed var(--primary-color); margin: 10px 0; background: var(--dogs-light);"><button id="copy-ref-link-btn" class="action-btn">Copy Link</button></div>`;
+            container.innerHTML = `<div class="task-container" style="flex-direction: column; align-items: stretch;"><h3>Refer & Earn More!</h3><p>Invite friends and earn ${appConfig.referralBonus || 0} AFN per referral.</p><input type="text" id="referral-link" value="${refLink}" readonly style="padding: 10px; text-align: center; border-radius: 8px; border: 1px dashed var(--primary-color); margin: 10px 0;"><button id="copy-ref-link-btn" class="action-btn">Copy Link</button></div>`;
         };
 
         const renderWithdrawSection = () => {
             const container = document.getElementById('withdraw-section'); let optionsHtml = '';
-            if (appConfig.withdrawMethods) { appConfig.withdrawMethods.forEach(method => { optionsHtml += `<option value="${method.name}">${method.name} (Min: ${method.min} DOGS)</option>`; }); }
+            if (appConfig.withdrawMethods) { appConfig.withdrawMethods.forEach(method => { optionsHtml += `<option value="${method.name}">${method.name} (Min: ${method.min} AFN)</option>`; }); }
             
             const minRefs = appConfig.minimumWithdrawReferrals || 0;
             let referralNotice = '';
@@ -634,7 +1316,7 @@
                 referralNotice = `<p style="font-size: 0.85rem; text-align: center; margin-bottom: 15px; opacity: 0.8;"><b>Note:</b> You need at least <b>${minRefs} referrals</b> to be eligible for withdrawal.</p>`;
             }
 
-            container.innerHTML = `<form id="withdraw-form" class="task-container" style="flex-direction: column; align-items: stretch;"><h3><i class="fas fa-money-bill-wave"></i> Request Withdraw</h3>${referralNotice}<div class="form-group" style="width:100%"><label for="withdraw-method">Method:</label><select id="withdraw-method" required style="width: 100%; padding: 10px; border-radius: 8px;">${optionsHtml}</select></div><div class="form-group" style="width:100%"><label for="account-number">Account Number/ID:</label><input type="text" id="account-number" required style="width: 100%; padding: 10px; border-radius: 8px;"></div><div class="form-group" style="width:100%"><label for="amount">Amount:</label><input type="number" step="any" id="amount" required style="width: 100%; padding: 10px; border-radius: 8px;"></div><button type="submit" id="withdraw-submit-btn" class="action-btn">Submit Request</button></form>`;
+            container.innerHTML = `<form id="withdraw-form" class="task-container" style="flex-direction: column; align-items: stretch;"><h3>Request Withdraw</h3>${referralNotice}<div class="form-group" style="width:100%"><label for="withdraw-method">Method:</label><select id="withdraw-method" required style="width: 100%; padding: 10px; border-radius: 8px;">${optionsHtml}</select></div><div class="form-group" style="width:100%"><label for="account-number">Account Number/ID:</label><input type="text" id="account-number" required style="width: 100%; padding: 10px; border-radius: 8px;"></div><div class="form-group" style="width:100%"><label for="amount">Amount:</label><input type="number" step="any" id="amount" required style="width: 100%; padding: 10px; border-radius: 8px;"></div><button type="submit" id="withdraw-submit-btn" class="action-btn">Submit Request</button></form>`;
         };
 
         const renderDynamicLinks = () => {
